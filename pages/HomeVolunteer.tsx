@@ -19,6 +19,7 @@ import { missionService } from '@/services/missionService';
 import Footer from '@/components/footer';
 import AlertToast from '@/components/AlertToast';
 import { volunteerService } from '@/services/volunteerService';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
  * Render the volunteer account screen with responsive layouts for mobile and web.
@@ -34,6 +35,7 @@ export default function HomeVolunteer() {
   const isWeb = Platform.OS === 'web';
   const isMobile = !isWeb;
   const isSmallScreen = width < 900;
+  const { t } = useLanguage();
 
   const [missions, setMissions] = useState<Mission[]>([]);
   const [favorites, setFavorites] = useState<Mission[]>([]);
@@ -62,11 +64,11 @@ export default function HomeVolunteer() {
       setMissions(data ?? []);
     } catch (e) {
       console.error(e);
-      setError("Impossible de charger les missions pour le moment.");
+      setError(t('loadError'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   const loadMissionsFavorites = useCallback(async () => {
     setLoadingF(true);
@@ -77,11 +79,11 @@ export default function HomeVolunteer() {
       setFavoriteIds(favoritesData.map(m => m.id_mission));
     } catch (e) {
       console.error(e);
-      setErrorF("Impossible de charger les missions favorites pour le moment.");
+      setErrorF(t('loadError'));
     } finally {
       setLoadingF(false);
     }
-  }, []);
+  }, [t]);
 
   const handleToggleFavorite = async (mission: Mission) => {
     const isFav = favoriteIds.includes(mission.id_mission);
@@ -111,7 +113,7 @@ export default function HomeVolunteer() {
             setFavoriteIds(prev => prev.filter(id => id !== mission.id_mission));
             setFavorites(prev => prev.filter(m => m.id_mission !== mission.id_mission));
         }
-        showAlert("Erreur","Impossible de modifier les favoris pour le moment.");
+        showAlert(t('error'), t('favError'));
     }
   };
 
@@ -155,12 +157,12 @@ export default function HomeVolunteer() {
         <View style={isMobile ? styles.sectionMobile : styles.sectionWeb}>
           <View style={styles.sectionHeader}>
             <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen && {paddingLeft: 35}]}>
-               {isMobile ? 'Récent' : 'Missions récentes'}
+               {isMobile ? t('recent') : t('recentMissions')}
             </Text>
             
             {isMobile && (
               <TouchableOpacity onPress={() => router.push('/(volunteer)/search')}>
-                <Text style={styles.seeAllText}>Voir tout</Text>
+                <Text style={styles.seeAllText}>{t('seeAll')}</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -187,14 +189,14 @@ export default function HomeVolunteer() {
                   }}
                 >
                   <Text style={{ color: Colors.orange, fontWeight: '600' }}>
-                    ↻ Recharger
+                    {t('reload')}
                   </Text>
                 </TouchableOpacity>
               </View>
             ) : (
             <View style={isMobile ? {alignItems:'center'} : styles.missionsGrid}>
               {missions.length === 0 ? (
-                <Text style={{ color: 'gray', fontStyle: 'italic', padding: 20 }}>Aucune mission récente disponible pour le moment.</Text>
+                <Text style={{ color: 'gray', fontStyle: 'italic', padding: 20 }}>{t('noRecentMissions')}</Text>
               ) : (
                 missions.slice(0, 3).map((mission) => (
                   <View key={mission.id_mission} style={styles.cardWrapper}>
@@ -217,12 +219,12 @@ export default function HomeVolunteer() {
         <View style={isMobile ? styles.sectionMobile : styles.sectionWeb}>
           <View style={styles.sectionHeader}>
             <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen && {paddingLeft: 35}]}>
-               {isMobile ? 'Favoris' : 'Missions favoris'}
+               {isMobile ? t('favorites') : t('favoriteMissions')}
             </Text>
             
             {isMobile && (
               <TouchableOpacity onPress={() => router.push('/(volunteer)/library/upcoming')}>
-                <Text style={styles.seeAllText}>Voir tout</Text>
+                <Text style={styles.seeAllText}>{t('seeAll')}</Text>
               </TouchableOpacity>
             )}
           </View>

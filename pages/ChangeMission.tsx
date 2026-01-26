@@ -26,6 +26,7 @@ import AlertToast from '@/components/AlertToast';
 import DatePickerField from '@/components/DatePickerFields';
 import { missionService } from '@/services/missionService';
 import { mapMissionPublicToMission } from '@/utils/mission.utils';
+import { useLanguage } from '@/context/LanguageContext';
 
 // Default image placeholder
 const DEFAULT_MISSION_IMAGE = require("@/assets/images/volunteering_img.jpg");
@@ -42,6 +43,7 @@ export default function ChangeMission() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const missionId = Number(id);
+  const { t, language } = useLanguage();
 
 
   // ====== STATE VARIABLES ======
@@ -75,27 +77,27 @@ export default function ChangeMission() {
         setRegisteredCount(mp.volunteers_enrolled);
       } catch (err) {
         console.error(err);
-        showAlert("Error", "Unable to load mission.");
+        showAlert(t('error'), t('loadHomeError'));
       } finally {
         setLoading(false);
       }
     };
     fetchMission();
-  }, [missionId]);
+  }, [missionId, t]);
 
   /**
    * Set placeholders for category and location once mission data is loaded.
    */
   useEffect(() => {
     if (mission?.category?.label) setCategoriePlaceholder(mission.category.label);
-    else setCategoriePlaceholder("Category not specified");
+    else setCategoriePlaceholder(t('categoryNotSpecified'));
     
     if (mission?.location?.address) {
       setLieuPlaceholder(`${mission.location.address}, ${mission.location.zip_code}`);
     } else {
-      setLieuPlaceholder("Location not specified");
+      setLieuPlaceholder(t('locationNotSpecified'));
     }
-  }, [mission]);
+  }, [mission, t]);
 
 
 
@@ -139,13 +141,13 @@ export default function ChangeMission() {
     if (!mission) return;
 
     // === Validation ===
-    if (!mission.name.trim()) return showAlert('Error', 'Title is required.');
-    if (!mission.description.trim()) return showAlert('Error', 'Description is required.');
+    if (!mission.name.trim()) return showAlert(t('error'), t('missingFields'));
+    if (!mission.description.trim()) return showAlert(t('error'), t('missingFields'));
 
     const min = Number(mission.capacity_min);
     const max = Number(mission.capacity_max);
-    if (isNaN(min) || isNaN(max) || min < 0 || max < 0) return showAlert('Error', 'Capacities must be positive numbers.');
-    if (min > max) return showAlert('Error', 'Minimum capacity cannot exceed maximum.');
+    if (isNaN(min) || isNaN(max) || min < 0 || max < 0) return showAlert(t('error'), t('capaPosErr'));
+    if (min > max) return showAlert(t('error'), t('minMaxErr'));
 
     let startDate: Date, endDate: Date;
     try {
@@ -153,10 +155,10 @@ export default function ChangeMission() {
       endDate = new Date(mission.date_end);
       if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) throw new Error("Invalid date");
     } catch {
-      return showAlert('Error', 'Invalid date format. Use YYYY-MM-DDTHH:mm.');
+      return showAlert(t('error'), t('dateFmtErr'));
     }
 
-    if (startDate >= endDate) return showAlert('Error', 'Start date must be before end date.');
+    if (startDate >= endDate) return showAlert(t('error'), t('startEndErr'));
 
     // === Save request ===
     setIsSaving(true);
@@ -176,10 +178,10 @@ export default function ChangeMission() {
       setMission(updatedMission);
       setOriginalMission(updatedMission);
       setIsEditing(false);
-      showAlert('Success', 'Mission updated.');
+      showAlert(t('success'), t('updateSuccess'));
     } catch (error) {
       console.error("Mission update failed:", error);
-      showAlert('Error', 'Save failed.');
+      showAlert(t('error'), t('updateFail'));
     } finally {
       setIsSaving(false);
     }
@@ -193,13 +195,13 @@ export default function ChangeMission() {
     setIsDeleting(true);
     try {
       await associationService.deleteMission(mission.id_mission);
-      showAlert('Success', 'Mission deleted.');
+      showAlert(t('success'), t('deleteSuccess'));
       setConfirmDeleteVisible(false);
       if (router.canGoBack()) router.back();
       else router.replace('/(association)/home');
     } catch (error) {
       console.error("Mission deletion failed:", error);
-      showAlert('Error', 'Deletion failed.');
+      showAlert(t('error'), t('deleteFail'));
       setIsDeleting(false);
     }
   };
@@ -209,11 +211,11 @@ export default function ChangeMission() {
     return <ActivityIndicator size="large" color={Colors.orange} style={{ flex: 1, justifyContent: 'center' }} />;
   }
   if (!mission) {
-    return <Text style={styles.text}>Mission not found.</Text>;
+    return <Text style={styles.text}>{t('missionNotFound')}</Text>;
   }
 
   // Helpers to format dates for UI
-  const formatDateForDisplay = (dateStr: string) => new Date(dateStr).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
+  const formatDateForDisplay = (dateStr: string) => new Date(dateStr).toLocaleString(language === 'fr' ? 'fr-FR' : 'en-US', { dateStyle: 'short', timeStyle: 'short' });
   const formatDateForInput = (dateStr: string) => new Date(dateStr).toISOString().substring(0, 16);
 
 
@@ -224,7 +226,7 @@ export default function ChangeMission() {
       <View style={{ flex: 1, flexDirection: 'row' }}>
         <ScrollView style={styles.container}>
           <View style={{ paddingLeft: isSmallScreen ? 30 : 0 }}>
-            <BackButton name_page={isEditing ? 'Edit Mission' : 'Mission Details'} />
+            <BackButton name_page={isEditing ? t('editMission') : t('missionDetails')} />
             {!isEditing && <Text style={styles.title}>{mission.name}</Text>}
           </View>
 
@@ -232,7 +234,7 @@ export default function ChangeMission() {
           {isEditing ? (
             <>
               {/* Title input */}
-              <Text style={styles.label}>Title</Text>
+              <Text style={styles.label}>{t('missionTitleLabel')}</Text>
               <TextInput style={styles.input} value={mission.name} onChangeText={(text) => handleChange("name", text)} />
 
               {/* Image URL */}
@@ -242,7 +244,7 @@ export default function ChangeMission() {
               {/* Start / End Dates */}
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20 }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.label}>Start Date</Text>
+                  <Text style={styles.label}>{t('startDateLabel')}</Text>
                   {Platform.OS === "web" ? (
                     <input
                       type="datetime-local"
@@ -255,7 +257,7 @@ export default function ChangeMission() {
                   )}
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.label}>End Date</Text>
+                  <Text style={styles.label}>{t('endDateLabel')}</Text>
                   {Platform.OS === "web" ? (
                     <input
                       type="datetime-local"
@@ -270,38 +272,38 @@ export default function ChangeMission() {
               </View>
 
               {/* Non-editable info */}
-              <Text style={styles.label}>Category</Text>
-              <Text style={styles.text}>{categoriePlaceholder} (Not editable)</Text>
+              <Text style={styles.label}>{t('categoryLabel')}</Text>
+              <Text style={styles.text}>{categoriePlaceholder}</Text>
 
-              <Text style={styles.label}>Location</Text>
-              <Text style={styles.text}>{lieuPlaceholder} (Not editable)</Text>
+              <Text style={styles.label}>{t('locationLabel')}</Text>
+              <Text style={styles.text}>{lieuPlaceholder}</Text>
 
               {/* Capacity */}
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20 }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.label}>Min Volunteers</Text>
+                  <Text style={styles.label}>{t('minVolunteersLabel')}</Text>
                   <TextInput style={styles.input} value={mission.capacity_min.toString()} onChangeText={(text) => handleNumericChange("capacity_min", text)} keyboardType="numeric" />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.label}>Max Volunteers</Text>
+                  <Text style={styles.label}>{t('maxVolunteersLabel')}</Text>
                   <TextInput style={styles.input} value={mission.capacity_max.toString()} onChangeText={(text) => handleNumericChange("capacity_max", text)} keyboardType="numeric" />
                 </View>
               </View>
 
               {/* Skills and description */}
-              <Text style={styles.label}>Required Skills</Text>
+              <Text style={styles.label}>{t('requiredSkillsLabel')}</Text>
               <TextInput style={[styles.input, { height: 100, textAlignVertical: 'top' }]} multiline value={mission.skills || ''} onChangeText={(text) => handleChange("skills", text)} />
 
-              <Text style={styles.label}>Description</Text>
+              <Text style={styles.label}>{t('missionDescLabel')}</Text>
               <TextInput style={[styles.input, { height: 150, textAlignVertical: 'top' }]} multiline value={mission.description} onChangeText={(text) => handleChange("description", text)} />
 
               {/* Buttons */}
               <View style={{ flexDirection: 'row', gap: 20, marginTop: 20 }}>
                 <TouchableOpacity style={[styles.buttonAction, { backgroundColor: Colors.gray, flex: 1 }]} onPress={handleCancel}>
-                  <Text style={styles.buttonText}>Cancel</Text>
+                  <Text style={styles.buttonText}>{t('cancel')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.buttonAction, { flex: 1 }]} onPress={handleSave} disabled={isSaving}>
-                  <Text style={styles.buttonText}>{isSaving ? 'Saving...' : 'Save'}</Text>
+                  <Text style={styles.buttonText}>{isSaving ? 'Saving...' : t('validate')}</Text>
                 </TouchableOpacity>
               </View>
             </>
@@ -313,40 +315,40 @@ export default function ChangeMission() {
               {/* Mission details */}
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20 }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.label}>Start</Text>
+                  <Text style={styles.label}>{t('startDateLabel')}</Text>
                   <Text style={styles.text}>{formatDateForDisplay(mission.date_start)}</Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.label}>End</Text>
+                  <Text style={styles.label}>{t('endDateLabel')}</Text>
                   <Text style={styles.text}>{formatDateForDisplay(mission.date_end)}</Text>
                 </View>
               </View>
 
-              <Text style={styles.label}>Category</Text>
+              <Text style={styles.label}>{t('categoryLabel')}</Text>
               <Text style={styles.text}>{categoriePlaceholder}</Text>
 
-              <Text style={styles.label}>Location</Text>
+              <Text style={styles.label}>{t('locationLabel')}</Text>
               <Text style={styles.text}>{lieuPlaceholder}</Text>
               
-              <Text style={styles.label}>Capacity</Text>
-              <Text style={styles.text}>{`${mission.capacity_min} - ${mission.capacity_max} volunteers`}</Text>
+              <Text style={styles.label}>{t('minVolunteersLabel')}</Text>
+              <Text style={styles.text}>{`${mission.capacity_min} - ${mission.capacity_max} ${t('volunteer').toLowerCase()}s`}</Text>
 
-              <Text style={styles.label}>Registered Volunteers</Text>
+              <Text style={styles.label}>{t('registeredVolunteers')}</Text>
               <Text style={styles.text}>{registeredCount}</Text>
 
-              <Text style={styles.label}>Required Skills</Text>
+              <Text style={styles.label}>{t('requiredSkillsLabel')}</Text>
               <Text style={styles.text}>{mission.skills}</Text>
               
-              <Text style={styles.label}>Description</Text>
+              <Text style={styles.label}>{t('missionDescLabel')}</Text>
               <Text style={styles.text}>{mission.description}</Text>
 
               {/* Action buttons */}
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20, marginTop: 20 }}>
                 <TouchableOpacity style={[styles.buttonAction, { backgroundColor: Colors.red, flex: 1 }]} onPress={() => setConfirmDeleteVisible(true)}>
-                  <Text style={styles.buttonText}>Delete</Text>
+                  <Text style={styles.buttonText}>{t('delete')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.buttonAction, { flex: 1 }]} onPress={() => setIsEditing(true)}>
-                  <Text style={styles.buttonText}>Edit Mission</Text>
+                  <Text style={styles.buttonText}>{t('editMission')}</Text>
                 </TouchableOpacity>
               </View>
             </>
@@ -358,14 +360,14 @@ export default function ChangeMission() {
       <Modal visible={confirmDeleteVisible} transparent animationType="fade" onRequestClose={() => setConfirmDeleteVisible(false)}>
         <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' }}>
           <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%' }}>
-            <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 20 }}>Confirm Deletion</Text>
-            <Text style={{ marginBottom: 20 }}>Are you sure you want to delete this mission? This action cannot be undone.</Text>
+            <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 20 }}>{t('confirmDeleteTitle')}</Text>
+            <Text style={{ marginBottom: 20 }}>{t('confirmDeleteMsg')}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 20 }}>
               <TouchableOpacity onPress={() => setConfirmDeleteVisible(false)}>
-                <Text style={{ color: Colors.grayText }}>Cancel</Text>
+                <Text style={{ color: Colors.grayText }}>{t('cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleDelete} disabled={isDeleting}>
-                <Text style={{ color: Colors.red }}>{isDeleting ? 'Deleting...' : 'Delete'}</Text>
+                <Text style={{ color: Colors.red }}>{isDeleting ? 'Deleting...' : t('delete')}</Text>
               </TouchableOpacity>
             </View>
           </View>

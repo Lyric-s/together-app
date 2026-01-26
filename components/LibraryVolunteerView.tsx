@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { Colors } from '@/constants/colors';
 import { Mission } from '@/models/mission.model';
 import MissionVolunteerCard from '@/components/MissionVolunteerCard';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface LibraryViewProps {
   loading: boolean;
@@ -18,6 +19,7 @@ interface LibraryViewProps {
 export default function VolunteerLibraryView({ 
   loading, missions, favorites, title, emptyText, onPressMission, onToggleFavorite 
 }: LibraryViewProps) {
+  const { t } = useLanguage();
   
   if (loading) {
     return <ActivityIndicator size="large" color={Colors.orange} style={{ marginTop: 50 }} />;
@@ -49,10 +51,10 @@ export default function VolunteerLibraryView({
       {/* SECTION FAVORIS */}
       {favorites && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Favoris</Text>
+          <Text style={styles.sectionTitle}>{t('favorites')}</Text>
           <View style={styles.cardsContainer}>
             {favorites.length === 0 ? (
-              <Text style={styles.emptyText}>Aucun favori pour le moment.</Text>
+              <Text style={styles.emptyText}>{t('noFavorites')}</Text>
             ) : (
               favorites.map(mission => (
                 <MissionVolunteerCard

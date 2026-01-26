@@ -22,6 +22,7 @@ import {
 
 import styles from "@/styles/pages/AssociationProfileVerificationStyles";
 import { adminService } from "@/services/adminService";
+import { useLanguage } from "@/context/LanguageContext";
 
 // --------------------
 // Types UI (pour la page)
@@ -42,10 +43,10 @@ type AssociationDocument = {
 // --------------------
 // Helpers
 // --------------------
-const formatDateFR = (iso: string) => {
+const formatDateLocalized = (iso: string, locale: string) => {
     const d = new Date(iso);
     if (Number.isNaN(d.getTime())) return iso;
-    return d.toLocaleString("fr-FR", {
+    return d.toLocaleString(locale === 'fr' ? "fr-FR" : "en-US", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -55,6 +56,7 @@ const formatDateFR = (iso: string) => {
 };
 
 export default function DocumentsVerification() {
+    const { t, language } = useLanguage();
     const [documents, setDocuments] = useState<AssociationDocument[]>([]);
     const [selectedDoc, setSelectedDoc] = useState<AssociationDocument | null>(null);
     const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
@@ -97,7 +99,7 @@ export default function DocumentsVerification() {
                     idDoc: doc.id_doc,
                     docName: doc.doc_name,
                     urlDoc: doc.url_doc ?? null,
-                    dateUpload: formatDateFR(doc.date_upload),
+                    dateUpload: formatDateLocalized(doc.date_upload, language),
 
                     // ✅ pending only
                     verifState: "pending",
@@ -115,11 +117,11 @@ export default function DocumentsVerification() {
             }
         } catch (e: any) {
             console.error("Erreur chargement documents:", e);
-            setErrorMsg("Impossible de charger les documents. Vérifie ta connexion ou ton token admin.");
+            setErrorMsg(t('docLoadError'));
         } finally {
             setIsLoading(false);
         }
-    }, [selectedDoc]);
+    }, [selectedDoc, language, t]);
 
     useEffect(() => {
         fetchDocuments();
@@ -159,16 +161,16 @@ export default function DocumentsVerification() {
     // Labels
     // --------------------
     const getStatusLabel = (state: StatutTraitement) => {
-        if (state === "pending") return "en attente";
-        if (state === "accepted") return "accepté";
-        return "rejeté";
+        if (state === "pending") return t('pending').toLowerCase();
+        if (state === "accepted") return t('accepted').toLowerCase();
+        return t('rejected').toLowerCase();
     };
 
     const getStateFilterLabel = () => {
-        if (!selectedState) return "Tous les statuts";
-        if (selectedState === "pending") return "En attente";
-        if (selectedState === "accepted") return "Acceptés";
-        return "Rejetés";
+        if (!selectedState) return t('allCategories'); // fallback "Tous les statuts"
+        if (selectedState === "pending") return t('pending');
+        if (selectedState === "accepted") return t('accepted');
+        return t('rejected');
     };
 
     // --------------------
@@ -206,7 +208,7 @@ export default function DocumentsVerification() {
             const signed = res?.preview_url ?? null;
 
             if (!signed) {
-                setPreviewError("Aucun lien d’aperçu disponible pour ce document.");
+                setPreviewError(t('noPreview'));
                 return;
             }
 
@@ -214,7 +216,7 @@ export default function DocumentsVerification() {
             setPreviewUrl(signed);
         } catch (e) {
             console.error("Erreur preview-url:", e);
-            setPreviewError("Impossible de générer l’aperçu du document.");
+            setPreviewError(t('noPreview'));
         } finally {
             setPreviewLoading(false);
         }
@@ -243,7 +245,7 @@ export default function DocumentsVerification() {
             await fetchDocuments();
         } catch (e) {
             console.error("Erreur approve:", e);
-            setErrorMsg("Erreur lors de la validation du document.");
+            setErrorMsg(t('docApproveError'));
         } finally {
             setIsLoading(false);
         }
@@ -265,7 +267,7 @@ export default function DocumentsVerification() {
             await fetchDocuments();
         } catch (e) {
             console.error("Erreur reject:", e);
-            setErrorMsg("Erreur lors du rejet du document.");
+            setErrorMsg(t('docRejectError'));
         } finally {
             setIsLoading(false);
         }
@@ -289,10 +291,9 @@ export default function DocumentsVerification() {
                     showsVerticalScrollIndicator
                 >
                     <View style={styles.contentWrapper}>
-                        <Text style={styles.title}>Vérification des documents</Text>
+                        <Text style={styles.title}>{t('docVerifTitle')}</Text>
                         <Text style={styles.subtitle}>
-                            Récépissés préfectoraux envoyés par les associations. Validez ou rejetez les
-                            documents après vérification.
+                            {t('docVerifSubtitle')}
                         </Text>
 
                         {isLoading && (
@@ -305,17 +306,17 @@ export default function DocumentsVerification() {
 
                         <View style={styles.summaryRow}>
                             <View style={[styles.summaryCard, styles.summaryCardPending]}>
-                                <Text style={[styles.summaryLabel, styles.summaryLabelPending]}>En attente</Text>
+                                <Text style={[styles.summaryLabel, styles.summaryLabelPending]}>{t('pending')}</Text>
                                 <Text style={styles.summaryValue}>{counts.pending}</Text>
                             </View>
 
                             <View style={[styles.summaryCard, styles.summaryCardAccepted]}>
-                                <Text style={[styles.summaryLabel, styles.summaryLabelAccepted]}>Acceptés</Text>
+                                <Text style={[styles.summaryLabel, styles.summaryLabelAccepted]}>{t('accepted')}</Text>
                                 <Text style={styles.summaryValue}>{counts.accepted}</Text>
                             </View>
 
                             <View style={[styles.summaryCard, styles.summaryCardRejected]}>
-                                <Text style={[styles.summaryLabel, styles.summaryLabelRejected]}>Rejetés</Text>
+                                <Text style={[styles.summaryLabel, styles.summaryLabelRejected]}>{t('rejected')}</Text>
                                 <Text style={styles.summaryValue}>{counts.rejected}</Text>
                             </View>
                         </View>
@@ -325,7 +326,7 @@ export default function DocumentsVerification() {
                                 <View style={styles.searchWrapper}>
                                     <TextInput
                                         style={styles.searchInput}
-                                        placeholder="Rechercher une association, un code RNA ou un document..."
+                                        placeholder={t('searchDocPlaceholder')}
                                         placeholderTextColor="#9CA3AF"
                                         value={search}
                                         onChangeText={setSearch}
@@ -337,17 +338,17 @@ export default function DocumentsVerification() {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity style={styles.resetButton} onPress={handleResetFilters}>
-                                    <Text style={styles.resetButtonText}>Réinitialiser</Text>
+                                    <Text style={styles.resetButtonText}>{t('reset')}</Text>
                                 </TouchableOpacity>
                             </View>
 
                             <View style={styles.tableHeaderRow}>
-                                <Text style={[styles.headerCell, styles.headerCellAsso]}>Association</Text>
-                                <Text style={[styles.headerCell, styles.headerCellRNA]}>Code RNA</Text>
-                                <Text style={[styles.headerCell, styles.headerCellDoc]}>Document</Text>
-                                <Text style={[styles.headerCell, styles.headerCellDate]}>Date d&apos;upload</Text>
-                                <Text style={[styles.headerCell, styles.headerCellStatus]}>Statut</Text>
-                                <Text style={[styles.headerCell, styles.headerCellActions]}>Actions</Text>
+                                <Text style={[styles.headerCell, styles.headerCellAsso]}>{t('association')}</Text>
+                                <Text style={[styles.headerCell, styles.headerCellRNA]}>{t('rnaCode')}</Text>
+                                <Text style={[styles.headerCell, styles.headerCellDoc]}>{t('docDetails')}</Text>
+                                <Text style={[styles.headerCell, styles.headerCellDate]}>{t('uploadDate')}</Text>
+                                <Text style={[styles.headerCell, styles.headerCellStatus]}>{t('status')}</Text>
+                                <Text style={[styles.headerCell, styles.headerCellActions]}>{t('actions')}</Text>
                             </View>
 
                             {filteredDocuments.map((doc) => (
@@ -372,7 +373,7 @@ export default function DocumentsVerification() {
 
                                     <View style={styles.cellActions}>
                                         <TouchableOpacity style={styles.actionButton} onPress={() => handleSelectDoc(doc)}>
-                                            <Text style={styles.actionButtonText}>Voir</Text>
+                                            <Text style={styles.actionButtonText}>{t('view')}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
@@ -380,7 +381,7 @@ export default function DocumentsVerification() {
 
                             {!isLoading && filteredDocuments.length === 0 && (
                                 <Text style={{ marginTop: 16, color: "#6B7280" }}>
-                                    Aucun document ne correspond aux filtres.
+                                    {t('noDocsFound')}
                                 </Text>
                             )}
                         </View>
@@ -392,7 +393,7 @@ export default function DocumentsVerification() {
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContainer}>
                         <View style={styles.modalHeaderRow}>
-                            <Text style={styles.modalTitle}>Détails du document</Text>
+                            <Text style={styles.modalTitle}>{t('docDetails')}</Text>
                             <TouchableOpacity onPress={handleCloseModal} style={styles.modalCloseButton}>
                                 <Text style={styles.modalCloseButtonText}>×</Text>
                             </TouchableOpacity>
@@ -400,33 +401,33 @@ export default function DocumentsVerification() {
 
                         <View style={styles.detailInfoBlock}>
                             <View style={styles.detailLine}>
-                                <Text style={styles.detailLabel}>Association</Text>
+                                <Text style={styles.detailLabel}>{t('association')}</Text>
                                 <Text style={styles.detailValue} numberOfLines={1}>
                                     {selectedDoc.assoName}
                                 </Text>
                             </View>
 
                             <View style={styles.detailLine}>
-                                <Text style={styles.detailLabel}>Code RNA</Text>
+                                <Text style={styles.detailLabel}>{t('rnaCode')}</Text>
                                 <Text style={styles.detailValue}>{selectedDoc.rnaCode}</Text>
                             </View>
 
                             <View style={styles.detailLine}>
-                                <Text style={styles.detailLabel}>Nom du fichier</Text>
+                                <Text style={styles.detailLabel}>{t('fileName')}</Text>
                                 <Text style={styles.detailValue} numberOfLines={1}>
                                     {selectedDoc.docName}
                                 </Text>
                             </View>
 
                             <View style={styles.detailLine}>
-                                <Text style={styles.detailLabel}>Date d&apos;upload</Text>
+                                <Text style={styles.detailLabel}>{t('uploadDate')}</Text>
                                 <Text style={styles.detailValue}>{selectedDoc.dateUpload}</Text>
                             </View>
                         </View>
 
                         {/* ✅ APERÇU via presigned preview URL */}
                         <View style={styles.previewContainer}>
-                            <Text style={styles.previewTitle}>Aperçu document</Text>
+                            <Text style={styles.previewTitle}>{t('docPreview')}</Text>
 
                             {previewLoading ? (
                                 <View style={{ marginTop: 10 }}>
@@ -438,7 +439,7 @@ export default function DocumentsVerification() {
                                 </View>
                             ) : !previewUrl ? (
                                 <View style={styles.previewPage}>
-                                    <Text style={styles.previewHint}>(Aucun aperçu disponible.)</Text>
+                                    <Text style={styles.previewHint}>{t('noPreview')}</Text>
                                 </View>
                             ) : (
                                 <>
@@ -447,7 +448,7 @@ export default function DocumentsVerification() {
                                         style={{ marginBottom: 12, alignSelf: "flex-start" }}
                                     >
                                         <Text style={{ textDecorationLine: "underline" }}>
-                                            Ouvrir le document dans un nouvel onglet
+                                            {t('openDocNewTab')}
                                         </Text>
                                     </TouchableOpacity>
 
@@ -477,11 +478,11 @@ export default function DocumentsVerification() {
 
                         <View style={styles.modalButtonsRow}>
                             <TouchableOpacity style={styles.rejectButton} onPress={handleReject} disabled={isLoading}>
-                                <Text style={styles.rejectButtonText}>Rejeter</Text>
+                                <Text style={styles.rejectButtonText}>{t('reject')}</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity style={styles.acceptButton} onPress={handleAccept} disabled={isLoading}>
-                                <Text style={styles.acceptButtonText}>Accepter</Text>
+                                <Text style={styles.acceptButtonText}>{t('acceptDoc')}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

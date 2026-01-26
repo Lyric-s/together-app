@@ -14,7 +14,9 @@ export interface SwitchButtonProps {
     variant?: SwitchVariant; // Colors
     labelLeft?: string;
     labelRight?: string;
-    value?: string; // button value
+    valueLeft?: string; // Value returned for left option
+    valueRight?: string; // Value returned for right option
+    value?: string; // button value (controlled)
     defaultValue?: string;
     onChange?: (tab: string) => void;
     style?: StyleProp<ViewStyle>;
@@ -28,9 +30,11 @@ export interface SwitchButtonProps {
  * @param variant - Visual and routing variant to use (affects labels, colors, and default routes)
  * @param labelLeft - Optional override for the left button label; when provided disables automatic routing
  * @param labelRight - Optional override for the right button label; when provided disables automatic routing
- * @param value - Controlled active tab label; when set, internal state is ignored
- * @param defaultValue - Initial active tab label for uncontrolled usage
- * @param onChange - Optional callback invoked with the new active tab label on user selection
+ * @param valueLeft - Optional value for the left button (defaults to labelLeft or config default)
+ * @param valueRight - Optional value for the right button (defaults to labelRight or config default)
+ * @param value - Controlled active tab value; when set, internal state is ignored
+ * @param defaultValue - Initial active tab value for uncontrolled usage
+ * @param onChange - Optional callback invoked with the new active tab value on user selection
  * @param style - Optional container style override
  * @returns The rendered segmented switch component
  */
@@ -38,6 +42,8 @@ export default function SwitchButton({
     variant = 'mission', 
     labelLeft,
     labelRight,
+    valueLeft,
+    valueRight,
     value, 
     defaultValue, 
     onChange, 
@@ -82,20 +88,24 @@ export default function SwitchButton({
     const finalLeftLabel = labelLeft || currentConfig.left;
     const finalRightLabel = labelRight || currentConfig.right;
 
-    const initialTab = defaultValue || finalLeftLabel;
+    // Use provided values or fallback to labels/config
+    const finalLeftValue = valueLeft || finalLeftLabel;
+    const finalRightValue = valueRight || finalRightLabel;
+
+    const initialTab = defaultValue || finalLeftValue;
     const [internalActiveTab, setInternalActiveTab] = useState<string>(initialTab);
     const router = useRouter();
 
     // L'onglet actif est soit celui passé en prop (value), soit l'interne
     const activeTab = value ?? internalActiveTab;
 
-    const handlePress = (tabName: string, side: 'left' | 'right') => {
+    const handlePress = (tabValue: string, side: 'left' | 'right') => {
         if (value === undefined) {
-            setInternalActiveTab(tabName);
+            setInternalActiveTab(tabValue);
         }
         
         if (onChange) {
-            onChange(tabName);
+            onChange(tabValue);
         } else if (!labelLeft && !labelRight) {
             const route = currentConfig.routes[side];
             if (route) {
@@ -128,22 +138,22 @@ export default function SwitchButton({
                 
                 {/* Bouton Gauche */}
                 <TouchableOpacity
-                    style={getButtonStyle(activeTab === finalLeftLabel)}
-                    onPress={() => handlePress(finalLeftLabel, 'left')}
+                    style={getButtonStyle(activeTab === finalLeftValue)}
+                    onPress={() => handlePress(finalLeftValue, 'left')}
                     activeOpacity={0.8}
                 >
-                    <Text style={[styles.text, getTextStyle(activeTab === finalLeftLabel)]}>
+                    <Text style={[styles.text, getTextStyle(activeTab === finalLeftValue)]}>
                         {finalLeftLabel}
                     </Text>
                 </TouchableOpacity>
 
                 {/* Bouton Droit */}
                 <TouchableOpacity
-                    style={getButtonStyle(activeTab === finalRightLabel)}
-                    onPress={() => handlePress(finalRightLabel, 'right')}
+                    style={getButtonStyle(activeTab === finalRightValue)}
+                    onPress={() => handlePress(finalRightValue, 'right')}
                     activeOpacity={0.8}
                 >
-                    <Text style={[styles.text, getTextStyle(activeTab === finalRightLabel)]}>
+                    <Text style={[styles.text, getTextStyle(activeTab === finalRightValue)]}>
                         {finalRightLabel}
                     </Text>
                 </TouchableOpacity>

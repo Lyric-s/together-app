@@ -10,6 +10,7 @@ import ProfilCard from '@/components/ProfilCard';
 import { adminService } from '@/services/adminService';
 import { useAuth } from '@/context/AuthContext';
 import { UserProfile, AdminProfile } from '@/types/ProfileUser';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
  * Admin profile screen that displays and allows editing of the authenticated admin's profile.
@@ -24,6 +25,7 @@ export default function ProfilAdmin() {
     const { width } = useWindowDimensions();
     const isSmallScreen = width < 900;
     const isWeb = Platform.OS === 'web';
+    const { t } = useLanguage();
 
     // We distinguish between page loading and authentication loading
     const { user, userType, isLoading: isAuthLoading, refetchUser } = useAuth();
@@ -61,12 +63,12 @@ export default function ProfilAdmin() {
             };
             setProfileUser(profileData);
         } catch (error) {
-            const message = error instanceof Error ? error.message : 'Impossible de récupérer le profil.';
-            showAlert('Erreur', message);
+            const message = error instanceof Error ? error.message : t('profileFetchError');
+            showAlert(t('error'), message);
         } finally {
             setIsPageLoading(false);
         }
-    }, [showAlert]);
+    }, [showAlert, t]);
 
     useEffect(() => {        
         if (user) {
@@ -88,11 +90,11 @@ export default function ProfilAdmin() {
 
     const handleSave = async (data: UserProfile): Promise<void> => {
         if (!profileUser?.id_admin) {
-            showAlert('Erreur', 'Identifiant administrateur manquant.');
+            showAlert(t('error'), t('adminIdMissing'));
             return;
         }
         if (data.type !== 'admin') {
-             showAlert('Erreur', 'Type de profil invalide.');
+             showAlert(t('error'), t('invalidProfileType'));
              return;
         }
         try {
@@ -105,10 +107,10 @@ export default function ProfilAdmin() {
             await adminService.updateProfile(profileUser.id_admin, payloadAdmin);
             setProfileUser(prev => prev ? ({ ...prev, ...payloadAdmin }) : null);
             await refetchUser(); // Synchro AutoContext
-            showAlert('Succès', 'Votre profil a été mis à jour avec succès.');
+            showAlert(t('success'), t('profileUpdateSuccess'));
         } catch (error) {
-            const message = error instanceof Error ? error.message : 'Échec de la mise à jour du profil.';
-            showAlert('Erreur', message);
+            const message = error instanceof Error ? error.message : t('profileUpdateFail');
+            showAlert(t('error'), message);
         }
     }
 
@@ -116,7 +118,7 @@ export default function ProfilAdmin() {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.white }}>
                 <ActivityIndicator size="large" color={Colors.orange} />
-                <Text style={{ marginTop: 10 }}>Chargement...</Text>
+                <Text style={{ marginTop: 10 }}>{t('loadingProfile')}</Text>
             </View>
         );
     }
@@ -125,7 +127,7 @@ export default function ProfilAdmin() {
          return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
                 <Text style={{ fontSize: 18, textAlign: 'center' }}>
-                    L'espace administrateur est uniquement accessible sur ordinateur.
+                    {t('adminWebOnly')}
                 </Text>
             </View>
         );
@@ -134,7 +136,7 @@ export default function ProfilAdmin() {
     if (!profileUser) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Impossible de charger les données du profil.</Text>
+                <Text>{t('profileLoadError')}</Text>
             </View>
         );
     }
@@ -156,8 +158,8 @@ export default function ProfilAdmin() {
 
                 <View style={{ flex: 1 }}>
                     <ScrollView style={styles.content}>
-                        <Text style={[styles.pageTitle, isSmallScreen && {paddingLeft: 40}]}>Mon profil</Text>
-                        <Text style={[styles.text, isSmallScreen && {paddingLeft: 40}]}>Toutes les données vous concernant</Text>
+                        <Text style={[styles.pageTitle, isSmallScreen && {paddingLeft: 40}]}>{t('myProfile')}</Text>
+                        <Text style={[styles.text, isSmallScreen && {paddingLeft: 40}]}>{t('allYourData')}</Text>
                         <View>
                             <ProfilCard
                                 userType = 'admin'

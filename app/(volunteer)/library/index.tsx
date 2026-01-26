@@ -12,16 +12,18 @@ import { Mission } from '@/models/mission.model';
 import { volunteerService } from '@/services/volunteerService';
 import LibraryVolunteerView from '@/components/LibraryVolunteerView';
 import SwitchButton from '@/components/SwitchButton';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function LibraryIndex() {
   const router = useRouter();
   const isWeb = Platform.OS === 'web';
+  const { t } = useLanguage();
 
   if (isWeb) {
     return <Redirect href="/(volunteer)/library/upcoming" />;
   }
   
-  const [activeTab, setActiveTab] = useState<'A venir' | 'Historique'>('A venir');
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'history'>('upcoming');
   const [missions, setMissions] = useState<Mission[]>([]);
   const [favorites, setFavorites] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ export default function LibraryIndex() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      if (activeTab === 'A venir') {
+      if (activeTab === 'upcoming') {
         const [enrolledData, favoritesData] = await Promise.all([
           volunteerService.getEnrolledMissions(),
           volunteerService.getFavorites()
@@ -80,7 +82,7 @@ export default function LibraryIndex() {
     </View>
         
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <Text style={styles.pageTitle}>Ma Bibliothèque</Text>
+        <Text style={styles.pageTitle}>{t('myLibrary')}</Text>
 
         {loading ? (
           <ActivityIndicator size="large" color={Colors.orange} style={{ marginTop: 50 }} />
@@ -88,22 +90,22 @@ export default function LibraryIndex() {
           <View style={{ marginBottom: 80 }}> 
             
             {/* --- CONTENU ONGLET "A VENIR" --- */}
-            {activeTab === 'A venir' ? (
+            {activeTab === 'upcoming' ? (
                 <LibraryVolunteerView 
                     loading={loading}
-                    title="A venir"
+                    title={t('upcomingBtn')}
                     missions={missions} // Liste A venir
                     favorites={favorites} // Liste Favoris
-                    emptyText="Aucune mission prévue."
+                    emptyText={t('noPlannedMissions')}
                     onPressMission={handlePressMission}
                     onToggleFavorite={handleToggleFavorite}
                 />
             ) : (
                 <LibraryVolunteerView 
                     loading={loading}
-                    title="Historique"
+                    title={t('historyBtn')}
                     missions={missions} // Liste Historique
-                    emptyText="Aucune mission passée."
+                    emptyText={t('noPastMissions')}
                     onPressMission={handlePressMission}
                 />
             )}
@@ -113,8 +115,12 @@ export default function LibraryIndex() {
       <View style={styles.fixedBottom}>
         <SwitchButton 
           variant="activityVolunteer" 
+          labelLeft={t('upcomingBtn')}
+          labelRight={t('historyBtn')}
+          valueLeft="upcoming"
+          valueRight="history"
           value={activeTab} // L'état local contrôle quel bouton est allumé
-          onChange={(tab) => setActiveTab(tab as 'A venir' | 'Historique')} // Change l'état au lieu de l'URL
+          onChange={(tab) => setActiveTab(tab as 'upcoming' | 'history')} // Change l'état au lieu de l'URL
         />
       </View>
     </View>

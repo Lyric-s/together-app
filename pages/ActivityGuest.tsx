@@ -5,10 +5,13 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import ButtonAuth from '@/components/Button';
 import { styles } from '@/styles/pages/ActivityGuestStyles';
+import { Colors } from '@/constants/colors';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
  * Renders a screen prompting unauthenticated users to log in or create an account.
@@ -19,24 +22,32 @@ import { styles } from '@/styles/pages/ActivityGuestStyles';
  */
 export default function ActivityGuest() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity 
+        style={{ position: 'absolute', top: 10, right: 20, zIndex: 10 }}
+        onPress={() => router.push('/settings')}
+      >
+        <Ionicons name="settings-outline" size={28} color={Colors.orange} />
+      </TouchableOpacity>
+
       <Text style={styles.mainText}>
-        Vous n’êtes pas connectés. Pour accéder à votre activité, connectez-vous.
+        {t('guestActivityMsg')}
       </Text>
 
       <ButtonAuth
-        text="Se connecter"
+        text={t('loginBtn')}
         onPress={() => router.push('/(auth)/login')}
       />
 
       <Text style={styles.mainText}>
-        Vous n’avez pas encore de compte, créez-en un !
+        {t('guestCreateAccountMsg')}
       </Text>
 
       <ButtonAuth
-        text="S'inscrire"
+        text={t('registerBtn')}
         onPress={() => router.push('/(auth)/register')}
       />
     </View>

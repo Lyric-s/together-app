@@ -10,6 +10,7 @@ import { Colors } from '@/constants/colors';
 import Cross from '@/components/Cross';
 import { UserType } from '@/models/enums'
 import { storageService } from '@/services/storageService';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
  * Renders the login screen and manages credential entry, validation, authentication, and post-login navigation.
@@ -23,6 +24,7 @@ export default function Login() {
     const { login, refetchUser } = useAuth();
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState({ visible: false, title: '', message: '' });
+    const { t } = useLanguage();
 
     const isWeb = Platform.OS === 'web';
 
@@ -38,18 +40,18 @@ export default function Login() {
     };
 
     const handleAuthSwitch = (tab: string) => {
-        if (tab === 'Inscription') {
+        if (tab === 'register') {
             router.push('/(auth)/register');
         }
     };
 
     const handleLogin = async () => {
         if (!username.trim()) {
-            showToast("Erreur", "Le nom d'utilisateur est requis.");
+            showToast(t('error'), t('usernameReq'));
             return;
         }
         if (!password) {
-            showToast("Erreur", "Le mot de passe est requis.");
+            showToast(t('error'), t('passwordReq'));
             return;
         }
         setLoading(true);
@@ -70,12 +72,12 @@ export default function Login() {
                 }
             } else {
                 // Sécurité : si l'API ne retourne pas le type, on redirige vers une page par défaut
-                showToast("Erreur de redirection", "Type d'utilisateur non reconnu.");
+                showToast(t('redirectError'), t('userTypeUnknown'));
                 router.replace('/(guest)/home');
             }
         } catch (e: any) {
             console.error(e);
-            showToast("Échec de la connexion", "Identifiants incorrects.");
+            showToast(t('loginFail'), t('badCredentials'));
         } finally {
             setLoading(false);
         }
@@ -120,7 +122,11 @@ export default function Login() {
                                         <>
                                             <SwitchButton
                                                 variant="auth"
-                                                value={"Connexion"}
+                                                labelLeft={t('registerBtn')}
+                                                labelRight={t('loginBtn')}
+                                                valueLeft="register"
+                                                valueRight="login"
+                                                value={"login"}
                                                 onChange={handleAuthSwitch}
                                             />
                                             <Cross
@@ -149,45 +155,45 @@ export default function Login() {
 
                                 <View style={styles.form}>
                                     <TextInput
-                                        placeholder="Username *"
+                                        placeholder={`${t('username')} *`}
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         value={username} onChangeText={setUsername}
-                                        accessibilityLabel="Nom d'utilisateur"
-                                        accessibilityHint="Entrez votre nom d'utilisateur"
+                                        accessibilityLabel={t('username')}
+                                        accessibilityHint={t('enterUsername')}
 
                                     />
                                     <TextInput
-                                        placeholder="Mot de passe *"
+                                        placeholder={`${t('password')} *`}
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         secureTextEntry={true}
                                         value={password}
                                         onChangeText={setPassword}
-                                        accessibilityLabel="Mot de passe"
-                                        accessibilityHint="Entrez votre mot de passe"
+                                        accessibilityLabel={t('password')}
+                                        accessibilityHint={t('enterPassword')}
                                     />
 
                                     <TouchableOpacity
                                         style={styles.submitBtn}
                                         onPress={handleLogin}
-                                        accessibilityLabel="Se connecter"
+                                        accessibilityLabel={t('login')}
                                         accessibilityHint="Appuyez pour vous connecter"
                                         accessibilityRole="button"
                                     >
                                         {loading ? (
                                             <ActivityIndicator color="#fff" />
                                         ) : (
-                                            <Text style={styles.submitBtnText}>Se connecter</Text>
+                                            <Text style={styles.submitBtnText}>{t('login')}</Text>
                                         )}
                                     </TouchableOpacity>
 
                                     { !isWeb &&
                                         <View style={styles.bottomLinksContainer}>
-                                            <Text style={styles.bottomText}> Pas de compte ?</Text>
+                                            <Text style={styles.bottomText}> {t('noAccount')}</Text>
                                             <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
                                                 <Text style={styles.bottomLinkText}>
-                                                    S'inscrire
+                                                    {t('register')}
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>

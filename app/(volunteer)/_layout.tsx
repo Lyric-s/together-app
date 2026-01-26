@@ -9,6 +9,7 @@ import BottomNavBar from '@/components/MobileNavigationBar';
 import Sidebar from '@/components/SideBar';
 import { useAuth } from '@/context/AuthContext';
 import { Colors } from '@/constants/colors';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
  * Layout component for the Volunteer area that enforces access control and provides platform-specific navigation.
@@ -22,6 +23,7 @@ import { Colors } from '@/constants/colors';
 export default function VolunteerLayout() {
   const { user, isLoading, userType } = useAuth();
   const isWeb = Platform.OS === 'web';
+  const { t } = useLanguage();
   
   if (isLoading) {
     return (
@@ -43,7 +45,7 @@ export default function VolunteerLayout() {
           userName={
              (user?.first_name && user?.last_name)
             ? `${user.first_name} ${user.last_name}`
-            : user?.username || 'Bénévole'
+            : user?.username || t('defaultVolunteer')
         }
           onNavigate={(route) => {
              router.push(route as Href);

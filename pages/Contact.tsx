@@ -1,16 +1,65 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Linking } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Linking, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '@/styles/pages/ContactStyle';
 import BottomNavBar from '@/components/MobileNavigationBar';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
+import { Colors } from '@/constants/colors';
 
 const Contact = () => {
   const navigation = useNavigation();
   const { t, getFontSize, fontFamily } = useLanguage();
   const { colors } = useTheme();
+  const isWeb = Platform.OS === 'web';
+
+  if (isWeb) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.background, padding: 40 }}>
+        <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 20 }}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="arrow-back" size={24} color="#FF6B35" />
+                <Text style={{ marginLeft: 10, fontSize: 16, color: "#FF6B35", fontFamily, fontWeight: '600' }}>{t('backToSettings')}</Text>
+            </TouchableOpacity>
+        </View>
+        
+        <View style={{ alignItems: 'center' }}>
+            <Text style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 20, color: colors.text, fontFamily }}>
+            {t('contactPageTitle')}
+            </Text>
+        <Text style={{ fontSize: 18, color: colors.text, fontFamily, textAlign: 'center', maxWidth: 600, marginBottom: 40 }}>
+          {t('contactDesc')}
+        </Text>
+
+        <TouchableOpacity 
+          style={{ 
+            flexDirection: 'row', 
+            alignItems: 'center', 
+            backgroundColor: colors.card, 
+            padding: 30, 
+            borderRadius: 12, 
+            borderWidth: 1, 
+            borderColor: colors.border,
+            gap: 20,
+            shadowColor: '#000',
+            shadowOpacity: 0.1,
+            shadowRadius: 5
+          }} 
+          onPress={() => Linking.openURL('mailto:contact@together-app.com')}
+        >
+            <View style={{ padding: 15, backgroundColor: Colors.orangeVeryLight, borderRadius: 50 }}>
+               <Ionicons name="mail" size={32} color="#FF6B35" />
+            </View>
+            <View>
+              <Text style={{ fontSize: 14, color: 'gray', fontFamily }}>{t('emailLabel')}</Text>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: colors.text, fontFamily }}>contact@together-app.com</Text>
+            </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+    );
+  }
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>

@@ -2,25 +2,42 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { storageService } from './storageService';
 import Constants from 'expo-constants';
 
-// 1. Extract the host's IP dynamically via Expo
-// debuggerHost looks like "192.168.1.15:8081"
-const debuggerHost = Constants.expoConfig?.hostUri || Constants.experienceUrl || '';
-const localhost = debuggerHost.split('//')[1]?.split(':')[0] || 'localhost';
+/**
+ * Determines the base URL for API requests based on the execution environment.
+ *
+ * The function handles three scenarios:
+ */
+const getBaseUrl = () => {
+  // ---------------------------------------------------------
+  // CASE MOBILE (Expo Go ou build standalone)
+  // ---------------------------------------------------------
+  if (__DEV__ && typeof window === 'undefined') {
+    const debuggerHost = Constants.expoConfig?.hostUri || Constants.experienceUrl || '';
+    const localhost = debuggerHost.split('//')[1]?.split(':')[0] || 'localhost';
+    return `http://${localhost}:8000`;
+  }
 
-// 2. Définition of URL
-// If you are in ‘production’ (published app), use the URL of your actual server.
-// Otherwise, construct the URL using your PC's IP address.
+  // ---------------------------------------------------------
+  // CASE WEB
+  // ---------------------------------------------------------
+  if (typeof window !== 'undefined') {
+    // CASE A: You are LOCAL (http://localhost:3000)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+       return 'http://localhost:8000';
+    }
 
-if (__DEV__ && !localhost) {
-    console.warn('Could not determine localhost IP, falling back to "localhost"');
-}
+    // CASE B: You are in PRODUCTION
+    // This is where the magic of the backend happens.
+    // Leave the URL blank. Axios will automatically use the current domain.
+    return ''; 
+  }
 
-const BASE_URL = __DEV__ 
-  ? `http://${localhost}:8000`
-  : 'https://together-api.out-online.net';
+  // Security fallback (should not occur on the web)
+  return '';
+};
 
 const api = axios.create({
-    baseURL: BASE_URL,
+    baseURL: getBaseUrl(),
     headers: {
         'Content-Type': 'application/json',
     },

@@ -13,7 +13,7 @@ import { AxiosError } from 'axios';
  */
 export function handleApiError(error: unknown): never {
   if (error instanceof AxiosError) {
-    let message = "Une erreur inconnue est survenue.";
+    let message = "An unknown error occurred.";
     const responseData = error.response?.data as any; // Cast explicite pour accès souple
 
     if (responseData) {
@@ -36,5 +36,5 @@ export function handleApiError(error: unknown): never {
   }
 
   console.error("Non-API Error:", error);
-  throw new Error("Erreur inattendue de connexion.", { cause: error });
+  throw new Error("Unexpected connection error.", { cause: error });
 }

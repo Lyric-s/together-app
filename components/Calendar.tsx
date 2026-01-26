@@ -5,6 +5,7 @@ import { styles } from '@/styles/components/CalendarCSS'; // Assurez-vous d'avoi
 import { volunteerService } from '@/services/volunteerService';
 import { Mission } from '@/models/mission.model';
 import { Colors } from '@/constants/colors';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface MissionDay {
     id: string;
@@ -13,10 +14,8 @@ interface MissionDay {
     image?: any;
 }
 
-const weekDays = ['D', 'L', 'M', 'Me', 'J', 'V', 'S'];
-const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-
 export default function Calendar() {
+    const { t, language } = useLanguage();
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDay, setSelectedDay] = useState(new Date());
     const [missionsToday, setMissionsToday] = useState<MissionDay[]>([]);
@@ -39,7 +38,7 @@ export default function Calendar() {
             if (missions && missions.length > 0) {
                 const formattedMissions: MissionDay[] = missions.map((m: Mission) => ({
                     id: m.id_mission.toString(),
-                    time: new Date(m.date_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    time: new Date(m.date_start).toLocaleTimeString(language === 'fr' ? 'fr-FR' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
                     title: m.name,
                     image: m.image_url ? { uri: m.image_url } : undefined
                 }));
@@ -53,7 +52,7 @@ export default function Calendar() {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [language]);
 
     // Initialisation au chargement
     useEffect(() => {
@@ -97,12 +96,23 @@ export default function Calendar() {
                currentMonth.getFullYear() === today.getFullYear();
     };
 
+    // Génération dynamique des jours de la semaine (D, L, M...)
+    // Note: getDay() retourne 0 pour Dimanche.
+    // On peut utiliser toLocaleDateString pour avoir "D", "L", etc.
+    const weekDays = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(2024, 0, 7 + i); // 7 Jan 2024 is Sunday
+        return d.toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'narrow' });
+    });
+
+    const monthName = currentMonth.toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', { month: 'long' });
+    const capitalizedMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
     return (
         <View style={styles.calendar}>
             {/* Header Mois */}
             <View style={styles.calendarHeader}>
                 <TouchableOpacity onPress={() => changeMonth('prev')}><Text style={styles.monthArrow}>{'<'}</Text></TouchableOpacity>
-                <Text style={styles.calendarMonth}>{monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}</Text>
+                <Text style={styles.calendarMonth}>{capitalizedMonth} {currentMonth.getFullYear()}</Text>
                 <TouchableOpacity onPress={() => changeMonth('next')}><Text style={styles.monthArrow}>{'>'}</Text></TouchableOpacity>
             </View>
 
@@ -122,7 +132,7 @@ export default function Calendar() {
               }}
             >
               <Text style={{ color: Colors.orange, fontSize: 10, fontWeight: 'bold' }}>
-                Aujourd'hui
+                {t('today')}
               </Text>
             </TouchableOpacity>
             {/* Jours Semaine */}
@@ -160,7 +170,7 @@ export default function Calendar() {
                 {loading ? (
                     <ActivityIndicator size="small" color={Colors.orange} />
                 ) : noEventsMessage ? (
-                    <Text style={styles.noEventsText}>Rien de prévu ce jour.</Text>
+                    <Text style={styles.noEventsText}>{t('noEvents')}</Text>
                 ) : (
                     missionsToday.map((mission) => (
                         <View key={mission.id} style={styles.calendarEvent}>

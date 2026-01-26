@@ -9,6 +9,7 @@ import BottomNavBar from '@/components/MobileNavigationBar';
 import Sidebar from '@/components/SideBar';
 import { useAuth } from '@/context/AuthContext';
 import { Colors } from '@/constants/colors';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
  * Renders the guest layout and adapts presentation for web and mobile.
@@ -22,6 +23,7 @@ import { Colors } from '@/constants/colors';
 export default function GuestLayout() {
   const { user, isLoading } = useAuth();
   const isWeb = Platform.OS === 'web';
+  const { t } = useLanguage();
   
   if (isLoading) {
     return (
@@ -36,7 +38,7 @@ export default function GuestLayout() {
       {isWeb && (
         <Sidebar 
           userType="volunteer_guest" 
-          userName={user?.username || 'Invité'} 
+          userName={user?.username || t('defaultGuest')} 
           onNavigate={(route) => {
              router.push(route as Href);
           }} 

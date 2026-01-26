@@ -9,6 +9,7 @@ import AlertToast from '@/components/AlertToast';
 import * as DocumentPicker from 'expo-document-picker';
 import { Colors } from '@/constants/colors';
 import Cross from '@/components/Cross';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
  * Renders the registration screen for both volunteer ("Bénévole") and association sign‑up flows.
@@ -23,9 +24,10 @@ export default function Register() {
     const router = useRouter();
     const { login, refetchUser } = useAuth();
     const { userType } = useLocalSearchParams<{ userType: string }>();
-    const [userTypeTab, setUserTypeTab] = useState(userType === 'association' ? 'Association' : 'Bénévole');
+    const [userTypeTab, setUserTypeTab] = useState(userType === 'association' ? 'association' : 'volunteer');
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState({ visible: false, title: '', message: '' });
+    const { t } = useLanguage();
     
     const isWeb = Platform.OS === 'web';
 
@@ -55,8 +57,8 @@ export default function Register() {
     const [attachment, setAttachment] = useState<DocumentPicker.DocumentPickerAsset | null>(null);
 
     useEffect(() => {
-        if (userType === 'association') setUserTypeTab('Association');
-        else if (userType === 'volunteer') setUserTypeTab('Bénévole');
+        if (userType === 'association') setUserTypeTab('association');
+        else if (userType === 'volunteer') setUserTypeTab('volunteer');
     }, [userType]);
 
     const handleClose = () => {
@@ -68,7 +70,7 @@ export default function Register() {
     };
 
     const handleAuthSwitch = (tab: string) => {
-        if (tab === 'Connexion') {
+        if (tab === 'login') {
             router.replace('/(auth)/login');
         }
     };
@@ -90,37 +92,37 @@ export default function Register() {
             }
         } catch (err) {
             console.log("Erreur selection fichier", err);
-            showToast("Erreur", "La sélection du fichier a échoué.");
+            showToast(t('error'), "La sélection du fichier a échoué.");
          }
 
     };
 
     const validateForm = () => {
         // 1. Common Validation (User)
-        if (!username.trim()) return "Le nom d'utilisateur est requis.";
-        if (!email.trim()) return "L'adresse email est requise.";
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "L'adresse email n'est pas valide.";
-        if (!phone_number.trim()) return "Le numéro de téléphone est requis.";
-        if (!password) return "Le mot de passe est requis.";
-        if (!confirmPassword) return "La confirmation du mot de passe est requise.";
-        if (password !== confirmPassword) return "Les mots de passe ne correspondent pas.";
+        if (!username.trim()) return t('usernameReq');
+        if (!email.trim()) return t('emailReq');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return t('emailInvalid');
+        if (!phone_number.trim()) return t('phoneReq');
+        if (!password) return t('passwordReq');
+        if (!confirmPassword) return t('confirmPwdReq');
+        if (password !== confirmPassword) return t('pwdMismatch');
 
         // 2. Specific Validation
-        if (userTypeTab === 'Bénévole') {
-            if (!lastName.trim()) return "Le nom est requis.";
-            if (!firstName.trim()) return "Le prénom est requis.";
-            if (!birthdate.trim()) return "La date de naissance est requise.";
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(birthdate)) return "Le format de date doit être YYYY-MM-DD.";
+        if (userTypeTab === 'volunteer') {
+            if (!lastName.trim()) return t('lastNameReq');
+            if (!firstName.trim()) return t('firstNameReq');
+            if (!birthdate.trim()) return t('birthdateReq');
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(birthdate)) return t('dateFormatError');
             // Bio & Skills are optional for the volunteer
         }    
         else { // Association
-            if (!assoName.trim()) return "Le nom de l'association est requis.";
-            if (!assoCompanyName.trim()) return "Le nom de la compagnie est requis.";
-            if (!rnaCode.trim()) return "Le code RNA est requis.";
-            if (!country.trim()) return "Le pays est requis.";
-            if (!description.trim()) return "La description est requise.";
-            if (!address.trim()) return "L'adresse est requise.";
-            if (!zip_code.trim()) return "Le code postal est requis.";
+            if (!assoName.trim()) return t('assoNameReq');
+            if (!assoCompanyName.trim()) return t('companyNameReq');
+            if (!rnaCode.trim()) return t('rnaReq');
+            if (!country.trim()) return t('countryReq');
+            if (!description.trim()) return t('descReq');
+            if (!address.trim()) return t('addressReq');
+            if (!zip_code.trim()) return t('zipReq');
             //if (!attachment) return "Le récépissé préfectoral est obligatoire.";
         }
 
@@ -130,19 +132,19 @@ export default function Register() {
     const handleRegister = async () => {
         const error = validateForm();
         if (error) {
-            showToast("Champs manquants", error);
+            showToast(t('missingFields'), error);
             return;
         }
         setLoading(true);
         try {
             const baseData = {
                 username, email, password, phone_number, address, zip_code,
-                type: userTypeTab === 'Bénévole' ? 'volunteer' : 'association'
+                type: userTypeTab === 'volunteer' ? 'volunteer' : 'association'
             };
 
             let payload: any = { ...baseData };
 
-            if (userTypeTab === 'Bénévole') {
+            if (userTypeTab === 'volunteer') {
                 payload = { ...payload, first_name: firstName, last_name: lastName, birthdate, bio, skills };
             } else {
                 payload = { 
@@ -163,22 +165,22 @@ export default function Register() {
         } catch (e: any) {
             console.error("ERREUR DÉTAILLÉE D'INSCRIPTION:", JSON.stringify(e, null, 2));
 
-            let errorMessage = "Une erreur inconnue est survenue.";
+            let errorMessage = t('unknownError');
 
             if (e.response) {
                 const serverError = e.response.data;
                 if (serverError && serverError.detail) {
                     errorMessage = serverError.detail;
                 } else {
-                    errorMessage = `Erreur du serveur : ${e.response.status}`;
+                    errorMessage = `${t('serverError')} : ${e.response.status}`;
                 }
             } else if (e.request) {
-                errorMessage = "Erreur Réseau : Impossible de contacter le serveur. Vérifiez l'URL de l'API et si le backend est bien démarré.";
+                errorMessage = t('networkError');
             } else {
                 errorMessage = e.message;
             }
 
-            showToast("Échec de l'inscription", errorMessage);
+            showToast(t('regFail'), errorMessage);
         } finally {
             setLoading(false);
         }
@@ -225,7 +227,11 @@ export default function Register() {
                                 <>
                                     <SwitchButton 
                                         variant="auth" 
-                                        value={"Inscription"}
+                                        labelLeft={t('registerBtn')}
+                                        labelRight={t('loginBtn')}
+                                        valueLeft="register"
+                                        valueRight="login"
+                                        value="register"
                                         onChange={handleAuthSwitch}
                                     />
                                     <Cross
@@ -245,6 +251,10 @@ export default function Register() {
                             <View style={[styles.subHeaderRow, { justifyContent: 'flex-start' }]}>
                                 <SwitchButton 
                                     variant="userType" 
+                                    labelLeft={t('volunteerBtn')}
+                                    labelRight={t('associationBtn')}
+                                    valueLeft="volunteer"
+                                    valueRight="association"
                                     value={userTypeTab}
                                     onChange={handleUserTypeSwitch}
                                 />
@@ -263,28 +273,28 @@ export default function Register() {
 
                         <View style={styles.form}>
                             <TextInput 
-                                placeholder="Username *" 
+                                placeholder={`${t('username')} *`} 
                                 placeholderTextColor="rgba(255,255,255,0.7)"
                                 style={styles.input}
                                 value={username} onChangeText={setUsername}
                             />
-                            {userTypeTab === 'Association' ? (
+                            {userTypeTab === 'association' ? (
                                 <>
                                     <TextInput 
-                                        placeholder="Nom de l'association *" 
+                                        placeholder={`${t('assoName')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         value={assoName} onChangeText={setAssoName}
                                     />
                                     <TextInput 
-                                        placeholder="Nom de la compagnie *" 
+                                        placeholder={`${t('companyName')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         value={assoCompanyName} onChangeText={setAssoCompanyName}
                                     />
                                     <View style={[styles.fileInputContainer, {justifyContent: 'space-between'}]}>
                                         <TextInput 
-                                            placeholder="Code RNA *" 
+                                            placeholder={`${t('rnaCode')} *`} 
                                             placeholderTextColor="rgba(255,255,255,0.7)"
                                             style={styles.input}
                                             value={rnaCode} onChangeText={setRnaCode}
@@ -297,7 +307,7 @@ export default function Register() {
                                         </TouchableOpacity>
                                     </View>
                                     <TextInput 
-                                        placeholder="Description *" 
+                                        placeholder={`${t('description')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         numberOfLines={4}
@@ -305,7 +315,7 @@ export default function Register() {
                                         value={description} onChangeText={setDescription}
                                     />
                                     <TextInput 
-                                        placeholder="Pays *" 
+                                        placeholder={`${t('country')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         value={country} onChangeText={setCountry}
@@ -314,43 +324,43 @@ export default function Register() {
                                 ) : (
                                 <>
                                     <TextInput 
-                                        placeholder="Nom *" 
+                                        placeholder={`${t('lastName')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         value={lastName} onChangeText={setLastName}
                                     />
                                     <TextInput 
-                                        placeholder="Prénom *" 
+                                        placeholder={`${t('firstName')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         value={firstName} onChangeText={setFirstName}
                                     />
                                     <TextInput 
-                                        placeholder="Date de naissance (YYYY-MM-DD) *" 
+                                        placeholder={`${t('birthdate')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         value={birthdate} onChangeText={setBirthdate}
                                     />
                                     <TextInput 
-                                        placeholder="Bio" 
+                                        placeholder={t('bio')} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         value={bio} onChangeText={setBio}
                                     />
                                     <TextInput 
-                                        placeholder="Compétences" 
+                                        placeholder={t('skills')} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
                                         style={styles.input}
                                         value={skills} onChangeText={setSkills}
                                     />
                                 </>
                             )}
-                            <TextInput placeholder={userTypeTab === 'Association' ? "Adresse *" : "Adresse"} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} value={address} onChangeText={setAddress}/>
-                            <TextInput placeholder={userTypeTab === 'Association' ? "Code Postal *" : "Code Postal"} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input}  value={zip_code} onChangeText={setZip_code}  />
-                            <TextInput placeholder="N°Téléphone *" placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} keyboardType="numeric"  value={phone_number} onChangeText={setPhone_number} />
-                            <TextInput placeholder="Adresse mail *" placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} />
-                            <TextInput placeholder="Mot de passe *" placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} secureTextEntry={true}  value={password} onChangeText={setPassword} />
-                            <TextInput placeholder="Confirmer mot de passe *" placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} secureTextEntry={true}  value={confirmPassword} onChangeText={setConfirmPassword} />
+                            <TextInput placeholder={userTypeTab === 'association' ? `${t('address')} *` : t('address')} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} value={address} onChangeText={setAddress}/>
+                            <TextInput placeholder={userTypeTab === 'association' ? `${t('zipCode')} *` : t('zipCode')} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input}  value={zip_code} onChangeText={setZip_code}  />
+                            <TextInput placeholder={`${t('phone')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} keyboardType="numeric"  value={phone_number} onChangeText={setPhone_number} />
+                            <TextInput placeholder={`${t('email')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} />
+                            <TextInput placeholder={`${t('password')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} secureTextEntry={true}  value={password} onChangeText={setPassword} />
+                            <TextInput placeholder={`${t('confirmPwdPlaceholder')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} secureTextEntry={true}  value={confirmPassword} onChangeText={setConfirmPassword} />
 
                             <TouchableOpacity 
                                 style={[styles.submitBtn, loading && { opacity: 0.6 }]} 
@@ -360,16 +370,16 @@ export default function Register() {
                                 {loading ? (
                                     <ActivityIndicator color="#fff" />
                                 ) : (
-                                    <Text style={styles.submitBtnText}>S'inscrire</Text>
+                                    <Text style={styles.submitBtnText}>{t('register')}</Text>
                                 )}
                             </TouchableOpacity>
                             
                             { !isWeb &&
                             <View style={styles.bottomLinksContainer}>
-                                <Text style={styles.bottomText}> Un compte ?</Text>
+                                <Text style={styles.bottomText}> {t('haveAccount')}</Text>
                                 <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
                                     <Text style={styles.bottomLinkText}>
-                                        Se connecter
+                                        {t('login')}
                                     </Text>
                                 </TouchableOpacity>
                             </View>

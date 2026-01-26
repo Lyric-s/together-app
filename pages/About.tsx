@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Image, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,6 +12,47 @@ const About = () => {
   const navigation = useNavigation();
   const { t, getFontSize, fontFamily } = useLanguage();
   const { colors } = useTheme();
+  const isWeb = Platform.OS === 'web';
+
+  if (isWeb) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.background, padding: 40 }}>
+        <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 20 }}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="arrow-back" size={24} color="#FF6B35" />
+                <Text style={{ marginLeft: 10, fontSize: 16, color: "#FF6B35", fontFamily, fontWeight: '600' }}>{t('backToSettings')}</Text>
+            </TouchableOpacity>
+        </View>
+
+        <View style={{ alignItems: 'center' }}>
+            <Image 
+                source={require('../assets/images/logo.png')} 
+                style={{ width: 120, height: 120, marginBottom: 20 }}
+                resizeMode="contain"
+            />
+            
+            <Text style={{ fontSize: 36, fontFamily, color: "#FF6B35", fontWeight: 'bold', marginBottom: 10 }}>
+            Together
+        </Text>
+        <Text style={{ fontSize: 16, fontFamily, color: "#999", marginBottom: 40 }}>
+            {t('version')}
+        </Text>
+
+        <View style={{ maxWidth: 600 }}>
+            <Text style={{ fontSize: 24, fontFamily, color: colors.text, marginBottom: 16, fontWeight: '600' }}>
+            {t('missionTitle')}
+            </Text>
+            <Text style={{ fontSize: 16, lineHeight: 24, fontFamily, color: colors.text, textAlign: 'justify' }}>
+            {t('missionText')}
+            </Text>
+        </View>
+        <Text style={{ marginTop: 60, fontSize: 14, color: '#999', fontFamily }}>
+            {t('copyright')}
+        </Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>

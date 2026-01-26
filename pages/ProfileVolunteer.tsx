@@ -17,6 +17,7 @@ import{styles1} from '@/styles/pages/ProfileVolunteerCSS';
 import ProfilCard from '@/components/ProfilCard';
 import ImageButton from '@/components/ImageButton';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { volunteerService } from '@/services/volunteerService';
 import { Volunteer, VolunteerUpdate } from '@/models/volunteer.model';
 
@@ -39,6 +40,7 @@ export default function ProfilVolunteer() {
   const isMobile = Platform.OS !== 'web';
 
   const { refetchUser } = useAuth();
+  const { t } = useLanguage();
   
   const [profileUser, setProfilUSer] = useState<Volunteer | null>(null);
   const [loading, setLoading] = useState(true);
@@ -53,11 +55,11 @@ export default function ProfilVolunteer() {
       setProfilUSer(volunteerData);
     } catch (e) {
       console.error(e);
-      setAlertModal({ visible: true, title: 'Erreur', message: 'Impossible de charger le profil.' });
+      setAlertModal({ visible: true, title: t('error'), message: t('loadError') });
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     loadProfile();
@@ -68,14 +70,14 @@ export default function ProfilVolunteer() {
 
   const handleSave = async (updatedData: VolunteerUpdate & { confirmPassword?: string }): Promise<void> => {
     if (!profileUser?.id_volunteer) {
-        showAlert('Erreur', 'Impossible de trouver l\'identifiant du bénévole.');
+        showAlert(t('error'), t('idNotFound'));
         return;
     }
 
     const requiredFields: (keyof VolunteerUpdate)[] = ['first_name', 'last_name', 'email'];
     for (const field of requiredFields) {
         if (!updatedData[field] || updatedData[field]?.trim() === '') {
-            showAlert("Erreur de validation", `Le champ "${field}" ne peut pas être vide.`);
+            showAlert(t('error'), `${t('error')}: ${field}`); // Simple fallback for specific field error
             return;
         }
     }
@@ -84,7 +86,7 @@ export default function ProfilVolunteer() {
 
     if (password) {
         if (password !== confirmPassword) {
-            showAlert("Erreur de mot de passe", "Les mots de passe ne correspondent pas.");
+            showAlert(t('error'), t('pwdMismatch'));
             return;
         }
         (profileData as any).password = password;
@@ -94,11 +96,11 @@ export default function ProfilVolunteer() {
         const result = await volunteerService.updateMe(profileUser.id_volunteer, profileData);
         setProfilUSer(result);
         await refetchUser(); 
-        showAlert('Succès', 'Profil mis à jour avec succès.');
+        showAlert(t('success'), t('success'));
 
     } catch (error) {
         console.error("Échec de la mise à jour du profil:", error);
-        showAlert('Erreur', 'La mise à jour du profil a échoué.');
+        showAlert(t('error'), t('error'));
     }
   };
 
@@ -111,7 +113,7 @@ export default function ProfilVolunteer() {
       return (
           <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
               <ActivityIndicator size="large" color={Colors.orange} />
-              <Text style={{marginTop:10, color:'gray'}}>Chargement du profil...</Text>
+              <Text style={{marginTop:10, color:'gray'}}>{t('loadingProfile')}</Text>
           </View>
       );
   }
@@ -156,7 +158,7 @@ export default function ProfilVolunteer() {
             <View style={styles.separatorLine} />
 
             <View style={styles.statsCardMobile}>
-                <Text style={[styles.menuLabel, {marginVertical: 10, marginTop: 50, fontSize: 17, fontWeight: 'bold'}]}>MISSIONS{'\n'}ACCOMPLIES</Text>
+                <Text style={[styles.menuLabel, {marginVertical: 10, marginTop: 50, fontSize: 17, fontWeight: 'bold'}]}>{t('accomplishedMissions')}</Text>
                 <Text style={styles.statsNumber}>{missionsAccomplies}</Text>
             </View>
 
@@ -168,7 +170,7 @@ export default function ProfilVolunteer() {
                                 source={require('@/assets/images/award.png')}
                                 style={styles.menuIcon}
                             />
-                            <Text style={styles.menuLabel}>Mes récompenses</Text>
+                            <Text style={styles.menuLabel}>{t('myRewards')}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.menuCard} onPress={navToInfo}>
@@ -177,7 +179,7 @@ export default function ProfilVolunteer() {
                                 source={require('@/assets/images/edit_profil.png')}
                                 style={styles.menuIcon}
                             />
-                            <Text style={styles.menuLabel}>Mes informations</Text>
+                            <Text style={styles.menuLabel}>{t('myInfo')}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -189,7 +191,7 @@ export default function ProfilVolunteer() {
                                 source={require('@/assets/images/calender.png')}
                                 style={styles.menuIcon}
                             />
-                            <Text style={styles.menuLabel}>Mon calendrier</Text>
+                            <Text style={styles.menuLabel}>{t('myCalendar')}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.menuCard} onPress={navToSettings}>
@@ -198,7 +200,7 @@ export default function ProfilVolunteer() {
                                 source={require('@/assets/images/parameters.png')}
                                 style={styles.menuIcon}
                             />
-                            <Text style={styles.menuLabel}>Paramètres</Text>
+                            <Text style={styles.menuLabel}>{t('settings')}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -225,8 +227,8 @@ export default function ProfilVolunteer() {
             showsVerticalScrollIndicator={false}
         >
             <View style={styles1.headerContainer}>
-                <Text style={[styles1.pageTitle, isSmallScreen && {paddingLeft : 40}]}>Mon profil</Text>
-                <Text style={[styles1.headerSubtitle, isSmallScreen && {paddingLeft : 40}]}>Toutes les données vous concernant</Text>
+                <Text style={[styles1.pageTitle, isSmallScreen && {paddingLeft : 40}]}>{t('myProfile')}</Text>
+                <Text style={[styles1.headerSubtitle, isSmallScreen && {paddingLeft : 40}]}>{t('allYourData')}</Text>
             </View>
             <View style={[styles1.mainLayout, !isMobile && { flexDirection: 'column', alignItems: 'center', gap: 20 }]}>
                 {/* On ne gère plus de colonnes, on met les éléments les uns après les autres */}
@@ -240,14 +242,14 @@ export default function ProfilVolunteer() {
                 {/* Conteneur pour le calendrier et les stats, pour les garder ensemble */}
                 <View style={{ width: '100%', maxWidth: 800, gap: 20 }}>
                     <View style={styles1.sectionContainer}>
-                        <Text style={styles1.sectionTitle}>Mon calendrier</Text>
+                        <Text style={styles1.sectionTitle}>{t('myCalendar')}</Text>
                         <Calendar />
                     </View>
 
                     <View style={styles1.statsCard}>
                         <View style={styles1.statsContent}>
                             <Text style={styles1.statsLabel}>
-                                MISSIONS{'\n'}ACCOMPLIES
+                                {t('accomplishedMissions')}
                             </Text>
                             <Text style={styles1.statsNumber}>{missionsAccomplies}</Text>
                         </View>

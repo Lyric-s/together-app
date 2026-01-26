@@ -3,11 +3,14 @@ import { Colors } from '@/constants/colors';
 import { VolunteerWithStatus } from '@/models/volunteer.model';
 import { styles } from '@/styles/pages/ChangeMissionCSS';
 import { FlatList, Image, Modal, Text, TextInput, TouchableOpacity, View, Platform } from 'react-native';
+import { useLanguage } from '@/context/LanguageContext';
+import { ProcessingStatus } from '@/models/enums';
 
 type Benevole = {
-    id: string;
-    lastname: string;
-    firstname: string;
+    id_volunteer: number;
+    last_name: string;
+    first_name: string;
+    state: ProcessingStatus;
 };
 
 type Props = {
@@ -31,8 +34,9 @@ export default function ListeBenevolesModal({
     setBenevoles,
     missionId,
 }: Props) {
-    const [rejectionReason, setRejectionReason] = useState('');
-    const [volunteerIdToReject, setVolunteerIdToReject] = useState<number | null>(null);
+    const { t } = useLanguage();
+    const [rejectionReason, setRejectionReason] = React.useState('');
+    const [volunteerIdToReject, setVolunteerIdToReject] = React.useState<number | null>(null);
 
     // ---------------------
     // FILTER VOLUNTEERS BY SEARCH
@@ -50,6 +54,11 @@ export default function ListeBenevolesModal({
         setRejectionReason('');
     };
 
+    // Placeholder for accept action as it was missing in original code snippet logic but referenced
+    const acceptBenevole = (id: number) => {
+        console.log("Accepting", id);
+    }
+
     const searchInputRef = useRef<TextInput>(null);
 
     useEffect(() => {
@@ -62,7 +71,7 @@ export default function ListeBenevolesModal({
         }
     }, [visible]);
 
-    const renderItem = ({ item }: { item: Benevole }) => (
+    const renderItem = ({ item }: { item: VolunteerWithStatus }) => (
         <View style={styles.itemContainer}>
             <Text style={styles.benevoleText}>
             {item.last_name} {item.first_name}
@@ -105,7 +114,7 @@ export default function ListeBenevolesModal({
         <View style={styles.modalBackground} accessibilityViewIsModal={true}>
             <View style={styles.modalContainer}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={styles.title}>{title} - Liste des bénévoles</Text>
+                <Text style={styles.title}>{title} - {t('volunteersList')}</Text>
                 <TouchableOpacity onPress={onClose}>
                 <Text style={[styles.croixText, { fontSize: 50, color: Colors.red }]}>×</Text>
                 </TouchableOpacity>
@@ -118,25 +127,12 @@ export default function ListeBenevolesModal({
                 />
                 <TextInput
                     ref={searchInputRef}
-                    placeholder="Recherche un bénévole"
+                    placeholder={t('searchVolunteer')}
                     value={search}
                     onChangeText={setSearch}
                     style={{ flex: 1, fontSize: 16, padding: 0, margin: 0, borderWidth: 0, outlineWidth: 0 }}
                 />
             </View>
-
-                    <View style={[styles.searchBar, { flexDirection: 'row', alignItems: 'center'}]}>
-                        <Image
-                            source={require('@/assets/images/loupe.png')}
-                            style={styles.icon}
-                        />
-                        <TextInput
-                            placeholder="Recherche un bénévole"
-                            value={search}
-                            onChangeText={setSearch}
-                            style={{ flex: 1, fontSize: 16, padding: 0, margin: 0, borderWidth: 0, outlineWidth: 0 }}
-                        />
-                    </View>
 
                     <FlatList
                         data={filteredBenevoles}
@@ -150,7 +146,7 @@ export default function ListeBenevolesModal({
                         style={[styles.button, {backgroundColor: Colors.buttonBackgroundViolet, marginHorizontal: 50}]}
                         onPress={onClose}
                     >
-                        <Text style={styles.buttonText}>Envoyer un mail aux bénévoles</Text>
+                        <Text style={styles.buttonText}>{t('sendEmailToVolunteers')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

@@ -18,6 +18,7 @@ import { router } from 'expo-router';
 import { associationService } from '@/services/associationService';
 import { volunteerService } from '@/services/volunteerService';
 import { ProcessingStatus } from '@/models/enums';
+import { useLanguage } from '@/context/LanguageContext';
 
 export const mapVolunteerStatusToVolunteerWithStatus = async (
   volunteerStatuses: VolunteerStatus[]
@@ -90,6 +91,7 @@ export const mapVolunteerStatusToVolunteerWithStatus = async (
 export default function ActivityAssos() {
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 900;
+  const { t } = useLanguage();
 
   // ---------------------
   // STATE
@@ -167,7 +169,7 @@ export default function ActivityAssos() {
         </Text>
         <View style={[styles.categoryContainer, { marginVertical: -2, marginLeft: -10 }]}>
           <CategoryLabel
-            text={`Catégorie ${mission.category?.label || mission.id_categ}`}
+            text={`${t('categoryPrefix')} ${mission.category?.label || mission.id_categ}`}
             backgroundColor={Colors.brightOrange}
           />
         </View>
@@ -181,7 +183,7 @@ export default function ActivityAssos() {
             style={[styles.button, { backgroundColor: '#E8D5FF' }]}
             onPress={() => router.push(`/(association)/library/upcoming/${mission.id_mission.toString()}`)}
           >
-            <Text style={[styles.buttonText, { color: '#7C3AED' }]}>Voir la mission</Text>
+            <Text style={[styles.buttonText, { color: '#7C3AED' }]}>{t('viewMission')}</Text>
           </TouchableOpacity>
 
           {/* Open volunteer modal */}
@@ -189,7 +191,7 @@ export default function ActivityAssos() {
             style={[styles.button, { backgroundColor: '#D1FAE5' }]}
             onPress={() => handleViewVolunteers(mission.id_mission)}
           >
-            <Text style={[styles.buttonText, { color: '#059669' }]}>Voir les bénévoles</Text>
+            <Text style={[styles.buttonText, { color: '#059669' }]}>{t('viewVolunteers')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -214,7 +216,7 @@ export default function ActivityAssos() {
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.content}>
           <Text style={[styles.pageTitle, isSmallScreen && { paddingLeft: 55 }]}>
-            Missions terminées
+            {t('finishedMissions')}
           </Text>
           <View style={styles.missionsList}>
             {missions.map(renderMissionCard)}

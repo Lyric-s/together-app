@@ -4,6 +4,7 @@ import { styles } from "../styles/components/MissionVolunteerCardStyle"
 import { Mission } from "@/models/mission.model";
 import { Colors } from "@/constants/colors";
 import { formatMissionDate } from "@/utils/date.utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface MissionCardProps {
   mission: Mission; 
@@ -32,21 +33,22 @@ export default function MissionVolunteerCard({
 }: MissionCardProps) {
 
   const isWeb = Platform.OS === 'web';
+  const { t, language } = useLanguage();
   const defaultImage = require("../assets/images/volunteering_img.jpg");
   const imageSource = mission.image_url 
     ? { uri: mission.image_url } 
     : defaultImage;
   
-  const formattedDate = formatMissionDate(mission.date_start);
+  const formattedDate = formatMissionDate(mission.date_start, language) || t('unknownDate');
 
-  const assoName = mission.association?.name || "Association inconnue";
-  const categoryLabel = mission.category?.label || "Général";
+  const assoName = mission.association?.name || t('unknownAssociation');
+  const categoryLabel = mission.category?.label || t('generalCategory');
   const categoryColor = Colors.orange;
 
   const locationParts = [mission.location?.zip_code, mission.location?.country].filter(Boolean);
   const mission_location = locationParts.length > 0 
   ? locationParts.join(', ') 
-  : "Lieu non précisé";
+  : t('locationUnspecified');
 
   return (
     <TouchableOpacity 

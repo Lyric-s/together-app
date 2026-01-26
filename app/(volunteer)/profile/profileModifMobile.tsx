@@ -21,6 +21,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Colors } from "@/constants/colors";
 import { UserType } from '@/models/enums';
 import AlertToast from "@/components/AlertToast";
+import { useLanguage } from "@/context/LanguageContext";
 
 // --- MOCK DATA & TEST SWITCH ---
 const USE_MOCK_DATA = true; // Passez à `false` pour utiliser l'API réelle
@@ -68,6 +69,7 @@ const FormInput = ({ label, value, onChangeText, editable, required = false, ...
 
 export default function ProfilModificationPage() {
   const { user, refetchUser } = useAuth();
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [alertModal, setAlertModal] = useState({ visible: false, title: '', message: '' });
@@ -97,13 +99,13 @@ export default function ProfilModificationPage() {
         setInitialValues(initialData);
       } catch (error) {
         console.error("Failed to load profile", error);
-        showAlert("Erreur", "Impossible de charger le profil.");
+        showAlert(t('error'), t('profileLoadError'));
       } finally {
         setLoading(false);
       }
     };
     loadProfile();
-  }, []);
+  }, [t]);
 
   const handleAlertClose = () => setAlertModal(prev => ({ ...prev, visible: false }));
   const showAlert = (title: string, message: string) => setAlertModal({ visible: true, title, message });
@@ -121,13 +123,13 @@ export default function ProfilModificationPage() {
     const requiredFields: (keyof VolunteerUpdate)[] = ['first_name', 'last_name', 'email', 'phone_number', 'birthdate'];
     for (const field of requiredFields) {
       if (!formData[field]) {
-        showAlert("Erreur", `Le champ "${field}" est obligatoire.`);
+        showAlert(t('error'), t('missingFields'));
         return;
       }
     }
 
     if (formData.password && formData.password !== formData.confirmPassword) {
-      showAlert("Erreur", "Les mots de passe ne correspondent pas.");
+      showAlert(t('error'), t('pwdMismatch'));
       return;
     }
 
@@ -161,10 +163,10 @@ export default function ProfilModificationPage() {
       setFormData({ ...formData, password: '', confirmPassword: '' });
       setInitialValues({ ...initialValues, ...payload });
       setIsEditing(false);
-      showAlert("Succès", "Profil mis à jour !");
+      showAlert(t('success'), t('profileUpdateSuccess'));
     } catch (error) {
       console.error("Failed to save profile", error);
-      showAlert("Erreur", "La sauvegarde a échoué.");
+      showAlert(t('error'), t('profileUpdateFail'));
     }
   };
 
@@ -196,7 +198,7 @@ export default function ProfilModificationPage() {
         <BackButton name_page="" />
         <View style={styles.title}>
           <Image source={require("@/assets/images/edit_profil.png")} style={styles.editIcon} />
-          <Text style={styles.headerTitle}>Mes informations</Text>
+          <Text style={styles.headerTitle}>{t('myInfoTitle')}</Text>
         </View>
       </View>
       <ScrollView style={{paddingHorizontal: 20}} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
@@ -207,20 +209,20 @@ export default function ProfilModificationPage() {
             </TouchableOpacity>
           </View>
           <View style={styles.form}>
-            <FormInput label="Nom" value={formData.last_name} onChangeText={(val: string) => handleInputChange("last_name", val)} editable={isEditing} required />
-            <FormInput label="Prénom" value={formData.first_name} onChangeText={(val: string) => handleInputChange("first_name", val)} editable={isEditing} required />
-            <FormInput label="Adresse mail" value={formData.email} onChangeText={(val: string) => handleInputChange("email", val)} editable={isEditing} required keyboardType="email-address" />
-            <FormInput label="Téléphone" value={formData.phone_number} onChangeText={(val: string) => handleInputChange("phone_number", val)} editable={isEditing} required keyboardType="phone-pad" />
-            <FormInput label="Date de naissance (AAAA-MM-JJ)" value={formData.birthdate} onChangeText={(val: string) => handleInputChange("birthdate", val)} editable={isEditing} required />
-            <FormInput label="Adresse" value={formData.address} onChangeText={(val: string) => handleInputChange("address", val)} editable={isEditing} />
-            <FormInput label="Code Postal" value={formData.zip_code} onChangeText={(val: string) => handleInputChange("zip_code", val)} editable={isEditing} keyboardType="number-pad" />
-            <FormInput label="Compétences" value={formData.skills} onChangeText={(val: string) => handleInputChange("skills", val)} editable={isEditing} />
-            <FormInput label="Bio" value={formData.bio} onChangeText={(val: string) => handleInputChange("bio", val)} editable={isEditing} multiline style={[ styles.input, !isEditing && styles.inputDisabled,  { height: 100 }]} />
+            <FormInput label={t('lastName')} value={formData.last_name} onChangeText={(val: string) => handleInputChange("last_name", val)} editable={isEditing} required />
+            <FormInput label={t('firstName')} value={formData.first_name} onChangeText={(val: string) => handleInputChange("first_name", val)} editable={isEditing} required />
+            <FormInput label={t('email')} value={formData.email} onChangeText={(val: string) => handleInputChange("email", val)} editable={isEditing} required keyboardType="email-address" />
+            <FormInput label={t('phone')} value={formData.phone_number} onChangeText={(val: string) => handleInputChange("phone_number", val)} editable={isEditing} required keyboardType="phone-pad" />
+            <FormInput label={t('birthdateEx')} value={formData.birthdate} onChangeText={(val: string) => handleInputChange("birthdate", val)} editable={isEditing} required />
+            <FormInput label={t('address')} value={formData.address} onChangeText={(val: string) => handleInputChange("address", val)} editable={isEditing} />
+            <FormInput label={t('zipCode')} value={formData.zip_code} onChangeText={(val: string) => handleInputChange("zip_code", val)} editable={isEditing} keyboardType="number-pad" />
+            <FormInput label={t('skills')} value={formData.skills} onChangeText={(val: string) => handleInputChange("skills", val)} editable={isEditing} />
+            <FormInput label={t('bio')} value={formData.bio} onChangeText={(val: string) => handleInputChange("bio", val)} editable={isEditing} multiline style={[ styles.input, !isEditing && styles.inputDisabled,  { height: 100 }]} />
 
             {isEditing && (
               <>
-                <FormInput label="Nouveau mot de passe" value={formData.password} onChangeText={(val: string) => handleInputChange("password", val)} editable={isEditing} secureTextEntry placeholder="Laisser vide pour ne pas changer" placeholderTextColor={Colors.white} />
-                <FormInput label="Confirmer le mot de passe" value={formData.confirmPassword} onChangeText={(val: string) => handleInputChange("confirmPassword", val)} editable={isEditing} secureTextEntry placeholderTextColor={Colors.white} />
+                <FormInput label={t('newPwd')} value={formData.password} onChangeText={(val: string) => handleInputChange("password", val)} editable={isEditing} secureTextEntry placeholder={t('leaveEmpty')} placeholderTextColor={Colors.white} />
+                <FormInput label={t('confirmPwd')} value={formData.confirmPassword} onChangeText={(val: string) => handleInputChange("confirmPassword", val)} editable={isEditing} secureTextEntry placeholderTextColor={Colors.white} />
               </>
             )}
           </View>
@@ -228,11 +230,11 @@ export default function ProfilModificationPage() {
 
         <View style={styles.buttonContainer}>
           {!isEditing ? (
-            <ButtonAuth text="Modifier" onPress={handleEdit} />
+            <ButtonAuth text={t('edit')} onPress={handleEdit} />
           ) : (
             <View style={styles.editButtons}>
-              <View style={{ flex: 1 }}><ButtonAuth text="Annuler" onPress={handleCancel} /></View>
-              <View style={{ flex: 1 }}><ButtonAuth text="Sauvegarder" onPress={handleSave} /></View>
+              <View style={{ flex: 1 }}><ButtonAuth text={t('cancel')} onPress={handleCancel} /></View>
+              <View style={{ flex: 1 }}><ButtonAuth text={t('save')} onPress={handleSave} /></View>
             </View>
           )}
         </View>

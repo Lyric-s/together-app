@@ -11,6 +11,7 @@ import ProfilePicture from "./ProfilPicture";
 import { getStyles } from "../styles/components/SideBarStyle";
 import { usePathname, Href } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { normalizePath } from '@/utils/path.utils';
 
 const MOBILE_BREAKPOINT = 900;
@@ -95,6 +96,7 @@ export default function Sidebar({ userType, userName, onNavigate }: SidebarProps
   const styles = getStyles(width);
   const pathname = usePathname();
   const { logout } = useAuth();
+  const { t } = useLanguage();
 
   const [open, setOpen] = React.useState(!isMobile);
 
@@ -105,35 +107,35 @@ export default function Sidebar({ userType, userName, onNavigate }: SidebarProps
 
   const appTitle =
     userType === "association"
-      ? "Together Association"
+      ? t('togetherAssos')
       : userType === "admin"
-      ? "Together Management"
+      ? t('togetherMgmt')
       : "Together";
 
   const sections: Record<string, MenuItem[]> = {
     volunteer: [
-      { icon: require("../assets/images/home.png"), label: "Accueil", route: "/(volunteer)/home" },
-      { icon: require("../assets/images/search.png"), label: "Recherche", route: "/(volunteer)/search" },
-      { icon: require("../assets/images/upcoming.png"), label: "Mission à venir", route: "/(volunteer)/library/upcoming" },
-      { icon: require("../assets/images/historical.png"), label: "Historiques", route: "/(volunteer)/library/history" },
-      { icon: require("../assets/images/user.png"), label: "Profil", route: "/(volunteer)/profile" },
+      { icon: require("../assets/images/home.png"), label: t('home'), route: "/(volunteer)/home" },
+      { icon: require("../assets/images/search.png"), label: t('search'), route: "/(volunteer)/search" },
+      { icon: require("../assets/images/upcoming.png"), label: t('upcomingMissions'), route: "/(volunteer)/library/upcoming" },
+      { icon: require("../assets/images/historical.png"), label: t('history'), route: "/(volunteer)/library/history" },
+      { icon: require("../assets/images/user.png"), label: t('profile'), route: "/(volunteer)/profile" },
     ],
     volunteer_guest: [
-      { icon: require("../assets/images/home.png"), label: "Accueil", route: "/(guest)/home" },
-      { icon: require("../assets/images/search.png"), label: "Recherche", route: "/(guest)/search" },
+      { icon: require("../assets/images/home.png"), label: t('home'), route: "/(guest)/home" },
+      { icon: require("../assets/images/search.png"), label: t('search'), route: "/(guest)/search" },
     ],
     association: [
-      { icon: require("../assets/images/home.png"), label: "Accueil", route: "/(association)/home" },
-      { icon: require("../assets/images/plus.png"), label: "Créer une mission", route: "/(association)/mission_creation" },
-      { icon: require("../assets/images/upcoming.png"), label: "Mission à venir", route: "/(association)/library/upcoming" },
-      { icon: require("../assets/images/historical.png"), label: "Historiques", route: "/(association)/library/history" },
-      { icon: require("../assets/images/user.png"), label: "Profil", route: "/(association)/profile" },
+      { icon: require("../assets/images/home.png"), label: t('home'), route: "/(association)/home" },
+      { icon: require("../assets/images/plus.png"), label: t('createMission'), route: "/(association)/mission_creation" },
+      { icon: require("../assets/images/upcoming.png"), label: t('upcomingMissions'), route: "/(association)/library/upcoming" },
+      { icon: require("../assets/images/historical.png"), label: t('history'), route: "/(association)/library/history" },
+      { icon: require("../assets/images/user.png"), label: t('profile'), route: "/(association)/profile" },
     ],
     admin: [
-      { icon: require("../assets/images/dashboard.png"), label: "Tableau de bord", route: "/(admin)/dashboard" },
-      { icon: require("../assets/images/search.png"), label: "Recherche", route: "/(admin)/search" },
-      { icon: require("../assets/images/report.png"), label: "Signalement", route: "/(admin)/report" },
-      { icon: require("../assets/images/user.png"), label: "Profil", route: "/(admin)/profile" },
+      { icon: require("../assets/images/dashboard.png"), label: t('dashboard'), route: "/(admin)/dashboard" },
+      { icon: require("../assets/images/search.png"), label: t('search'), route: "/(admin)/search" },
+      { icon: require("../assets/images/report.png"), label: t('report'), route: "/(admin)/report" },
+      { icon: require("../assets/images/user.png"), label: t('profile'), route: "/(admin)/profile" },
     ],
   };
   
@@ -143,12 +145,13 @@ export default function Sidebar({ userType, userName, onNavigate }: SidebarProps
   else if (userType === 'admin') activeSection = sections.admin;
 
   const securityItemsConnected = [
-    { icon: require("../assets/images/logout.png"), label: "Déconnexion", route: "LOGOUT_ACTION" },
-    { icon: require("../assets/images/settings.png"), label: "Réglages", route: "/settings" },
+    { icon: require("../assets/images/logout.png"), label: t('logout'), route: "LOGOUT_ACTION" },
+    { icon: require("../assets/images/settings.png"), label: t('settings'), route: "/settings" },
   ];
 
   const securityItemsGuest = [
-    { icon: require("../assets/images/login.png"), label: "Se connecter", route: "/(auth)/login" },
+    { icon: require("../assets/images/login.png"), label: t('login'), route: "/(auth)/login" },
+    { icon: require("../assets/images/settings.png"), label: t('settings'), route: "/settings" },
   ];
 
   const securityItems = userType === 'volunteer_guest' 
@@ -182,7 +185,7 @@ export default function Sidebar({ userType, userName, onNavigate }: SidebarProps
           onPress={() => setOpen(!open)}
           style={styles.burgerButton}
           accessibilityRole="button"
-          accessibilityLabel={open ? "Fermer le menu" : "Ouvrir le menu"}
+          accessibilityLabel={open ? t('menuClose') : t('menuOpen')}
         >
           <Text style={styles.burger}>☰</Text>
         </TouchableOpacity>      )}
@@ -215,7 +218,7 @@ export default function Sidebar({ userType, userName, onNavigate }: SidebarProps
                 <Text style={styles.userName}>{userName}</Text>
               </View>
 
-              <Text style={styles.sectionTitle}>GENERAL</Text>
+              <Text style={styles.sectionTitle}>{t('general')}</Text>
               {activeSection.map((item, i) => (
                 <SidebarButton
                   key={i}
@@ -229,7 +232,7 @@ export default function Sidebar({ userType, userName, onNavigate }: SidebarProps
 
             <View>
               <Text style={styles.sectionTitle}>
-                {userType === 'volunteer_guest' ? 'COMPTE' : 'SECURITE'}
+                {userType === 'volunteer_guest' ? t('account') : t('security')}
               </Text>
               {securityItems.map((item, i) => (
                 <SidebarButton

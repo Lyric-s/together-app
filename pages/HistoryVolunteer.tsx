@@ -6,6 +6,7 @@ import { Mission } from '@/models/mission.model';
 import { volunteerService } from '@/services/volunteerService';
 import MissionVolunteerCardHorizontal from '@/components/MissionVolunteerCardHorizontal';
 import { styles } from '@/styles/pages/UpcomingVolunteerCSS';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function LibraryHistory() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function LibraryHistory() {
   const [loading, setLoading] = useState(true);
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 900;
+  const { t } = useLanguage();
 
   useEffect(() => {
     const load = async () => {
@@ -33,15 +35,15 @@ export default function LibraryHistory() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <Text style={[styles.pageTitle, isSmallScreen && {paddingLeft: 60, paddingTop: 10}]}>Ma Bibliothèque</Text>
+        <Text style={[styles.pageTitle, isSmallScreen && {paddingLeft: 60, paddingTop: 10}]}>{t('myLibrary')}</Text>
 
         {loading ? (
           <ActivityIndicator size="large" color={Colors.orange} style={{ marginTop: 50 }} />
         ) : (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Historique</Text>
+            <Text style={styles.sectionTitle}>{t('history')}</Text>
             {history.length === 0 ? (
-              <Text style={styles.emptyText}>Aucune mission passée.</Text>
+              <Text style={styles.emptyText}>{t('noPastMissions')}</Text>
             ) : (
               history.map(mission => (
                 <MissionVolunteerCardHorizontal

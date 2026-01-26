@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '@/styles/pages/NotificationsStyle';
 import BottomNavBar from '@/components/MobileNavigationBar';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
+import { Colors } from '@/constants/colors';
 
 const NotificationsScreen = () => {
   const navigation = useNavigation();
   const { t, getFontSize, fontFamily } = useLanguage();
   const { colors } = useTheme();
+  const isWeb = Platform.OS === 'web';
 
   const [news, setNews] = useState(true);
   const [data, setData] = useState(true);
@@ -28,6 +30,42 @@ const NotificationsScreen = () => {
       </TouchableOpacity>
     </View>
   );
+
+  if (isWeb) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.background, padding: 40 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 }}>
+            <Ionicons name="arrow-back" size={24} color={Colors.orange} />
+            <Text style={{ marginLeft: 10, fontSize: 16, color: Colors.orange, fontFamily, fontWeight: '600' }}>{t('backToSettings')}</Text>
+        </TouchableOpacity>
+
+        <Text style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 40, color: colors.text, fontFamily }}>
+          {t('notifPageTitle')}
+        </Text>
+
+        <View style={{ maxWidth: 800, gap: 30 }}>
+            <View style={{ backgroundColor: colors.card, padding: 20, borderRadius: 12, borderWidth: 1, borderColor: colors.border }}>
+                <Text style={{ fontSize: 16, marginBottom: 15, fontFamily, color: colors.text }}>{t('notifNewsDesc')}</Text>
+                <RadioRow selected={news} onSelect={setNews} />
+            </View>
+
+            <View style={{ backgroundColor: colors.card, padding: 20, borderRadius: 12, borderWidth: 1, borderColor: colors.border }}>
+                <Text style={{ fontSize: 16, marginBottom: 15, fontFamily, color: colors.text }}>{t('notifDataDesc')}</Text>
+                <RadioRow selected={data} onSelect={setData} />
+            </View>
+
+            <View style={{ backgroundColor: colors.card, padding: 20, borderRadius: 12, borderWidth: 1, borderColor: colors.border }}>
+                <Text style={{ fontSize: 16, marginBottom: 15, fontFamily, color: colors.text }}>{t('notifOffersDesc')}</Text>
+                <RadioRow selected={offers} onSelect={setOffers} />
+            </View>
+
+            <TouchableOpacity style={[styles.validateButton, { alignSelf: 'flex-start', paddingHorizontal: 40 }]}>
+                <Text style={[styles.validateButtonText, { fontSize: getFontSize(16), fontFamily: fontFamily }]}>{t('validate')}</Text>
+            </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>

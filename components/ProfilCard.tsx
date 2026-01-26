@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import CustomButton from './ImageButton';
 import { UserType } from '@/context/AuthContext';
 import { UserProfile, AdminProfile, VolunteerProfile, AssociationProfile } from '@/types/ProfileUser';
+import { useLanguage } from '@/context/LanguageContext';
 
 type ProfileLabels = {
     username?: string;
@@ -48,53 +49,6 @@ const isAdmin = (data: UserProfile): data is AdminProfile => data.type === 'admi
 const isVolunteer = (data: UserProfile): data is VolunteerProfile => data.type === 'volunteer';
 const isAsso = (data: UserProfile): data is AssociationProfile => data.type === 'association';
 
-// Labels according to the type of user
-const getLabels = (userType: UserType): ProfileLabels => {
-    switch (userType) {
-        case 'volunteer':
-            return {
-                last_name: 'Nom',
-                first_name: 'Prénom',
-                username: 'Nom d\'utilisateur',
-                phone_number: 'N°Tel',
-                birthdate: 'Date de naissance (ex: 2003-04-30)',
-                email: 'Adresse Mail',
-                address: 'Adresse',
-                zip_code: 'Code postal',
-                skills: 'Compétences',
-                bio: 'Biographie',
-                password: 'Mot de passe',
-                confirmPassword: 'Confirmez mot de passe',
-            };
-        case 'association':
-            return {
-                company_name: 'Nom de l\'association',
-                name: 'Nom',
-                username: 'Nom d\'utilisateur',
-                email: 'Adresse Mail',
-                phone_number: 'N°Tel',
-                rna_code: 'Code RNA',
-                password: 'Mot de passe',
-                confirmPassword: 'Confirmez mot de passe',
-            };
-        case 'admin':
-            return {
-                last_name: 'Nom',
-                first_name: 'Prénom',
-                username: 'Nom d\'utilisateur',
-                email: 'Adresse Mail',
-                password: 'Mot de passe',
-                confirmPassword: 'Confirmez mot de passe',
-            };
-        default:
-            return {
-                last_name: 'Nom',
-                password: 'Mot de passe',
-                confirmPassword: 'Confirmez mot de passe',
-            };
-    }
-};
-
 /**
  * Render and manage an editable profile card for admin, volunteer, or association users.
  *
@@ -117,6 +71,54 @@ export default function ProfilCard({
     const { width } = useWindowDimensions();
     const contentPadding = width < 380 ? 15 : 30;
     const [isEditing, setIsEditing] = useState(false);
+    const { t } = useLanguage();
+
+    const getLabels = (uType: UserType): ProfileLabels => {
+        switch (uType) {
+            case 'volunteer':
+                return {
+                    last_name: t('lastName'),
+                    first_name: t('firstName'),
+                    username: t('username'),
+                    phone_number: t('phone'),
+                    birthdate: t('birthdateEx'),
+                    email: t('email'),
+                    address: t('address'),
+                    zip_code: t('zipCode'),
+                    skills: t('skills'),
+                    bio: t('bio'),
+                    password: t('password'),
+                    confirmPassword: t('confirmPwd'),
+                };
+            case 'association':
+                return {
+                    company_name: t('companyName'),
+                    name: t('lastName'),
+                    username: t('username'),
+                    email: t('email'),
+                    phone_number: t('phone'),
+                    rna_code: t('rnaCode'),
+                    password: t('password'),
+                    confirmPassword: t('confirmPwd'),
+                };
+            case 'admin':
+                return {
+                    last_name: t('lastName'),
+                    first_name: t('firstName'),
+                    username: t('username'),
+                    email: t('email'),
+                    password: t('password'),
+                    confirmPassword: t('confirmPwd'),
+                };
+            default:
+                return {
+                    last_name: t('lastName'),
+                    password: t('password'),
+                    confirmPassword: t('confirmPwd'),
+                };
+        }
+    };
+
     const labels = getLabels(userType);
 
     // Original data (immutable copy)
@@ -146,7 +148,7 @@ export default function ProfilCard({
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
         
         if (permissionResult.granted === false) {
-            showAlert('Permission refusée', 'Vous devez autoriser l\'accès à la galerie pour changer votre photo de profil.');
+            showAlert(t('permDenied'), t('permDeniedMsg'));
             return;
         }
 
@@ -183,11 +185,11 @@ export default function ProfilCard({
                 const confirm = formData.confirmPassword || '';
 
                 if (pass.length < 10) {
-                    return showAlert('Erreur', 'Le mot de passe doit contenir au moins 10 caractères.');
+                    return showAlert(t('error'), t('pwdLengthErr'));
                 }
 
                 if (pass !== confirm) {
-                    return showAlert('Erreur', 'La confirmation du mot de passe ne correspond pas.');
+                    return showAlert(t('error'), t('pwdConfirmErr'));
                 }
 
                 passwordPayload = { password: pass };
@@ -198,22 +200,22 @@ export default function ProfilCard({
             if (isVolunteer(formData)) {
                 // Validation Specific Volunteer
                 if (!formData.last_name?.trim() || !formData.first_name?.trim() || !formData.email?.trim() || !formData.birthdate?.trim() || !formData.phone_number?.trim()) {
-                    return showAlert('Erreur', 'Champs obligatoires manquants');
+                    return showAlert(t('error'), t('missingFields'));
                 }
                 if (!emailRegex.test(formData.email.trim())) {
-                    return showAlert('Erreur', "L'adresse email n'est pas valide.");
+                    return showAlert(t('error'), t('emailInvalid'));
                 }
                 const birthdateRegex = /^\d{4}-\d{2}-\d{2}$/;
                 if (!birthdateRegex.test(formData.birthdate.trim())) {
-                    return showAlert('Erreur', 'La date de naissance doit être au format AAAA-MM-JJ.');
+                    return showAlert(t('error'), t('dateFormatErr'));
                 }
                 const dateObj = new Date(formData.birthdate.trim());
                 if (isNaN(dateObj.getTime())) {
-                    return showAlert('Erreur', 'La date de naissance n\'est pas valide.');
+                    return showAlert(t('error'), t('dateInvalid'));
                 }
                 const cleanPhone = formData.phone_number.replace(/[\s\-\(\)]/g, '');
                 if (!phoneRegex.test(cleanPhone)) {
-                    return showAlert('Erreur', "Le numéro de téléphone n'est pas valide.");
+                    return showAlert(t('error'), t('phoneInvalid'));
                 }
 
                 finalPayload = {
@@ -233,10 +235,10 @@ export default function ProfilCard({
             else if (isAdmin(formData)) {
                 // Validation Specific Admin
                 if (!formData.last_name?.trim() || !formData.first_name?.trim() || !formData.email?.trim()) {
-                    return showAlert('Erreur', 'Champs obligatoires manquants');
+                    return showAlert(t('error'), t('missingFields'));
                 }
                 if (!emailRegex.test(formData.email.trim())) {
-                    return showAlert('Erreur', "L'adresse email n'est pas valide.");
+                    return showAlert(t('error'), t('emailInvalid'));
                 }
 
                 finalPayload = {
@@ -250,14 +252,14 @@ export default function ProfilCard({
             else if (isAsso(formData)) {
                 // Validation Association
                 if (!formData.name?.trim() || !formData.company_name?.trim() || !formData.rna_code?.trim() || !formData.phone_number?.trim() || !formData.email?.trim()) {
-                    return showAlert('Erreur', 'Champs obligatoires manquants');
+                    return showAlert(t('error'), t('missingFields'));
                 }
                 if (!emailRegex.test(formData.email.trim())) {
-                    return showAlert('Erreur', "L'adresse email n'est pas valide.");
+                    return showAlert(t('error'), t('emailInvalid'));
                 }
                 const cleanPhone = formData.phone_number.replace(/[\s\-\(\)]/g, '');
                 if (!phoneRegex.test(cleanPhone)) {
-                    return showAlert('Erreur', "Le numéro de téléphone n'est pas valide.");
+                    return showAlert(t('error'), t('phoneInvalid'));
                 }
                 finalPayload = {
                     ...formData,
@@ -278,7 +280,7 @@ export default function ProfilCard({
             }
 
         } catch (error) {
-            showAlert('Erreur', 'Sauvegarde impossible');
+            showAlert(t('error'), t('saveError'));
             console.error(error);
         }
     };

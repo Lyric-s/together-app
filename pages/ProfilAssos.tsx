@@ -28,11 +28,12 @@ import { styles } from '@/styles/pages/ProfilCSS';
 import { Association } from '@/models/association.model';
 import { associationService } from '@/services/associationService';
 import { AssociationProfile, UserProfile } from '@/types/ProfileUser';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
  * Utility function to convert Association → AssociationProfile
  */
-const mapAssociationToProfile = (asso: Association): AssociationProfile => ({
+const mapAssociationToProfile = (asso: Association, t: (key: any) => string): AssociationProfile => ({
     type: 'association',
     id_asso: asso.id_asso,
     id_user: asso.id_user,
@@ -44,8 +45,8 @@ const mapAssociationToProfile = (asso: Association): AssociationProfile => ({
     address: asso.address,
     zip_code: asso.zip_code,
     country: asso.country,
-    email: asso.user?.email ?? "Pas d'informations",
-    username: asso.user?.username ?? "Pas d'informations"
+    email: asso.user?.email ?? t('noInfo'),
+    username: asso.user?.username ?? t('noInfo')
 });
 
 
@@ -53,6 +54,7 @@ export default function ProfilAssos() {
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 900;
   const isVerySmallScreen = width < 610;
+  const { t } = useLanguage();
 
   const [profileUser, setProfileUser] = useState<Association | null>(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -74,10 +76,10 @@ export default function ProfilAssos() {
    * Validate profile data before saving
    */
   const validateAssociationProfile = (data: Association): string | null => {
-    if (!data.name?.trim()) return "Le nom de l'association est requis.";
-    if (!data.phone_number?.trim()) return "Le numéro de téléphone est requis.";
-    if (!data.rna_code?.trim()) return "Le code RNA est requis.";
-    if (data.zip_code && !/^\d{5}$/.test(data.zip_code)) return 'Le code postal est invalide.';
+    if (!data.name?.trim()) return t('assoNameReq');
+    if (!data.phone_number?.trim()) return t('phoneReq');
+    if (!data.rna_code?.trim()) return t('rnaReq');
+    if (data.zip_code && !/^\d{5}$/.test(data.zip_code)) return t('zipInvalid');
     return null;
   };
 
@@ -96,13 +98,13 @@ export default function ProfilAssos() {
         }
       } catch (error) {
         console.error("Error loading association profile:", error);
-        showAlert("Erreur", "Impossible de charger le profil.");
+        showAlert(t('error'), t('loadError'));
       } finally {
         setIsPageLoading(false);
       }
     };
     loadProfile();
-  }, []);
+  }, [t]);
 
   // Detect if address has changed
   useEffect(() => {
@@ -118,13 +120,13 @@ export default function ProfilAssos() {
    */
   const handleSave = async (data: Association) => {
     if (!profileUser) {
-      showAlert('Erreur', 'Profil invalide.');
+      showAlert(t('error'), t('profileInvalid'));
       return;
     }
 
     const error = validateAssociationProfile(data);
     if (error) {
-      showAlert('Erreur', error);
+      showAlert(t('error'), error);
       return;
     }
 
@@ -151,10 +153,10 @@ export default function ProfilAssos() {
       setIsEditingDescription(false);
       setEditingJustificationFile(null);
 
-      showAlert('Succès', 'Profil mis à jour avec succès.');
+      showAlert(t('success'), t('success'));
     } catch (error) {
       console.error(error);
-      showAlert('Erreur', 'Échec de la mise à jour du profil.');
+      showAlert(t('error'), t('error'));
     }
   };
 
@@ -163,7 +165,7 @@ export default function ProfilAssos() {
    */
   const descriptionCard = () => (
     <View style={styles.card}>
-      <Text style={[styles.cardTitle, { marginBottom: 16 }]}>Description</Text>
+      <Text style={[styles.cardTitle, { marginBottom: 16 }]}>{t('description')}</Text>
       <TextInput
         style={styles.textArea}
         value={profileUser?.description || ''}
@@ -200,9 +202,9 @@ export default function ProfilAssos() {
    */
   const addressCard = () => (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>Adresse</Text>
+      <Text style={styles.cardTitle}>{t('address')}</Text>
 
-      <Text style={styles.label}>Adresse</Text>
+      <Text style={styles.label}>{t('address')}</Text>
       <TextInput
         style={styles.input}
         value={profileUser?.address || ''}
@@ -210,7 +212,7 @@ export default function ProfilAssos() {
         onChangeText={(text) => profileUser && setProfileUser({ ...profileUser, address: text })}
       />
 
-      <Text style={styles.label}>Code Postal</Text>
+      <Text style={styles.label}>{t('zipCode')}</Text>
       <TextInput
         style={styles.input}
         value={profileUser?.zip_code || ''}
@@ -231,7 +233,7 @@ export default function ProfilAssos() {
             style={[styles.smallButton, styles.saveButton]}
             onPress={() => {
               if (addressChanged && !editingJustificationFile) {
-                showAlert('Justificatif requis', "Vous devez joindre un justificatif pour modifier l'adresse");
+                showAlert(t('justifRequired'), t('justifMsg'));
                 return;
               }
               handleSave(profileUser!);
@@ -274,15 +276,15 @@ export default function ProfilAssos() {
       <AlertToast visible={alertModal.visible} title={alertModal.title} message={alertModal.message} onClose={handleAlertClose} />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={[styles.pageTitle, isSmallScreen && { paddingLeft: 40 }]}>Mon profil</Text>
-        <Text style={[styles.text, isSmallScreen && { paddingLeft: 40 }]}>Toutes les données vous concernant</Text>
+        <Text style={[styles.pageTitle, isSmallScreen && { paddingLeft: 40 }]}>{t('myProfile')}</Text>
+        <Text style={[styles.text, isSmallScreen && { paddingLeft: 40 }]}>{t('allYourData')}</Text>
 
         {isVerySmallScreen ? (
           <View style={{ alignItems: 'center', gap: 20 }}>
             {profileUser && (
               <ProfilCard
                     userType="association"
-                    userData={mapAssociationToProfile(profileUser)}
+                    userData={mapAssociationToProfile(profileUser, t)}
                     onSave={async (data: UserProfile) => {
                         // Vérifie que c’est bien une association
                         if (data.type !== 'association') return;
@@ -305,7 +307,7 @@ export default function ProfilAssos() {
                         setProfileUser(updatedProfile);
                         setSavedAddress({ address: updatedProfile.address, zip_code: updatedProfile.zip_code });
                         setSavedDescription(updatedProfile.description);
-                        showAlert('Succès', 'Profil mis à jour avec succès.');
+                        showAlert(t('success'), t('success'));
                     }}
                     showAlert={showAlert}
                 />
@@ -318,7 +320,7 @@ export default function ProfilAssos() {
               {profileUser && (
                 <ProfilCard
                     userType="association"
-                    userData={mapAssociationToProfile(profileUser)}
+                    userData={mapAssociationToProfile(profileUser, t)}
                     onSave={async (data: UserProfile) => {
                         // Vérifie que c’est bien une association
                         if (data.type !== 'association') return;
@@ -341,7 +343,7 @@ export default function ProfilAssos() {
                         setProfileUser(updatedProfile);
                         setSavedAddress({ address: updatedProfile.address, zip_code: updatedProfile.zip_code });
                         setSavedDescription(updatedProfile.description);
-                        showAlert('Succès', 'Profil mis à jour avec succès.');
+                        showAlert(t('success'), t('success'));
                     }}
                     showAlert={showAlert}
                     />
