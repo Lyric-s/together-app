@@ -77,9 +77,9 @@ export default function DashboardAdmin() {
     }, [authLoading, userType, t]);
 
     // ⚠️ Ajuste tes routes selon ta structure Expo Router (groupes, etc.)
-    const handleNavigateToReports = () => router.push("/report");
+    const handleNavigateToReports = () => router.push("/(admin)/report");
     const handleNavigateToAssociations = () =>
-        router.push("/search");
+        router.push("/(admin)/search");
 
     if (loading || !stats) {
         return (
@@ -230,6 +230,7 @@ function PendingCard({
     buttonStyle: any;
     onPress: () => void;
 }) {
+    const { t } = useLanguage();
     return (
         <View style={[styles.pendingCard, cardStyle]}>
             <Text style={styles.pendingValue}>{value}</Text>

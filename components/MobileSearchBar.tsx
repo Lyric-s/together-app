@@ -17,7 +17,28 @@ import { Colors } from "@/constants/colors";
 import { SearchFilters } from "../types/search.types";
 import { useLanguage } from "@/context/LanguageContext";
 
-// ... (rest of types)
+interface Props {
+  onSearch: (text: string, filters: SearchFilters) => void;
+  category_list: string[];
+  default_city?: string;
+}
+
+interface City {
+  code: string;
+  nom: string;
+  codesPostaux: string[];
+}
+
+/**
+ * Render a mobile search bar that provides text search plus a modal-based filter panel for city/ZIP autocomplete, category selection, and start-date selection.
+ *
+ * The component manages local UI and filter state, applies or resets filters, and calls `onSearch` with the current search text and filters when the user submits.
+ *
+ * @param onSearch - Callback invoked with the current search text and selected filters: `{ category, zipCode, date }`
+ * @param category_list - List of category names to display as selectable filter options
+ * @param default_city - Optional default city name to prefill the city input and selected city
+ * @returns The rendered React element for the mobile search bar and its filters modal
+ */
 
 export default function MobileSearchBar({
   onSearch,
@@ -26,7 +47,101 @@ export default function MobileSearchBar({
 }: Props) {
   const { t, language } = useLanguage();
   const [searchText, setSearchText] = useState("");
-// ... (omitted code)
+
+  // Filters State
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCityName, setSelectedCityName] = useState<string | null>(default_city ?? null);
+  const [selectedZipCode, setSelectedZipCode] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  // UI State
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // Autocomplete State
+  const [citySuggestions, setCitySuggestions] = useState<City[]>([]);
+  const [cityInputText, setCityInputText] = useState(default_city ?? "");
+
+  const fetchCitySuggestions = async (text: string) => {
+    if (/^\d{5}$/.test(text)) {
+        setSelectedZipCode(text);
+    } else if (text.length < 5) {
+        setSelectedZipCode(null);
+    }
+
+    if (!text || text.length < 2) {
+      setCitySuggestions([]);
+      return;
+    }
+    
+    try {
+      const isZip = /^\d+$/.test(text);
+      const param = isZip ? `codePostal=${text}` : `nom=${encodeURIComponent(text)}`;
+      const response = await fetch(
+        `https://geo.api.gouv.fr/communes?${param}&fields=nom,codesPostaux&boost=population&limit=5`
+      );
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      const data = await response.json();
+      setCitySuggestions(data);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+      setCitySuggestions([]);
+    }
+  };
+
+  const cityInputRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    if (filtersOpen && Platform.OS === 'web') {
+        const timer = setTimeout(() => {
+            cityInputRef.current?.focus();
+        }, 100);
+        return () => clearTimeout(timer);
+    }
+  }, [filtersOpen]);
+
+  const handleSelectCity = (item: City) => {
+    setSelectedCityName(item.nom);
+    const cp = item.codesPostaux && item.codesPostaux.length > 0 ? item.codesPostaux[0] : "";
+    setSelectedZipCode(cp);
+    setCityInputText(`${item.nom} (${cp})`);
+    setCitySuggestions([]);
+  };
+
+  const applySearch = () => {
+    setFiltersOpen(false);
+    onSearch(searchText, {
+      category: selectedCategory,
+      zipCode: selectedZipCode,
+      date: selectedDate,
+    });
+  };
+
+  const resetFilters = () => {
+    setSelectedCategory(null);
+    setSelectedCityName(null);
+    setSelectedZipCode(null);
+    setSelectedDate(null);
+    setCityInputText("");
+    setCitySuggestions([]);
+    setShowDatePicker(false);
+  };
+
+  const handleDateChange = (event: any, date?: Date) => {
+    if (Platform.OS === 'android') {
+        setShowDatePicker(false);
+    }
+    if (date) {
+        setSelectedDate(date);
+    }
+  };
+
+  const toggleDatePicker = () => {
+    setShowDatePicker((prev) => !prev);
+  };
+
   return (
     <View style={styles.container}>
       {/* TOP BAR */}
@@ -207,7 +322,6 @@ export default function MobileSearchBar({
   );
 }
 
-// Styles internes pour le Modal DatePicker iOS
 const internalStyles = StyleSheet.create({
   dateButton: {
     backgroundColor: Colors.darkerWhite, 

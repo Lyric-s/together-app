@@ -46,7 +46,6 @@ export default function ResearchMission() {
   const { t } = useLanguage();
 
   // --- DATA ---
-// ... (omitted code for brevity in replace, but usually I should include context)
   const [allMissions, setAllMissions] = useState<Mission[]>([]);
   const [filteredMissions, setFilteredMissions] = useState<Mission[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
@@ -95,7 +94,6 @@ export default function ResearchMission() {
         } catch (error) {
             if (cancelled) return;
             console.error(error);
-            // On ne spam pas le toast si c'est juste un refresh
             if (allMissions.length === 0) setToast({ visible: true, title: t('error'), message: t('loadError') });
       } finally {
         if (!cancelled) setLoading(false);
@@ -107,9 +105,9 @@ export default function ResearchMission() {
   );
 
   /**
-   * Logique de filtrage unifiée
-   * @param text - Texte de recherche (nom de la mission)
-   * @param filters - Objet contenant category, zipCode, date
+   * Unified filtering logic
+   * @param text - Search text (mission name)
+   * @param filters - Object containing category, postcode, date
    */
   const performFilter = (text: string, filters: Partial<SearchFilters>) => {
     const lowerText = text.toLowerCase();

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform, ActivityIndicator, useWindowDimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform, ActivityIndicator, useWindowDimensions, Linking } from 'react-native';
 import SwitchButton from '../components/SwitchButton'; 
 import { styles } from '../styles/pages/RegisterCSS';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAuth } from '@/context';
 import { authService } from '@/services/authService';
+import { documentService } from '@/services/documentService';
+import { associationService } from '@/services/associationService';
 import AlertToast from '@/components/AlertToast';
 import * as DocumentPicker from 'expo-document-picker';
 import { Colors } from '@/constants/colors';
@@ -123,7 +125,7 @@ export default function Register() {
             if (!description.trim()) return t('descReq');
             if (!address.trim()) return t('addressReq');
             if (!zip_code.trim()) return t('zipReq');
-            //if (!attachment) return "Le récépissé préfectoral est obligatoire.";
+            if (!attachment) return t('attachmentRequired');
         }
 
         return null;
@@ -156,9 +158,47 @@ export default function Register() {
                     description,
                 };
                 // Note: File upload likely requires FormData instead of JSON
-                // payload.file = attachment;
             }
+            // 1. Création du compte + Connexion automatique
             const response = await authService.register(payload);
+
+            // --- DOCUMENT UPLOAD (Association only) ---
+            if (userTypeTab === 'association') {
+                // On récupère le profil immédiatement pour avoir l'ID de l'association
+                const me = await associationService.getMe();
+                
+                if (attachment) {
+                    try {
+                        const fileToUpload = {
+                            uri: attachment.uri,
+                            name: attachment.name,
+                            mimeType: attachment.mimeType,
+                            // @ts-ignore
+                            file: Platform.OS === 'web' ? (attachment as any).file : undefined
+                        };
+                        await documentService.uploadValidationDocument(fileToUpload, `Authenticity_${assoName}`);
+                        console.log("✅ Document d'authenticité uploadé avec succès");
+                    } catch (docError) {
+                        console.error("❌ Erreur upload document. ROLLBACK en cours...");
+                        
+                        // --- ROLLBACK : SUPPRESSION DU COMPTE ---
+                        if (me && me.id_asso) {
+                            try {
+                                await associationService.delete(me.id_asso);
+                                console.log("✅ Compte supprimé suite à l'échec de l'upload.");
+                            } catch (deleteError) {
+                                console.error("CRITIQUE : Échec de la suppression du compte orphelin", deleteError);
+                            }
+                        }
+                        // Déconnexion locale pour nettoyer l'état
+                        await authService.logout();
+                        
+                        // On lance une erreur pour arrêter le processus et prévenir l'utilisateur
+                        throw new Error(t('regCancelledDoc'));
+                    }
+                }
+            }
+
             await refetchUser();
             console.log("Inscription lancée");
             router.replace(`/(${payload.type})/home` as any);
@@ -306,6 +346,21 @@ export default function Register() {
                                             />
                                         </TouchableOpacity>
                                     </View>
+                                    {attachment && (
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: -5, marginBottom: 10, marginLeft: 5 }}>
+                                            <Text style={{ fontSize: 12, color: Colors.buttonBackgroundViolet, flex: 1 }} numberOfLines={1}>
+                                                📎 {attachment.name}
+                                            </Text>
+                                            <TouchableOpacity 
+                                                onPress={() => Linking.openURL(attachment.uri)}
+                                                style={{ marginLeft: 10, backgroundColor: Colors.orangeVeryLight, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 }}
+                                            >
+                                                <Text style={{ fontSize: 10, color: Colors.orange, fontWeight: 'bold' }}>
+                                                    {t('viewDoc')}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )}
                                     <TextInput 
                                         placeholder={`${t('description')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"

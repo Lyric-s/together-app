@@ -11,6 +11,61 @@ import type {
 } from "@/models/admin.model";
 import { useLanguage } from "@/context/LanguageContext";
 
+
+/* =========================
+   MAPPERS API -> UI
+========================= */
+
+const mapApiStateToUi = (s: ReportProcessingState): ReportState => {
+    if (s === "PENDING") return "pending";
+    if (s === "APPROVED") return "accepted";
+    return "rejected";
+};
+
+const mapUiStateToApi = (s: ReportState): ReportProcessingState => {
+    if (s === "pending") return "PENDING";
+    if (s === "accepted") return "APPROVED";
+    return "REJECTED";
+};
+
+// Backend renvoie target: PROFILE/MISSION/ASSOCIATION
+// Ta UI veut Mission/Utilisateur/Association
+const mapApiTargetToUiType = (target: string): ReportType => {
+    if (target === "MISSION") return "Mission";
+    if (target === "ASSOCIATION") return "Association";
+    return "Volunteer";
+};
+
+// ISO -> dd/mm/yyyy (simple)
+const formatDateFr = (iso: string): string => {
+    const d = new Date(iso);
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const yyyy = d.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+};
+
+const mapApiReportToUi = (r: ReportPublic): Report => ({
+    id: r.id_report,
+    type: mapApiTargetToUiType(r.target),
+    target: r.target,
+    reason: r.reason,
+    dateReporting: formatDateFr(r.date_reporting),
+    state: mapApiStateToUi(r.state),
+    reporterName: r.reporter_name,
+    reportedName: r.reported_name,
+});
+
+const mapStatsToUiCounts = (stats: ReportStatsResponse | null) => {
+    if (!stats) return { pending: 0, accepted: 0, rejected: 0 };
+
+    const pending = (stats as any).PENDING ?? (stats as any).pending ?? 0;
+    const accepted = (stats as any).APPROVED ?? (stats as any).accepted ?? 0;
+    const rejected = (stats as any).REJECTED ?? (stats as any).rejected ?? 0;
+
+    return { pending, accepted, rejected };
+};
+
 type ReportState = "pending" | "accepted" | "rejected";
 type ReportType = "Mission" | "Volunteer" | "Association";
 
@@ -25,14 +80,131 @@ type Report = {
     reportedName: string;
 };
 
-// ... (API mappers omitted but I should keep them consistent with the new Type)
-
 export default function ReportsVerification() {
     const { t, language } = useLanguage();
     const [reports, setReports] = useState<Report[]>([]);
     const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
-    // ... (rest of logic)
+    const [search, setSearch] = useState("");
+    const [selectedType, setSelectedType] = useState<ReportType | null>(null);
+    const [selectedState, setSelectedState] = useState<ReportState | null>(null);
+
+    const [stats, setStats] = useState<ReportStatsResponse | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+    const [offset, setOffset] = useState(0);
+    const limit = 100;
+useEffect(() => {
+        let mounted = true;
+
+        const load = async () => {
+            try {
+                setLoading(true);
+                setErrorMsg(null);
+
+                const [apiReports, apiStats] = await Promise.all([
+                    adminService.getReports({ offset, limit }),
+                    adminService.getReportStats(),
+                ]);
+
+                if (!mounted) return;
+
+                setReports(apiReports.map(mapApiReportToUi));
+                setStats(apiStats);
+            } catch (e: any) {
+                if (!mounted) return;
+                setErrorMsg(e?.message ?? "Erreur lors du chargement des signalements.");
+            } finally {
+                if (!mounted) return;
+                setLoading(false);
+            }
+        };
+
+        load();
+        return () => {
+            mounted = false;
+        };
+    }, [offset]);
+
+    const counts = useMemo(() => {
+        const fromStats = mapStatsToUiCounts(stats);
+        if (stats) return fromStats;
+
+        let pending = 0,
+            accepted = 0,
+            rejected = 0;
+        reports.forEach((r) => {
+            if (r.state === "pending") pending++;
+            else if (r.state === "accepted") accepted++;
+            else rejected++;
+        });
+        return { pending, accepted, rejected };
+    }, [reports, stats]);
+
+    const filteredReports = useMemo(
+        () =>
+            reports.filter((r) => {
+                const matchesSearch =
+                    search.trim().length === 0 ||
+                    [r.reporterName, r.reportedName, r.type, r.target, r.reason, r.dateReporting]
+                        .join(" ")
+                        .toLowerCase()
+                        .includes(search.toLowerCase());
+
+                const matchesType = selectedType === null || r.type === selectedType;
+                const matchesState = selectedState === null || r.state === selectedState;
+
+                return matchesSearch && matchesType && matchesState;
+            }),
+        [reports, search, selectedType, selectedState]
+    );
+
+    const handleStateFilterPress = () => {
+        const order: (ReportState | null)[] = [null, "pending", "accepted", "rejected"];
+        const currentIndex = order.indexOf(selectedState);
+        setSelectedState(order[(currentIndex + 1) % order.length]);
+    };
+
+    const handleResetFilters = () => {
+        setSearch("");
+        setSelectedType(null);
+        setSelectedState(null);
+    };
+
+    const handleOpenDetails = (report: Report) => setSelectedReport(report);
+    const handleCloseDetails = () => setSelectedReport(null);
+
+    const refreshStats = async () => {
+        try {
+            const s = await adminService.getReportStats();
+            setStats(s);
+        } catch {
+            // non bloquant
+        }
+    };
+
+    const handleUpdateSelectedState = async (newUiState: ReportState) => {
+        if (!selectedReport) return;
+
+        const reportId = selectedReport.id;
+        const apiState = mapUiStateToApi(newUiState);
+
+        try {
+            const updatedApi = await adminService.updateReportState(reportId, apiState);
+            const updatedUi = mapApiReportToUi(updatedApi);
+
+            setReports((prev) => prev.map((r) => (r.id === reportId ? updatedUi : r)));
+            setSelectedReport(updatedUi);
+
+            refreshStats();
+        } catch (e: any) {
+            console.error(e?.message ?? e);
+        }
+    };
+
+    const handleMarkAsAccepted = () => handleUpdateSelectedState("accepted");
+    const handleMarkAsRejected = () => handleUpdateSelectedState("rejected");
     
     // Mappers localized
     const mapApiTargetToUiType = (target: string): ReportType => {
@@ -138,7 +310,6 @@ export default function ReportsVerification() {
                                 style={[
                                     reportStyles.summaryCard,
                                     reportStyles.summaryCardOrange,
-                                    reportStyles.summaryCardFixed,
                                 ]}
                             >
                                 <Text style={[reportStyles.summaryCardLabel, reportStyles.summaryLabelOrange]}>
@@ -151,7 +322,6 @@ export default function ReportsVerification() {
                                 style={[
                                     reportStyles.summaryCard,
                                     reportStyles.summaryCardPurple,
-                                    reportStyles.summaryCardFixed,
                                 ]}
                             >
                                 <Text style={[reportStyles.summaryCardLabel, reportStyles.summaryLabelPurple]}>
@@ -164,7 +334,6 @@ export default function ReportsVerification() {
                                 style={[
                                     reportStyles.summaryCard,
                                     reportStyles.summaryCardGreen,
-                                    reportStyles.summaryCardFixed,
                                 ]}
                             >
                                 <Text style={[reportStyles.summaryCardLabel, reportStyles.summaryLabelGreen]}>
@@ -226,15 +395,17 @@ export default function ReportsVerification() {
 
                                 <Text style={[reportStyles.cellText, reportStyles.cellDate]}>{report.dateReporting}</Text>
 
-                                <View
-                                    style={[
-                                        reportStyles.statusBadge,
-                                        report.state === "pending" && reportStyles.statusBadgePending,
-                                        report.state === "accepted" && reportStyles.statusBadgeAccepted,
-                                        report.state === "rejected" && reportStyles.statusBadgeRejected,
-                                    ]}
-                                >
-                                    <Text style={reportStyles.statusBadgeText}>{getStatusLabel(report.state)}</Text>
+                                <View style={reportStyles.cellStatus}>
+                                    <View
+                                        style={[
+                                            reportStyles.statusBadge,
+                                            report.state === "pending" && reportStyles.statusBadgePending,
+                                            report.state === "accepted" && reportStyles.statusBadgeAccepted,
+                                            report.state === "rejected" && reportStyles.statusBadgeRejected,
+                                        ]}
+                                    >
+                                        <Text style={reportStyles.statusBadgeText}>{getStatusLabel(report.state)}</Text>
+                                    </View>
                                 </View>
 
                                 <View style={reportStyles.cellActions}>
