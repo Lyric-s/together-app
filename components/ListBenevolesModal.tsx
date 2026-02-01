@@ -18,6 +18,19 @@ type Props = {
     missionId: number; // <-- new prop to know which mission
 };
 
+/**
+ * Render a modal that lists volunteers, allows searching, and provides accept/reject actions plus a send-email button.
+ *
+ * @param visible - Whether the modal is shown
+ * @param onClose - Handler invoked to close the modal
+ * @param title - Modal title shown in the header
+ * @param search - Current search query used to filter volunteers by "last_name first_name"
+ * @param setSearch - Updater for the search query
+ * @param benevoles - Array of volunteers with status information to display
+ * @param setBenevoles - Updater for the volunteers array
+ * @param missionId - Identifier for the related mission (provided for mission-scoped operations)
+ * @returns A React element rendering the volunteers modal UI
+ */
 export default function ListeBenevolesModal({
     visible,
     onClose,

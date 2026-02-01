@@ -19,6 +19,13 @@ import { Association } from "@/models/association.model";
 import { useLanguage } from "@/context/LanguageContext";
 
 
+/**
+ * Render a form allowing an association to create and publish a mission.
+ *
+ * Loads available categories and the current association, validates form fields (title, description, category, dates, location, volunteer capacities), and submits a mission payload to the backend; on successful creation it navigates to the association home.
+ *
+ * @returns The React element representing the mission creation form UI.
+ */
 export default function MissionCreation() {
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 900;
@@ -259,5 +266,4 @@ export default function MissionCreation() {
     </ScrollView>
   );
 }
-
 

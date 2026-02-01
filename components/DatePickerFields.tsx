@@ -13,32 +13,12 @@ interface Props {
 }
 
 /**
- * Cross-platform date picker component for React Native.
+ * Cross-platform date picker that renders a web `datetime-local` input or a native mobile date/time picker.
  *
- * This component provides a unified date selection UI that works on both
- * **mobile (iOS/Android)** and **web**:
- *
- * - On **web**, it renders a native HTML `<input type="date">`.
- * - On **mobile**, it uses `@react-native-community/datetimepicker`
- *   with a modal-like UX triggered by a pressable field.
- *
- * The component accepts an optional minimum date (default: today) and
- * returns the selected value through the `onChange` callback.
- *
- * Props:
- * @param {Date | null} date
- *        Currently selected date, or `null` if none.
- *
- * @param {(date: Date | null) => void} onChange
- *        Callback fired when the user selects a date. Receives either
- *        a `Date` object or `null` if the input is cleared (web only).
- *
- * @param {Date} [minimumDate=new Date()]
- *        The earliest allowed date. Applied internally to both
- *        the web input and the native mobile picker.
- *
- * @returns JSX.Element
- *          A platform-appropriate date picker UI component.
+ * @param date - Currently selected Date, or `null` if no date is chosen.
+ * @param onChange - Callback invoked with the newly selected Date, or `null` when the web input is cleared.
+ * @param minimumDate - Earliest selectable date (defaults to today).
+ * @returns A JSX element presenting a platform-appropriate date/time selection UI.
  */
 export default function DatePickerField({
   date,

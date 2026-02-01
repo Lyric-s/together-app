@@ -15,16 +15,15 @@ interface MissionCardProps {
 }
 
 /**
- * Render a horizontal mission card for volunteers showing image, category, metadata, and an optional favorite control.
+ * Render a horizontal mission card for volunteers including image, category, metadata, and an optional favorite control.
  *
- * Displays the mission image (with a fallback), category label, mission name, association name, formatted start date,
- * location (zip code and country if available), and capacity (min/max). Tapping the card invokes `onPressMission`; if
- * `onPressFavorite` is provided a heart button is shown to toggle favorite state indicated by `isFavorite`.
+ * Shows the mission image (with a fallback), category label, mission name, association name, formatted start date,
+ * location (zip code and country when available), and enrolled / capacity counts. Tapping the card invokes `onPressMission`.
  *
- * @param mission - The mission data to display (name, image_url, association, category, date_start, location, capacities)
+ * @param mission - The mission object to display (uses fields such as `name`, `image_url`, `association`, `category`, `date_start`, `location`, `volunteers_enrolled`, and `capacity_max`)
  * @param onPressMission - Callback invoked when the card is pressed
- * @param isFavorite - Whether the mission is currently marked as favorite; controls heart icon appearance
- * @param onPressFavorite - Optional callback invoked when the favorite (heart) button is pressed; if omitted the heart button is hidden
+ * @param isFavorite - Whether the mission is currently marked as favorite; controls the heart icon appearance
+ * @param onPressFavorite - Optional callback invoked when the favorite (heart) button is pressed; if omitted the favorite control is not rendered
  * @returns A React element representing the mission card
  */
 export default function MissionVolunteerCard({

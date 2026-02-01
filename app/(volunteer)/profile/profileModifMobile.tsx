@@ -82,6 +82,13 @@ const FormInput = ({ label, value, onChangeText, editable, required = false, get
   </View>
 );
 
+/**
+ * Renders the volunteer profile modification screen with view and edit modes, including editable form fields, profile image selection, and save/cancel flows.
+ *
+ * Supports a mock-data mode for development, validates required fields and optional password confirmation, and shows alerts for errors and success.
+ *
+ * @returns The JSX element for the profile modification page.
+ */
 export default function ProfilModificationPage() {
   const { user, refetchUser } = useAuth();
   const { t, getFontSize, fontFamily } = useLanguage();

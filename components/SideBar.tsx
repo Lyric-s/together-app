@@ -68,27 +68,10 @@ function SidebarButton({ icon, label, onPress, active=false }:SidebarButtonProps
 }
 
 /**
- * Sidebar component for web and responsive layouts.
+ * Render the app sidebar tailored to the current user type and viewport (responsive).
  *
- * @param userType - Type of the user ("volunteer", "volunteer_guest", "association", "admin")
- * @param userName - Display name of the user or association
- * @param onNavigate - Callback to navigate when a button is clicked; receives the route string
- *
- * Responsive behavior:
- * - On large screens (desktop), the sidebar is permanently visible and occupies a fixed space
- *   on the left side of the layout.
- * - On small screens, the sidebar is hidden by default and replaced by a burger menu button.
- * - The burger button toggles the visibility of the sidebar.
- * - When opened on small screens, the sidebar appears as an overlay (absolute positioned)
- *   and does NOT push or resize the main content.
- * - Selecting a navigation item on small screens automatically closes the sidebar.
- *
- * Displays:
- * - App title based on user type
- * - Profile picture and user name
- * - Two sections: GENERAL (main navigation) and SECURITE (logout/settings)
- * - Buttons highlight in bright orange when active
- * - Scrollable content when menu height exceeds viewport
+ * @param onNavigate - Callback invoked when a navigation item is selected; receives the destination route (`Href` or string)
+ * @returns The sidebar UI element (including header, profile, main and security sections) appropriate for the current user and screen size
  */
 export default function Sidebar({ userType, userName, onNavigate }: SidebarProps) {
   const { width } = useWindowDimensions();

@@ -22,13 +22,13 @@ interface CityResult {
 }
 
 /**
- * Render a search bar with inputs for query text, category, postal code, and start date, plus controls to execute or reset the search.
+ * Render a search bar with inputs for query text, category, location (postal code), and start date, plus controls to execute or reset the search.
  *
  * The component calls `onSearch` when the user submits a search or presses the search button, passing the current text and a `SearchFilters` object where empty fields are represented as `null` and a valid `dateText` is parsed to a `Date`.
  *
- * @param categories - Optional list of category labels displayed in the category picker; the picker shows a default "Catégorie..." option mapped to `null`.
+ * @param categories - Optional list of category labels shown in the category picker; a default "none" option is exposed as `"-"` and maps to `null` in the filters.
  * @param onSearch - Callback invoked with `(text: string, filters: SearchFilters)` when a search is triggered. `filters` has the shape `{ category: string | null; zipCode: string | null; date: Date | null }`.
- * @returns The rendered search bar React element containing inputs and action buttons.
+ * @returns The rendered React element for the search bar.
  */
 
 export default function SearchBar({
@@ -57,6 +57,12 @@ export default function SearchBar({
     };
   }, []);
 
+  /**
+   * Reset all search inputs to their initial states and trigger a cleared search.
+   *
+   * Clears the query text, selected category, location input, confirmed ZIP, suggestions, and date text,
+   * then calls `onSearch` with an empty text string and filters where `category`, `zipCode`, and `date` are `null`.
+   */
   function resetAll() {
     setText("");
     setSelectedCategory("-");

@@ -18,6 +18,13 @@ import { associationService } from '@/services/associationService';
 import { mapMissionPublicToMission } from '@/utils/mission.utils';
 import { useLanguage } from '@/context/LanguageContext';
 
+/**
+ * Display the association's finished missions screen, fetching finished missions on mount and rendering a loading indicator, an empty state, or a scrollable list of mission cards.
+ *
+ * The component loads finished missions from the association service, maps API mission data to the internal Mission model, and adapts the title layout for small screens. Text strings are localized via the language context.
+ *
+ * @returns A React element rendering the finished missions view (loading state, empty message, or list of MissionAdminAssosCard components).
+ */
 export default function AssosHistory() {
   const router = useRouter();
   const { width } = useWindowDimensions();

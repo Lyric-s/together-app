@@ -9,6 +9,13 @@ import MissionVolunteerCardHorizontal from '@/components/MissionVolunteerCardHor
 import { styles } from '@/styles/pages/UpcomingVolunteerCSS';
 import { useLanguage } from '@/context/LanguageContext';
 
+/**
+ * Renders the volunteer library/history screen, fetching and displaying past missions with loading and empty states.
+ *
+ * Fetches the user's historical missions on mount, shows an activity indicator while loading, displays an empty message when there are no past missions, and renders a list of mission cards that navigate to mission detail routes when pressed.
+ *
+ * @returns A React element containing the LibraryHistory view.
+ */
 export default function LibraryHistory() {
   const router = useRouter();
   const isWeb = Platform.OS === 'web';

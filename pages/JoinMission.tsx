@@ -24,11 +24,11 @@ import AlertToast from "@/components/AlertToast";
 import { useLanguage } from "@/context/LanguageContext";
 
 /**
- * Renders the mission details page for guests and volunteers, including responsive layout, mission metadata, and role-based actions.
+ * Display the mission details screen with responsive layout, mission metadata, and role-based actions.
  *
- * Displays a loading indicator while fetching mission data from the route `id`, shows an error or not-found message when appropriate, and presents mission information (category, dates, location, association, description). Provides actions for authenticated volunteers to apply to the mission and toggle favorites; guests and non-volunteer users are shown informational toasts when attempting restricted actions. Toast notifications communicate success and error outcomes.
+ * Shows loading and not-found states, formats mission dates and location for the current locale, and provides controlled actions for volunteers (apply to join and toggle favorites) while showing informational toasts for restricted users.
  *
- * @returns The mission detail screen UI component with loading/error handling, formatted date/location display, and join/favorite action controls conditioned on authentication and user role.
+ * @returns The rendered React component for the mission detail page.
  */
 export default function JoinMissionPage() {
   const { id: missionId } = useLocalSearchParams<{ id: string }>();

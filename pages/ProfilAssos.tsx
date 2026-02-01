@@ -50,6 +50,13 @@ const mapAssociationToProfile = (asso: Association, t: (key: any) => string): As
 });
 
 
+/**
+ * Render the association profile screen with editable description and address.
+ *
+ * Fetches the current association profile on mount, displays a loading state, and presents editable fields for description and address. Validates required fields (name, phone number, RNA code) and zip code format before saving. Address changes can require an uploaded justification file. Saves update via the associationService, updates local state (including savedAddress and savedDescription), and surfaces success/error alerts. Layout adapts for very small screens by stacking ProfilCard above the detail cards and uses mapAssociationToProfile(profileUser, t) when rendering ProfilCard.
+ *
+ * @returns The component JSX for the association profile screen
+ */
 export default function ProfilAssos() {
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 900;

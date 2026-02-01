@@ -15,6 +15,15 @@ interface MissionDay {
     image?: any;
 }
 
+/**
+ * Render an interactive monthly calendar that shows missions for the selected day.
+ *
+ * Displays month navigation, a localized weekday header and month name, a grid of selectable days
+ * (highlighting today and the selected day), and a missions list for the selected date.
+ * The component fetches and displays missions for the selected day, showing a loading indicator or a "no events" message when appropriate.
+ *
+ * @returns A React element containing the calendar view with navigation controls, selectable days, and the selected day's missions.
+ */
 export default function Calendar() {
     const { t, language } = useLanguage();
     const [currentMonth, setCurrentMonth] = useState(new Date());

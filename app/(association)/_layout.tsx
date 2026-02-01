@@ -12,14 +12,9 @@ import { Colors } from '@/constants/colors';
 import { useLanguage } from '@/context/LanguageContext';
 
 /**
- * Platform-specific layout for the Association area that gates access based on authentication and device.
+ * Render the Association-area layout and gate access based on authentication status and platform.
  *
- * Shows a centered loading indicator while authentication state is loading. On non-web platforms, displays
- * a centered message indicating the Association area is unavailable on mobile. If the authenticated user's
- * type is not `"association"`, redirects to the login route. Otherwise, renders the web two-column layout
- * with an association Sidebar and a content Stack.
- *
- * @returns A JSX element representing the association layout (loader, mobile message, redirect, or web two-column view).
+ * @returns A JSX element showing either a centered loader, a mobile-unavailable message, a redirect to the login route, or the web two-column association layout.
  */
 export default function AssociationLayout() {
   const { user, isLoading, userType } = useAuth();

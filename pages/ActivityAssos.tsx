@@ -67,26 +67,11 @@ export const mapVolunteerStatusToVolunteerWithStatus = async (
 };
 
 /**
- * ActivityAssos
+ * Renders the association activity dashboard showing finished missions and actions to view mission details or volunteers.
  *
- * Component for the association's activity dashboard, showing a list of finished missions.
- * 
- * Features:
- * - Fetches finished missions from the backend API (`associationService.getMyFinishedMissions`)
- * - Converts API missions (MissionPublic) to internal Mission model
- * - Displays mission cards with details: name, dates, category, participant counts
- * - Provides two actions per mission:
- *    1. "Voir la mission" → navigates to mission details page
- *    2. "Voir les bénévoles" → opens a modal listing volunteers for that mission
- * - Includes responsive layout for small screens
+ * Fetches finished missions, displays each mission as a card with name, dates, category, and participant counts, and provides controls to open a mission details view or a volunteer list modal.
  *
- * State:
- * - missions: Array of finished missions
- * - modalVisible: Whether the volunteer list modal is open
- * - missionClick: Currently selected mission for volunteer modal
- * - search: Search filter for volunteers
- * - benevoles: Volunteers of the selected mission
- * - loading: Loading state for API calls
+ * @returns The rendered association activity dashboard component
  */
 export default function ActivityAssos() {
   const { width } = useWindowDimensions();

@@ -2,9 +2,9 @@
 import React from 'react';
 import ProfileVolunteer from '@/pages/ProfileVolunteer';
 /**
- * Profile page component for volunteer users.
+ * Render the volunteer user's profile page.
  *
- * @returns A React element representing the volunteer profile page, or `null` if nothing is rendered.
+ * @returns The React element for the volunteer profile page.
  */
 
 export default function ProfileVolunteerPage() {

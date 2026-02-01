@@ -12,13 +12,14 @@ import { Colors } from '@/constants/colors';
 import { useLanguage } from '@/context/LanguageContext';
 
 /**
- * Layout component for the Volunteer area that enforces access control and provides platform-specific navigation.
+ * Volunteer area layout that enforces volunteer-only access and renders platform-specific navigation.
  *
- * Renders a full-screen loading indicator while authentication is loading, redirects to the login route if the
- * authenticated user's type is not "volunteer", and otherwise renders the main layout: a persistent Sidebar on web,
- * a Stack containing the volunteer "home" and "profile" screens, and a BottomNavBar on non-web platforms.
+ * Shows a full-screen loading indicator while authentication state is loading. If the authenticated user's
+ * type is not "volunteer", redirects to the guest home route (`/(guest)/home`). Otherwise renders the main
+ * volunteer layout: on web a persistent Sidebar (with the volunteer's display name) alongside a Stack for
+ * the "home" and "profile" screens; on non-web platforms a vertical layout with a BottomNavBar.
  *
- * @returns The component's rendered JSX element: either the loading indicator, a redirect to login, or the volunteer layout with sidebar/stack/bottom navigation.
+ * @returns The rendered JSX element: either the loading indicator, a redirect to `/(guest)/home`, or the volunteer layout containing sidebar, stack, and/or bottom navigation.
  */
 export default function VolunteerLayout() {
   const { user, isLoading, userType } = useAuth();

@@ -14,11 +14,9 @@ import { storageService } from '@/services/storageService';
 import { useLanguage } from '@/context/LanguageContext';
 
 /**
- * Renders the login screen and manages credential entry, validation, authentication, and post-login navigation.
+ * Render the login screen, handle credential input and validation, perform authentication, persist session tokens, refresh user context, and navigate to the appropriate post-login route.
  *
- * The component displays username and password inputs, shows a loading state and toast messages for validation or authentication failures, calls the authentication service and auth context to persist the session, and navigates to the admin dashboard or the appropriate user home after successful login.
- *
- * @returns The rendered JSX element for the login screen.
+ * @returns The JSX element representing the login screen
  */
 export default function Login() {
     const router = useRouter();

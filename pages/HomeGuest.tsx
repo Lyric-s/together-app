@@ -21,11 +21,11 @@ import Footer from '@/components/footer';
 import { useLanguage } from '@/context/LanguageContext';
 
 /**
- * Render the guest home page showing recent missions and CTAs for volunteers and associations.
+ * Guest home screen that displays up to three recent missions and provides CTAs to register as a volunteer or an association.
  *
- * Displays a responsive, scrollable UI that fetches and shows up to three recent missions with loading and error states, and provides buttons to register as a volunteer or as an association (association registration opens on web only; non-web shows an alert).
+ * Shows loading, error, and empty states for the mission list and triggers navigation or an informational alert for association registration on non-web platforms.
  *
- * @returns The JSX element for the guest home screen containing the mission list, loading/error handling, and registration CTAs.
+ * @returns The JSX element for the guest home screen
  */
 export default function HomeGuest() {
   const { width } = useWindowDimensions();

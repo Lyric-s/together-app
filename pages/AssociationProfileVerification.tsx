@@ -55,6 +55,14 @@ const formatDateLocalized = (iso: string, locale: string) => {
     });
 };
 
+/**
+ * Admin screen to review pending association documents, preview files, and accept or reject submissions.
+ *
+ * Renders a searchable and filterable list of pending documents, a detail modal with a presigned preview,
+ * and actions to approve or reject documents; all user-facing text is localized.
+ *
+ * @returns The rendered DocumentsVerification React component (JSX element).
+ */
 export default function DocumentsVerification() {
     const { t, language, getFontSize, fontFamily } = useLanguage();
     const [documents, setDocuments] = useState<AssociationDocument[]>([]);

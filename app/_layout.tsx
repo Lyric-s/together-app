@@ -10,6 +10,15 @@ import { ThemeProvider as AppThemeProvider } from '@/context/ThemeContext';
 import { StatusBar, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { Colors } from '@/constants/colors';
 
+/**
+ * Renders the app's root navigation stack and handles redirects based on authentication state and current route segments.
+ *
+ * When the authentication state is loading, displays a centered loading indicator. Once loading completes,
+ * redirects authenticated users away from the auth group to their appropriate home/dashboard route, and redirects
+ * volunteer guests away from protected routes to the guest home.
+ *
+ * @returns A React element containing either a centered loading indicator or the configured navigation stack for the app.
+ */
 function RootLayoutNav() {
   const { userType, isLoading } = useAuth();
   const segments = useSegments();
@@ -51,6 +60,15 @@ function RootLayoutNav() {
   );
 }
 
+/**
+ * Render the application's root layout with global context providers, theming, safe area, navigation, and status bar.
+ *
+ * Wraps the app with AuthProvider, AppThemeProvider, LanguageProvider, and a ThemeProvider that selects a dark or light theme
+ * based on the current color scheme. Applies a SafeAreaView containing the navigation stack (RootLayoutNav) and a StatusBar
+ * whose style and background color follow the chosen color scheme.
+ *
+ * @returns The root React element that composes global providers, theme, safe area, navigation, and status bar.
+ */
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const backgroundColor = colorScheme === 'dark' ? Colors.black : Colors.white;

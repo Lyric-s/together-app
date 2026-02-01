@@ -40,6 +40,11 @@ const HoverLink = ({ children, onPress }: HoverLinkProps) => {
   );
 };
 
+/**
+ * Renders the application footer containing accessibility, informational, and contact sections plus a bottom copyright bar.
+ *
+ * @returns The footer JSX element
+ */
 export default function Footer() {
   const router = useRouter();
   const { width } = useWindowDimensions();

@@ -8,6 +8,13 @@ import BackButton from '@/components/BackButton';
 import { styles } from '@/styles/pages/CalenderMobileCSS';
 import { useLanguage } from '@/context/LanguageContext';
 
+/**
+ * Render the volunteer profile mobile calendar screen.
+ *
+ * Displays a top logo area, a header with a back button and a translated "My Calendar" title with an icon, and the calendar content.
+ *
+ * @returns A React element representing the mobile calendar screen.
+ */
 export default function CalendarVolunteerPage() {
     const router = useRouter();
     const { t } = useLanguage();

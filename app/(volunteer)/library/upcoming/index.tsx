@@ -2,9 +2,9 @@
 import React from 'react';
 import UpcomingVolunteer from '@/pages/UpcomingVolunteer';
 /**
- * Page component for the Upcoming Volunteer view.
+ * Renders the UpcomingVolunteer page.
  *
- * @returns The component's React element tree; currently a placeholder that renders nothing.
+ * @returns The React element tree for the UpcomingVolunteer page.
  */
 
 export default function UpcomingVolunteerPage() {

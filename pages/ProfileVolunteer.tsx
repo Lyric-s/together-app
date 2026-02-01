@@ -34,6 +34,13 @@ interface MissionDay {
   image?: any;
 }
 
+/**
+ * Display the volunteer profile screen with responsive mobile and desktop layouts, including profile fetching, editing, calendar, mission statistics, and navigation actions.
+ *
+ * The component fetches the current volunteer profile on mount, shows a loading indicator while fetching, presents an editable profile form (ProfilCard) with save validation and alerts, and renders a calendar and mission statistics alongside navigation shortcuts for rewards, profile modification, calendar, and settings.
+ *
+ * @returns The rendered React element for the volunteer profile screen.
+ */
 export default function ProfilVolunteer() {
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 900;

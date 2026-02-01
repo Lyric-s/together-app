@@ -22,12 +22,9 @@ import { volunteerService } from '@/services/volunteerService';
 import { useLanguage } from '@/context/LanguageContext';
 
 /**
- * Render the volunteer account screen with responsive layouts for mobile and web.
+ * Render the volunteer dashboard showing recent and favorite missions and providing handlers for navigation, favoriting, and alerts.
  *
- * Displays recent missions and favorited missions, manages local state for missions and favorites,
- * and exposes handlers for opening mission details, toggling favorites (with backend save), and showing alerts.
- *
- * @returns The rendered JSX element for the volunteer account screen.
+ * @returns The component's rendered JSX element.
  */
 export default function HomeVolunteer() {
   const { width } = useWindowDimensions();

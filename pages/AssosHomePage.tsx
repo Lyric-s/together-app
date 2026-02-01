@@ -26,15 +26,13 @@ type NotificationSection = {
 };
 
 /**
- * AssosHomePage
+ * Association home page presenting upcoming missions and notifications grouped by date.
  *
- * Association home page layout composed of two main sections:
+ * Left column displays upcoming missions; right column shows notifications grouped into
+ * date sections (Today, Yesterday, or localized date). Shows a centered loading indicator
+ * while data is being fetched and renders a Footer on web platforms.
  *
- * - Left column (35%):
- *   Displays upcoming missions using MissionAdminAssosCard components.
- *
- * - Right column (65%):
- *   Displays notifications grouped by date.
+ * @returns The rendered React element for the association home page.
  */
 export default function AssosHomePage() {
   const { width } = useWindowDimensions();

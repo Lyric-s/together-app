@@ -4,6 +4,11 @@ import Sidebar from '@/components/SideBar';
 import { useAuth } from '@/context/AuthContext';
 import { Colors } from '@/constants/colors';
 
+/**
+ * Layout component that renders the settings area, showing a sidebar alongside content on web and a full-screen stack on non-web platforms.
+ *
+ * @returns A JSX element for the settings layout: on web a two-column layout containing a Sidebar and a main Stack; on non-web platforms a single full-screen Stack with header hidden and white background.
+ */
 export default function SettingsLayout() {
   const isWeb = Platform.OS === 'web';
   const { user, userType } = useAuth();

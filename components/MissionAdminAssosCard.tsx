@@ -12,9 +12,13 @@ interface MissionAdminAssosCardProps {
 }
 
 /**
- * Renders an admin/association mission card.
+ * Render an admin/association mission card for the provided mission.
  *
- * Same visual behavior as before, but now based on Mission model
+ * Displays the mission's image (or a default image), title, association name (or translated unknown label),
+ * formatted start date (or translated unknown label), and a button that navigates to the mission's detail history.
+ *
+ * @param mission - Mission to display; uses `name`, `association?.name`, `image_url`, `date_start`, and `id_mission`
+ * @returns The React element for the mission card
  */
 export default function MissionAdminAssosCard({
     mission,

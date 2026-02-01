@@ -9,6 +9,15 @@ import MissionVolunteerCardHorizontal from '@/components/MissionVolunteerCardHor
 import { styles } from '@/styles/pages/UpcomingVolunteerCSS';
 import { useLanguage } from '@/context/LanguageContext';
 
+/**
+ * Screen component that displays a volunteer's upcoming (enrolled) missions and favorites.
+ *
+ * The component fetches enrolled missions and favorites, shows a loading indicator while data is loading,
+ * renders separate sections for upcoming missions and favorites, enables navigation to mission details,
+ * and allows removing missions from favorites which refreshes the lists.
+ *
+ * @returns The rendered JSX element for the volunteer library screen, showing a loading indicator or the upcoming and favorites sections.
+ */
 export default function LibraryUpcoming() {
   const router = useRouter();
   const isWeb = Platform.OS === 'web';
@@ -113,4 +122,3 @@ export default function LibraryUpcoming() {
     </View>
   );
 }
-

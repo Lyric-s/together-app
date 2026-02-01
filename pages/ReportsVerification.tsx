@@ -81,6 +81,15 @@ type Report = {
     reportedName: string;
 };
 
+/**
+ * Render the administrative reports verification interface with listing, filtering, statistics, and detail actions.
+ *
+ * The component loads reports and statistics from the admin API, supports search/type/state filters, pagination,
+ * localized labels and date formatting, and allows marking reports as accepted or rejected. It also exposes a modal
+ * to view detailed report information.
+ *
+ * @returns A React element that displays the reports table, filter controls, summary counts, and a details modal
+ */
 export default function ReportsVerification() {
     const { t, language, getFontSize, fontFamily } = useLanguage();
     const [reports, setReports] = useState<Report[]>([]);

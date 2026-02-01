@@ -15,6 +15,13 @@ import LibraryVolunteerView from '@/components/LibraryVolunteerView';
 import SwitchButton from '@/components/SwitchButton';
 import { useLanguage } from '@/context/LanguageContext';
 
+/**
+ * Renders the mobile volunteer library screen with "Upcoming" and "History" tabs.
+ *
+ * Displays a header and a scrollable list of missions for the active tab, manages local state for the active tab, missions, favorites, and loading, loads mission data when the tab changes, navigates to mission details, and toggles mission favorites.
+ *
+ * @returns The rendered mobile volunteer library view as a React element.
+ */
 function LibraryIndexMobile() {
   const router = useRouter();
   const { t } = useLanguage();
@@ -127,6 +134,11 @@ function LibraryIndexMobile() {
   );
 }
 
+/**
+ * Chooses the appropriate entry UI for the volunteer library based on platform.
+ *
+ * @returns A React element that redirects web clients to "/(volunteer)/library/upcoming" or renders the mobile `LibraryIndexMobile` component on native platforms.
+ */
 export default function LibraryIndex() {
   const isWeb = Platform.OS === 'web';
 

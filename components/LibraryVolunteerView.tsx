@@ -17,6 +17,18 @@ interface LibraryViewProps {
   onToggleFavorite?: (id: number) => void;
 }
 
+/**
+ * Render a volunteer missions list with an optional favorites section, handling loading and empty states.
+ *
+ * @param loading - When true, displays a loading indicator instead of the lists
+ * @param missions - Main list of missions to display
+ * @param favorites - Optional list of favorite missions to display in a separate section
+ * @param title - Title for the main missions section
+ * @param emptyText - Text to show when the main missions list is empty
+ * @param onPressMission - Callback invoked with a mission id when a mission card is pressed
+ * @param onToggleFavorite - Optional callback invoked with a mission id when a favorite toggle is pressed
+ * @returns A React element rendering the missions and optional favorites UI
+ */
 export default function VolunteerLibraryView({ 
   loading, missions, favorites, title, emptyText, onPressMission, onToggleFavorite 
 }: LibraryViewProps) {

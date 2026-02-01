@@ -25,6 +25,11 @@ type DashboardStats = {
     pendingAssociationsCount: number;
 };
 
+/**
+ * Renders the admin dashboard view, fetching dashboard statistics and displaying KPIs, monthly charts, and pending items while handling access control, loading, and error states.
+ *
+ * @returns The rendered dashboard component as a JSX element.
+ */
 export default function DashboardAdmin() {
     const { width } = useWindowDimensions();
     const isMobile = width < 900;
@@ -219,6 +224,15 @@ function KpiCard({
     );
 }
 
+/**
+ * Render a pending-item card that displays a value and a localized "process" button.
+ *
+ * @param value - The text shown as the pending count or label
+ * @param cardStyle - Optional style overrides applied to the card container
+ * @param buttonStyle - Optional style overrides applied to the action button
+ * @param onPress - Callback invoked when the action button is pressed
+ * @returns A React element representing the pending card with the provided value and an action button
+ */
 function PendingCard({
                          value,
                          cardStyle,
