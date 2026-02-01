@@ -189,7 +189,10 @@ export const translations = {
     minMaxErr: "La capacité minimale ne peut pas dépasser la maximale.",
     dateFmtErr: "Format de date invalide. Utilisez YYYY-MM-DDTHH:mm.",
     startEndErr: "La date de début doit être avant la date de fin.",
-    
+    saving: "Sauvegarde...",
+    deleting: "Suppression...",
+    volunteerRange: "Entre {{min}} et {{max}} bénévoles",
+
     // --- Join Mission ---
     joinMission: "Rejoindre la mission",
     joinedValidated: "Inscrit (Validé)",
@@ -657,7 +660,10 @@ export const translations = {
     minMaxErr: "Minimum capacity cannot exceed maximum.",
     dateFmtErr: "Invalid date format. Use YYYY-MM-DDTHH:mm.",
     startEndErr: "Start date must be before end date.",
-
+    saving: "Saving...",
+    deleting: "Deleting...",
+    volunteerRange: "Between {{min}} and {{max}} volunteers",
+    
     // --- Join Mission ---
     joinMission: "Join Mission",
     joinedValidated: "Joined (Validated)",

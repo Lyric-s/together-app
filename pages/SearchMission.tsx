@@ -332,7 +332,13 @@ export default function ResearchMission() {
           </View>
         )}
         ListEmptyComponent={
-          <Text style={{textAlign: 'center', marginTop: 50, color: 'gray'}}>{t('noMissionsFound')}</Text>
+          loading ? (
+            <View style={{flex: 1, justifyContent:'center', alignItems:'center', marginTop: 50}}>
+              <ActivityIndicator size="large" color={Colors.orange} />
+            </View>
+          ) : (
+            <Text style={{textAlign: 'center', marginTop: 50, color: 'gray'}}>{t('noMissionsFound')}</Text>
+          )
         }
         />
       )}

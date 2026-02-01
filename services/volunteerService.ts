@@ -6,6 +6,11 @@ import { handleApiError } from '@/services/apiErrorHandler'
 import { ProcessingStatus } from '@/models/enums';
 import { mapApiToMission } from '@/utils/mission.utils';
 
+const parseLocalDate = (dateStr: string): Date => {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d);
+};
+
 // --- Service ---
 export const volunteerService = {
 
@@ -112,12 +117,12 @@ export const volunteerService = {
       today.setHours(0, 0, 0, 0);
 
       const upcoming = allMissions.filter(mission => {
-        const missionDate = new Date(mission.date_start);
+        const missionDate = parseLocalDate(mission.date_start);
         return missionDate >= today;
       });
 
       return upcoming.sort((a, b) => 
-        new Date(a.date_start).getTime() - new Date(b.date_start).getTime()
+        parseLocalDate(a.date_start).getTime() - parseLocalDate(b.date_start).getTime()
       );
 
     } catch (error) {
@@ -137,12 +142,12 @@ export const volunteerService = {
       today.setHours(0, 0, 0, 0);
 
       const history = allMissions.filter(mission => {
-        const missionDate = new Date(mission.date_start);
+        const missionDate = parseLocalDate(mission.date_start);
         return missionDate < today;
       });
 
       return history.sort((a, b) => 
-        new Date(b.date_start).getTime() - new Date(a.date_start).getTime()
+        parseLocalDate(b.date_start).getTime() - parseLocalDate(a.date_start).getTime()
       );
 
     } catch (error) {

@@ -59,6 +59,8 @@ export default function ProfilModificationPage() {
   const [formData, setFormData] = useState<VolunteerUpdate & { password?: string; confirmPassword?: string }>({});
   const [initialValues, setInitialValues] = useState<VolunteerUpdate>({});
 
+  const [imageUri, setImageUri] = useState<string | null>(null);
+
   // Helper component for form inputs defined inside so it can access hooks
   const FormInput = ({ label, value, onChangeText, editable, required = false, ...props }: any) => (
     <View style={styles.inputContainer}>
@@ -101,6 +103,7 @@ export default function ProfilModificationPage() {
         };
         setFormData(initialData);
         setInitialValues(initialData);
+        // setImageUri(volunteerData.photo_url || null);
       } catch (error) {
         console.error("Failed to load profile", error);
         showAlert(t('error'), t('profileLoadError'));
@@ -116,7 +119,23 @@ export default function ProfilModificationPage() {
 
   const handleEdit = () => setIsEditing(true);
 
-  const handlePickImage = async () => { /* ... */ };
+  const handlePickImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true, // Allows cropping
+        aspect: [1, 1], // Square aspect ratio for profile pictures
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        setImageUri(result.assets[0].uri);
+      }
+    } catch (error) {
+        console.error("Image Picker Error:", error);
+        showAlert(t('error'), "Impossible de sélectionner l'image.");
+    }
+  };
 
   const handleCancel = () => {
     setFormData(initialValues);
@@ -153,6 +172,12 @@ export default function ProfilModificationPage() {
       (payload as any).password = formData.password;
     }
 
+    // const formDataPayload = new FormData();
+    // formDataPayload.append('data', JSON.stringify(payload));
+    // if (imageUri) {
+    //    formDataPayload.append('file', { uri: imageUri, name: 'profile.jpg', type: 'image/jpeg' });
+    // }
+
     if (USE_MOCK_DATA) {
       console.log("Données sauvegardées (simulation):", payload);
       setInitialValues({ ...initialValues, ...payload });
@@ -163,6 +188,7 @@ export default function ProfilModificationPage() {
     if (!user?.id_volunteer) return;
     try {
       await volunteerService.updateMe(user.id_volunteer, payload);
+      // await volunteerService.uploadAvatar(user.id_volunteer, imageUri); // Call your image upload service here
       await refetchUser();
       setFormData({ ...formData, password: '', confirmPassword: '' });
       setInitialValues({ ...initialValues, ...payload });
@@ -209,7 +235,13 @@ export default function ProfilModificationPage() {
         <View>
           <View style={styles.formContainer}>
             <TouchableOpacity onPress={handlePickImage} activeOpacity={isEditing ? 0.7 : 1}>
-              <ProfilePicture source={ require("@/assets/images/profil-picture.png")} size={120} />
+              <ProfilePicture source={ imageUri ? { uri: imageUri } : require("@/assets/images/profil-picture.png")} size={120} />
+              {isEditing && (
+                  <View style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: Colors.orange, borderRadius: 15, padding: 5 }}>
+                     {/* You can add a small camera icon here if you have one, or just a visual indicator */}
+                     <Text style={{fontSize: 10, color: 'white'}}>✏️</Text>
+                  </View>
+              )}
             </TouchableOpacity>
           </View>
           <View style={styles.form}>

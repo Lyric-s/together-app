@@ -55,12 +55,17 @@ function LibraryIndexMobile() {
 
   const handleToggleFavorite = async (id: number) => {
     try {
-       await volunteerService.removeFavorite(id);
-       loadData();
-     } catch (e) {
-       console.error(e);
-       loadData();
-     }
+      const isFavorite = favorites.some(f => f.id_mission === id);
+      if (isFavorite) {
+        await volunteerService.removeFavorite(id);
+      } else {
+        await volunteerService.addFavorite(id);
+      }
+      await loadData();
+    } catch (e) {
+      console.error(e);
+      await loadData();
+    }
   };
 
   return (

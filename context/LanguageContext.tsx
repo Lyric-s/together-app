@@ -8,7 +8,7 @@ type FontType = 'default' | 'opendyslexic';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: TranslationKey) => string;
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string;
   textSize: number;
   setTextSize: (size: number) => void;
   getFontSize: (baseSize: number) => number;

@@ -98,7 +98,7 @@ export default function ChangeMission() {
     } else {
       setLieuPlaceholder(t('locationNotSpecified'));
     }
-  }, [mission]);
+  }, [mission, language]);
 
 
 
@@ -304,7 +304,7 @@ export default function ChangeMission() {
                   <Text style={styles.buttonText}>{t('cancel')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.buttonAction, { flex: 1 }]} onPress={handleSave} disabled={isSaving}>
-                  <Text style={styles.buttonText}>{isSaving ? 'Saving...' : t('validate')}</Text>
+                  <Text style={styles.buttonText}>{isSaving ? t('saving') : t('validate')}</Text>
                 </TouchableOpacity>
               </View>
             </>
@@ -332,7 +332,7 @@ export default function ChangeMission() {
               <Text style={styles.text}>{lieuPlaceholder}</Text>
               
               <Text style={styles.label}>{t('minVolunteersLabel')}</Text>
-              <Text style={styles.text}>{`${mission.capacity_min} - ${mission.capacity_max} ${t('volunteer').toLowerCase()}s`}</Text>
+              <Text style={styles.text}>{t('volunteerRange', { min: mission.capacity_min, max: mission.capacity_max })}</Text>
 
               <Text style={styles.label}>{t('registeredVolunteers')}</Text>
               <Text style={styles.text}>{registeredCount}</Text>
@@ -368,7 +368,7 @@ export default function ChangeMission() {
                 <Text style={{ color: Colors.grayText }}>{t('cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleDelete} disabled={isDeleting}>
-                <Text style={{ color: Colors.red }}>{isDeleting ? 'Deleting...' : t('delete')}</Text>
+                <Text style={{ color: Colors.red }}>{isDeleting ? t('deleting') : t('delete')}</Text>
               </TouchableOpacity>
             </View>
           </View>
