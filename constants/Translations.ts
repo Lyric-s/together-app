@@ -16,7 +16,7 @@ export const translations = {
     myLibrary: "Ma Bibliothèque",
 
     // --- Sidebar & Navigation ---
-    general: "GENERAL",
+    general: "GÉNÉRAL",
     security: "SÉCURITÉ",
     account: "COMPTE",
     togetherAssos: "Together Association",
@@ -764,7 +764,7 @@ export const translations = {
     seeAll: "See all",
     noMissions: "No missions available.",
     reload: "↻ Reload",
-    volunteerCtaTitle: "Are you a volunteer, or do you want to become one!",
+    volunteerCtaTitle: "Are you a volunteer, or do you want to become one?",
     volunteerCtaDesc: "Want to act and give some of your time? Together connects you with associations near you.",
     joinVolunteer: "JOIN AS A VOLUNTEER",
     associationCtaTitle: "Are you an association looking for volunteers!",
