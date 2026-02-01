@@ -278,7 +278,7 @@ export const translations = {
     about: "À propos",
     aboutDesc: "En savoir plus sur Together",
     logout: "Se déconnecter",
-    lastUpdate: "Dernière mise à jour : 14 Janvier 2026",
+    lastUpdate: "Dernière mise à jour : 14 janvier 2026",
     validate: "Valider",
     error: "Erreur",
     success: "Succès",
@@ -308,7 +308,7 @@ export const translations = {
     registerBtn: "Inscription",
     volunteerBtn: "Bénévole",
     associationBtn: "Association",
-    upcomingBtn: "A venir",
+    upcomingBtn: "À venir",
     historyBtn: "Historique",
 
     // --- Page Library ---
