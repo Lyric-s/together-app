@@ -9,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { Text } from '@/components/ThemedText';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 
 import MissionAdminAssosCard from '@/components/MissionAdminAssosCard';
 import { styles } from '@/styles/pages/AssosHistoryStyle';
@@ -26,7 +25,6 @@ import { useLanguage } from '@/context/LanguageContext';
  * @returns A React element rendering the finished missions view (loading state, empty message, or list of MissionAdminAssosCard components).
  */
 export default function AssosHistory() {
-  const router = useRouter();
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 900;
   const { t } = useLanguage();

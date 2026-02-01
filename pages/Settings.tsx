@@ -23,7 +23,7 @@ const PageReglages = () => {
 
   const allMenuItems = [
     { title: t('notifications'), icon: 'notifications-outline', route: '/settings/notifications', description: t('notificationsDesc'), requiresAuth: true },
-    { title: t('languageAccessibility'), icon: 'language-outline', route: '/settings/language', description: t('languageDesc') },
+    { title: t('accessibility'), icon: 'accessibility-outline', route: '/settings/accessibility', description: t('accessibilityDesc') },
     { title: t('contacts'), icon: 'call-outline', route: '/settings/contact', description: t('contactsDesc') },
     { title: t('termsConditions'), icon: 'document-text-outline', route: '/settings/terms', description: t('termsDesc') },
     { title: t('privacyPolicy'), icon: 'shield-checkmark-outline', route: '/settings/privacy', description: t('privacyDesc') },

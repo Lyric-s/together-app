@@ -116,13 +116,29 @@ export default function ProfilVolunteer() {
     const navToCalendar = () => router.push('/(volunteer)/profile/calendarMobile');
     const navToSettings = () => router.push('/settings');
 
-  if (loading || !profileUser) {
-      return (
-          <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-              <ActivityIndicator size="large" color={Colors.orange} />
-              <Text style={{marginTop:10, color:'gray'}}>{t('loadingProfile')}</Text>
-          </View>
-      );
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={Colors.orange} />
+        <Text style={{ marginTop: 10, color: 'gray' }}>{t('loadingProfile')}</Text>
+      </View>
+    );
+  }
+  if (!profileUser) {
+    return (
+      <>
+        <AlertToast
+          visible={alertModal.visible}
+          title={alertModal.title}
+          message={alertModal.message}
+          onClose={handleAlertClose}
+        />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ marginTop: 10, color: 'gray' }}>{t('loadError')}</Text>
+          {/* Optional: add a retry action that calls loadProfile() */}
+        </View>
+      </>
+    );
   }
 
   // --- CORRECTION DU TYPE ICI ---

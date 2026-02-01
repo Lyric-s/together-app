@@ -72,8 +72,9 @@ export default function HomeVolunteer() {
     setErrorF(null);
     try {
       const favoritesData = await volunteerService.getFavorites();
-      setFavorites(favoritesData ?? []);
-      setFavoriteIds(favoritesData.map(m => m.id_mission));
+      const safeFavorites = favoritesData ?? [];
+      setFavorites(safeFavorites);
+      setFavoriteIds(safeFavorites.map(m => m.id_mission));
     } catch (e) {
       console.error(e);
       setErrorF(t('loadError'));
@@ -128,7 +129,12 @@ export default function HomeVolunteer() {
 
   return (
     <View style={[styles.container, { flex: 1 }]}> 
-      
+      <AlertToast 
+        visible={alertModal.visible} 
+        title={alertModal.title} 
+        message={alertModal.message} 
+        onClose={() => setAlertModal(t => ({ ...t, visible: false }))}
+      />
       {/* Header Mobile Only */}
       {isMobile && (
         <View style={styles.headerMobile}>

@@ -10,7 +10,7 @@ import BottomNavBar from '@/components/MobileNavigationBar';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 
-const LanguageAccessibility = () => {
+const Accessibility = () => {
   const navigation = useNavigation();
   const { language, setLanguage, t, textSize, setTextSize, fontType, setFontType } = useLanguage();
   const { colors } = useTheme();
@@ -135,4 +135,4 @@ const LanguageAccessibility = () => {
   );
 };
 
-export default LanguageAccessibility;
+export default Accessibility;

@@ -59,10 +59,10 @@ export default function Footer() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('accessibility')}</Text>
           <View style={styles.linksGroup}>
-            <HoverLink onPress={() => router.push('/settings/language')}>{t('language')}</HoverLink>
-            <HoverLink onPress={() => router.push('/settings/language')}>{t('textSize')}</HoverLink>
-            <HoverLink onPress={() => router.push('/settings/language')}>{t('contrast')}</HoverLink>
-            <HoverLink onPress={() => router.push('/settings/language')}>{t('theme')}</HoverLink>
+            <HoverLink onPress={() => router.push('/settings/accessibility')}>{t('language')}</HoverLink>
+            <HoverLink onPress={() => router.push('/settings/accessibility')}>{t('textSize')}</HoverLink>
+            <HoverLink onPress={() => router.push('/settings/accessibility')}>{t('contrast')}</HoverLink>
+            <HoverLink onPress={() => router.push('/settings/accessibility')}>{t('theme')}</HoverLink>
           </View>
         </View>
 

@@ -251,14 +251,6 @@ export default function JoinMissionPage() {
       }
   };
 
-  if (loading && !mission) {
-    return <ActivityIndicator style={{ flex: 1 }} size="large" />;
-  }
-   
-  if (!mission) {
-    return <Text>{t('missionNotFound')}</Text>;
-  }
-
   return (
     <View style={[styles.container, { backgroundColor: Colors.white }]} >
       <AlertToast 

@@ -40,8 +40,11 @@ export default function Calendar() {
 
         try {
             // Format YYYY-MM-DD pour l'API
-            const dateStr = date.toISOString().split('T')[0]; 
-            
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
+
             // APPEL API RÉEL ICI
             const missions = await volunteerService.getMyMissions(dateStr);
 
@@ -64,16 +67,16 @@ export default function Calendar() {
         }
     }, [language]);
 
-    // Initialisation au chargement
+    // Initialisation on loading
     useEffect(() => {
         loadMissionsForDay(selectedDay);
-    }, []); // Au montage uniquement
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedDay, loadMissionsForDay]); // Intentionally run only on mount with initial selectedDay
 
     const goToToday = () => {
         const today = new Date();
-        setCurrentMonth(today); // Remet le calendrier sur le mois actuel
-        setSelectedDay(today);  // Sélectionne le jour d'aujourd'hui
-        loadMissionsForDay(today); // Recharge les données
+        setCurrentMonth(today);
+        setSelectedDay(today);  
     };
 
     const changeMonth = (direction: 'prev' | 'next') => {
@@ -87,7 +90,6 @@ export default function Calendar() {
     const handleDayPress = (dayNum: number) => {
         const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), dayNum);
         setSelectedDay(newDate);
-        loadMissionsForDay(newDate);
     };
 
     const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
@@ -106,11 +108,8 @@ export default function Calendar() {
                currentMonth.getFullYear() === today.getFullYear();
     };
 
-    // Génération dynamique des jours de la semaine (D, L, M...)
-    // Note: getDay() retourne 0 pour Dimanche.
-    // On peut utiliser toLocaleDateString pour avoir "D", "L", etc.
     const weekDays = Array.from({ length: 7 }, (_, i) => {
-        const d = new Date(2024, 0, 7 + i); // 7 Jan 2024 is Sunday
+        const d = new Date(2024, 0, 7 + i);
         return d.toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'narrow' });
     });
 
@@ -152,7 +151,7 @@ export default function Calendar() {
 
             {/* Grille Jours */}
             <View style={styles.calendarDays}>
-                {Array.from({ length: 35 }, (_, i) => {
+                {Array.from({ length: Math.ceil((firstDayOfMonth + daysInMonth) / 7) * 7 }, (_, i) => {
                     const dayNum = i - firstDayOfMonth + 1;
                     const isValid = dayNum > 0 && dayNum <= daysInMonth;
                     return (

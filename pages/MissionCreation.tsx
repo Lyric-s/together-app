@@ -230,7 +230,7 @@ export default function MissionCreation() {
                 style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                 keyboardType="numeric"
                 value={minVolunteers}
-                onChangeText={(t) => setMinVolunteers(t.replace(/[^0-9]/g, ""))}
+                onChangeText={(val) => setMinVolunteers(val.replace(/[^0-9]/g, ""))}
               />
             </View>
 
@@ -240,7 +240,7 @@ export default function MissionCreation() {
                 style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                 keyboardType="numeric"
                 value={maxVolunteers}
-                onChangeText={(t) => setMaxVolunteers(t.replace(/[^0-9]/g, ""))}
+                onChangeText={(val) => setMaxVolunteers(val.replace(/[^0-9]/g, ""))}
               />
             </View>
           </View>

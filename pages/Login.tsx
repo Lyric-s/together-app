@@ -177,7 +177,7 @@ export default function Login() {
                                         style={styles.submitBtn}
                                         onPress={handleLogin}
                                         accessibilityLabel={t('login')}
-                                        accessibilityHint="Appuyez pour vous connecter"
+                                        accessibilityHint={t('loginHint')}
                                         accessibilityRole="button"
                                     >
                                         {loading ? (

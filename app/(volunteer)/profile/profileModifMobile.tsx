@@ -128,7 +128,7 @@ export default function ProfilModificationPage() {
       }
     };
     loadProfile();
-  }, [t]);
+  }, []);
 
   const handleAlertClose = () => setAlertModal(prev => ({ ...prev, visible: false }));
   const showAlert = (title: string, message: string) => setAlertModal({ visible: true, title, message });

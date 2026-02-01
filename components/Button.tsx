@@ -27,6 +27,8 @@ export default function ButtonAuth({ text, onPress, disabled = false, style }: P
             style={[styles.button, style, disabled && { opacity: 0.6 }]} 
             onPress={disabled ? undefined : onPress}
             activeOpacity={disabled ? 1 : 0.7}
+            disabled={disabled}
+            accessibilityState={{ disabled }}
         >
             <Text style={styles.text}>{text}</Text>
         </TouchableOpacity>

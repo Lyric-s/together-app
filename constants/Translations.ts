@@ -268,7 +268,7 @@ export const translations = {
     notifications: "Notifications",
     notificationsDesc: "Gérer vos préférences de notification",
     languageAccessibility: "Langues et accessibilité",
-    languageDesc: "Langue, taille du texte et thèmes",
+    accessibilityDesc: "Langue, taille du texte et thèmes",
     contacts: "Contacts",
     contactsDesc: "Nous contacter et support",
     termsConditions: "Termes et conditions",
@@ -328,6 +328,7 @@ export const translations = {
     register: "S'inscrire",
     enterUsername: "Entrez votre nom d'utilisateur",
     enterPassword: "Entrez votre mot de passe",
+    loginHint: "Appuyez pour vous connecter",
 
     // --- Page Register ---
     emailReq: "L'adresse email est requise.",
@@ -742,7 +743,7 @@ export const translations = {
     notifications: "Notifications",
     notificationsDesc: "Manage your notification preferences",
     languageAccessibility: "Language & Accessibility",
-    languageDesc: "Language, text size and themes",
+    accessibilityDesc: "Language, text size and themes",
     contacts: "Contacts",
     contactsDesc: "Contact us and support",
     termsConditions: "Terms & Conditions",
@@ -802,6 +803,7 @@ export const translations = {
     register: "Sign up",
     enterUsername: "Enter your username",
     enterPassword: "Enter your password",
+    loginHint: "Tap to log in",
 
     // --- Page Register ---
     emailReq: "Email address is required.",
