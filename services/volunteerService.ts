@@ -7,6 +7,8 @@ import { ProcessingStatus } from '@/models/enums';
 import { mapApiToMission } from '@/utils/mission.utils';
 
 const parseLocalDate = (dateStr: string): Date => {
+  if (!dateStr) return new Date(NaN);
+  if (dateStr.includes('T')) return new Date(dateStr);
   const [y, m, d] = dateStr.split('-').map(Number);
   return new Date(y, m - 1, d);
 };

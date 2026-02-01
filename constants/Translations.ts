@@ -70,6 +70,8 @@ export const translations = {
 
     backToSettings: "Retour aux paramètres",
     defaultFont: "Par défaut",
+    imagePickError: "Impossible de sélectionner l'image.",
+    mediaPermissionDenied: "Permission d'accès aux médias refusée.",
 
     // --- Admin Dashboard ---
     accessDeniedAdmin: "Accès refusé : vous devez être admin.",
@@ -541,6 +543,8 @@ export const translations = {
 
     backToSettings: "Back to settings",
     defaultFont: "Default",
+    imagePickError: "Unable to select the image.",
+    mediaPermissionDenied: "Permission to access media denied.",
 
     // --- Admin Dashboard ---
     accessDeniedAdmin: "Access denied: you must be an admin.",

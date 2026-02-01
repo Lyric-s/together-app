@@ -120,7 +120,13 @@ export default function ProfilModificationPage() {
   const handleEdit = () => setIsEditing(true);
 
   const handlePickImage = async () => {
+    if (!isEditing) return;
     try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      showAlert(t('error'), t('mediaPermissionDenied'));
+      return;
+    }
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true, // Allows cropping
@@ -133,7 +139,7 @@ export default function ProfilModificationPage() {
       }
     } catch (error) {
         console.error("Image Picker Error:", error);
-        showAlert(t('error'), "Impossible de sélectionner l'image.");
+        showAlert(t('error'), t('imagePickError'));
     }
   };
 
@@ -234,7 +240,7 @@ export default function ProfilModificationPage() {
       <ScrollView style={{paddingHorizontal: 20}} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
         <View>
           <View style={styles.formContainer}>
-            <TouchableOpacity onPress={handlePickImage} activeOpacity={isEditing ? 0.7 : 1}>
+            <TouchableOpacity onPress={isEditing ? handlePickImage : undefined} disabled={!isEditing} activeOpacity={isEditing ? 0.7 : 1}>
               <ProfilePicture source={ imageUri ? { uri: imageUri } : require("@/assets/images/profil-picture.png")} size={120} />
               {isEditing && (
                   <View style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: Colors.orange, borderRadius: 15, padding: 5 }}>
