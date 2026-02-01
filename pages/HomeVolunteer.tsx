@@ -133,7 +133,7 @@ export default function HomeVolunteer() {
         visible={alertModal.visible} 
         title={alertModal.title} 
         message={alertModal.message} 
-        onClose={() => setAlertModal(t => ({ ...t, visible: false }))}
+        onClose={() => setAlertModal(prev => ({ ...prev, visible: false }))}
       />
       {/* Header Mobile Only */}
       {isMobile && (

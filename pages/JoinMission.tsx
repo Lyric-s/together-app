@@ -185,19 +185,19 @@ export default function JoinMissionPage() {
 
   const handleJoinMission = async () => {
     if (!checkAuthAndRedirect()) return;
-    if (userType !== 'volunteer' || !missionId) {
+    if (userType !== 'volunteer' || !mission?.id_mission) {
       showToast(t('actionUnavailable'), t('volunteersOnly'));
       return;
     }
 
     if (isJoined) {
-        showToast("Info", t('alreadyJoinedInfo'));
+        showToast(t('info'), t('alreadyJoinedInfo'));
         return;
     }
 
     setLoading(true);
     try {
-      await volunteerService.applyToMission(Number(missionId));
+      await volunteerService.applyToMission(mission.id_mission);
       setIsJoined(true);
       setStatusText(t('waitingValidation'));
       showToast(t('success'), t('applicationSent'));
@@ -224,7 +224,7 @@ export default function JoinMissionPage() {
   const toggleFavorite = async () => {
     if (!checkAuthAndRedirect()) return;
       if (userType !== 'volunteer') {
-        showToast(t('actionUnavailable'), "Seuls les bénévoles peuvent gérer des favoris."); // Only volunters can manage favs
+        showToast(t('actionUnavailable'), t('volunteersOnlyFavorites')); // Only volunters can manage favs
         return;
       }
 
@@ -309,7 +309,7 @@ export default function JoinMissionPage() {
         <View style={styles.bottomCard}>
           <View style={{flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'}}>
             <Text style={styles.infoLine}>
-                <Text style={styles.infoLabel}>{t('association')} :</Text> {mission.association?.name || "Non spécifiée"}
+                <Text style={styles.infoLabel}>{t('association')} :</Text> {mission.association?.name ||  t('associationNotSpecified')}
             </Text>
             {!!mission.id_asso && (
               <TouchableOpacity 
@@ -366,7 +366,7 @@ export default function JoinMissionPage() {
                         toggleFavorite();
                       }}
                       accessibilityRole="button"
-                      accessibilityLabel={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+                      accessibilityLabel={isFavorite ? t('removeFromFavorites') : t('addToFavorites')}
                       accessibilityState={{ checked: isFavorite }}
                     >
                         <Image

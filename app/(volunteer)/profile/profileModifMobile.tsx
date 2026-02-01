@@ -60,8 +60,8 @@ const MOCK_VOLUNTEER_DATA: Volunteer = {
     }
   };
 
-// Helper component for form inputs defined inside so it can access hooks
-const FormInput = ({ label, value, onChangeText, editable, required = false, getFontSize, fontFamily, ...props }: FormInputProps) => (
+//  Helper component for form inputs
+const FormInput = ({ label, value, onChangeText, editable, required = false, getFontSize, fontFamily, style, ...props }: FormInputProps) => (
   <View style={styles.inputContainer}>
     <Text style={styles.label}>
       {label}
@@ -71,7 +71,8 @@ const FormInput = ({ label, value, onChangeText, editable, required = false, get
       style={[
           styles.input, 
           !editable && styles.inputDisabled,
-          { fontSize: getFontSize(14), fontFamily }
+          { fontSize: getFontSize(14), fontFamily },
+          style
       ]}
       value={value}
       onChangeText={onChangeText}

@@ -217,6 +217,12 @@ export const translations = {
     toDate: "au",
     numVolunteers: "Nombre de bénévoles :",
     minNum: "Nombre minimum :",
+    info: "Info",
+    volunteersOnlyFavorites: "Seuls les bénévoles peuvent ajouter des missions aux favoris.",
+    associationNotSpecified: "Association non spécifiée",
+    addToFavorites: "Ajouter aux Favoris",
+    removeFromFavorites: "Retirer des Favoris",
+    
 
     // --- Search & Filters ---
     allCategories: "Toutes les catégories",
@@ -692,6 +698,11 @@ export const translations = {
     toDate: "to",
     numVolunteers: "Number of volunteers:",
     minNum: "Minimum number:",
+    info: "Info",
+    volunteersOnlyFavorites: "Only volunteers can add missions to favorites.",
+    associationNotSpecified: "Association not specified",
+    addToFavorites: "Add to Favorites",
+    removeFromFavorites: "Remove from Favorites",
 
     // --- Search & Filters ---
     allCategories: "All categories",
