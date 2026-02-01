@@ -99,7 +99,7 @@ export default function ProfilModificationPage() {
       setLoading(true);
       try {
         const volunteerData = USE_MOCK_DATA ? MOCK_VOLUNTEER_DATA : await volunteerService.getMe();
-        const initialData = {
+        const initialData: VolunteerUpdate = {
           first_name: volunteerData.first_name,
           last_name: volunteerData.last_name,
           email: volunteerData.user?.email,
@@ -109,10 +109,8 @@ export default function ProfilModificationPage() {
           zip_code: volunteerData.zip_code,
           skills: volunteerData.skills,
           bio: volunteerData.bio,
-          password: '',
-          confirmPassword: '',
         };
-        setFormData(initialData);
+        setFormData({ ...initialData, password: '', confirmPassword: '' });
         setInitialValues(initialData);
         // setImageUri(volunteerData.photo_url || null);
       } catch (error) {
@@ -155,7 +153,7 @@ export default function ProfilModificationPage() {
   };
 
   const handleCancel = () => {
-    setFormData(initialValues);
+    setFormData({ ...initialValues, password: '', confirmPassword: '' });
     setIsEditing(false);
   };
 
@@ -196,8 +194,9 @@ export default function ProfilModificationPage() {
     // }
 
     if (USE_MOCK_DATA) {
-      console.log("Données sauvegardées (simulation):", payload);
-      setInitialValues({ ...initialValues, ...payload });
+      console.log("Données sauvegardées (simulation)");
+      const { password, ...payloadNoPwd } = payload as VolunteerUpdate & { password?: string };
+      setInitialValues({ ...initialValues, ...payloadNoPwd });
       setIsEditing(false);
       return;
     }
@@ -211,7 +210,8 @@ export default function ProfilModificationPage() {
       // await volunteerService.uploadAvatar(user.id_volunteer, imageUri); // Call your image upload service here
       await refetchUser();
       setFormData({ ...formData, password: '', confirmPassword: '' });
-      setInitialValues({ ...initialValues, ...payload });
+      const { password, ...payloadNoPwd } = payload as VolunteerUpdate & { password?: string };
+      setInitialValues({ ...initialValues, ...payloadNoPwd });
       setIsEditing(false);
       showAlert(t('success'), t('profileUpdateSuccess'));
     } catch (error) {
