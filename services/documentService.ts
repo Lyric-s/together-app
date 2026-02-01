@@ -48,11 +48,7 @@ export const documentService = {
                 formData.append('file', filePayload as any);
             }
 
-            const response = await api.post<DocumentResponse>('/documents/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            const response = await api.post<DocumentResponse>('/documents/upload', formData);
 
             return response.data;
 

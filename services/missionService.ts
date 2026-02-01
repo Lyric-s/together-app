@@ -29,7 +29,10 @@ export const missionService = {
     // Gestion de la date (conversion en ISO string simple YYYY-MM-DD si c'est un objet Date)
     if (filters.date_available) {
       if (filters.date_available instanceof Date) {
-        params.date_available = filters.date_available.toISOString().split('T')[0];
+        const yyyy = filters.date_available.getFullYear();
+        const mm = String(filters.date_available.getMonth() + 1).padStart(2, '0');
+        const dd = String(filters.date_available.getDate()).padStart(2, '0');
+        params.date_available = `${yyyy}-${mm}-${dd}`;
       } else {
         params.date_available = filters.date_available;
       }

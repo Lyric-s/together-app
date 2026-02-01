@@ -121,8 +121,8 @@ export const volunteerService = {
       );
 
     } catch (error) {
-      console.error("Erreur getEnrolledMissions", error);
-      return [];
+      handleApiError(error);
+      throw error;
     }
   },
 
@@ -146,8 +146,8 @@ export const volunteerService = {
       );
 
     } catch (error) {
-      console.error("Erreur getHistoryMissions", error);
-      return [];
+      handleApiError(error);
+      throw error;
     }
   },
 

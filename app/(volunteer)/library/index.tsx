@@ -15,15 +15,9 @@ import LibraryVolunteerView from '@/components/LibraryVolunteerView';
 import SwitchButton from '@/components/SwitchButton';
 import { useLanguage } from '@/context/LanguageContext';
 
-export default function LibraryIndex() {
+function LibraryIndexMobile() {
   const router = useRouter();
-  const isWeb = Platform.OS === 'web';
   const { t } = useLanguage();
-
-  if (isWeb) {
-    return <Redirect href="/(volunteer)/library/upcoming" />;
-  }
-  
   const [activeTab, setActiveTab] = useState<'upcoming' | 'history'>('upcoming');
   const [missions, setMissions] = useState<Mission[]>([]);
   const [favorites, setFavorites] = useState<Mission[]>([]);
@@ -126,6 +120,16 @@ export default function LibraryIndex() {
       </View>
     </View>
   );
+}
+
+export default function LibraryIndex() {
+  const isWeb = Platform.OS === 'web';
+
+  if (isWeb) {
+    return <Redirect href="/(volunteer)/library/upcoming" />;
+  }
+
+  return <LibraryIndexMobile />;
 }
 
 const styles = StyleSheet.create({

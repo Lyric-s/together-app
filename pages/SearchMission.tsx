@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   FlatList,
@@ -52,51 +52,55 @@ export default function ResearchMission() {
   
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState({ visible: false, title: '', message: '' });
-
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const isFirstLoad = useRef(true);
 
   useFocusEffect(
     useCallback(() => {
     let cancelled = false;
 
     const loadData = async () => {
-      // On ne met le loading qu'au premier chargement pour éviter le clignotement
-      if (allMissions.length === 0) setLoading(true);
-      
+      // Use ref to check if it's the first load, avoiding dependency on allMissions state
+      if (isFirstLoad.current) {
+          setLoading(true);
+      }
+
       try {
         const [missionsData, categoriesData, favoritesData] = await Promise.all([
-              missionService.getAll(),
-              categoryService.getAll(),
-              userType === 'volunteer' ? volunteerService.getFavorites() : Promise.resolve([]),
-            ]);
+          missionService.getAll(),
+          categoryService.getAll(),
+          userType === 'volunteer' ? volunteerService.getFavorites() : Promise.resolve([]),
+        ]);
         if (cancelled) return;
-        setAllMissions(missionsData || []);
+        const newMissions = missionsData || [];
+        setAllMissions(newMissions);
+        setCategories(categoriesData || []);
         
         setFilteredMissions(prev => {
-             // Si la liste précédente était complète (pas de filtre), on met à jour
-             if (prev.length === 0 || prev.length === (allMissions.length > 0 ? allMissions.length : 0)) {
-                 return missionsData || [];
+             // If the previous list was complete (no filter), update it.
+             if (isFirstLoad.current || prev.length === 0) {
+                 return newMissions;
              }
              return prev;
         });
-        
-        if (allMissions.length === 0) setFilteredMissions(missionsData || []); 
-
-        setAllMissions(missionsData || []);
-        setCategories(categoriesData || []);
 
         if (favoritesData) {
-              const ids = favoritesData.map((m) => m.id_mission);
-              setFavoriteIds(ids);
-            } else {
-              setFavoriteIds([]);
-            }
+            const ids = favoritesData.map((m) => m.id_mission);
+            setFavoriteIds(ids);
+          } else {
+            setFavoriteIds([]);
+          }
+
         } catch (error) {
             if (cancelled) return;
             console.error(error);
-            if (allMissions.length === 0) setToast({ visible: true, title: t('error'), message: t('loadError') });
+            if (isFirstLoad.current) setToast({ visible: true, title: t('error'), message: t('loadError') });
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+          isFirstLoad.current = false;
+        }
       }
     };
     loadData();

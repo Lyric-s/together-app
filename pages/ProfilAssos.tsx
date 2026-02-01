@@ -104,7 +104,7 @@ export default function ProfilAssos() {
       }
     };
     loadProfile();
-  }, [t]);
+  }, []);
 
   // Detect if address has changed
   useEffect(() => {

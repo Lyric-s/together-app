@@ -206,13 +206,6 @@ useEffect(() => {
 
     const handleMarkAsAccepted = () => handleUpdateSelectedState("accepted");
     const handleMarkAsRejected = () => handleUpdateSelectedState("rejected");
-    
-    // Mappers localized
-    const mapApiTargetToUiType = (target: string): ReportType => {
-        if (target === "MISSION") return "Mission";
-        if (target === "ASSOCIATION") return "Association";
-        return "Volunteer";
-    };
 
     const formatDateLocal = (iso: string): string => {
         const d = new Date(iso);
@@ -251,8 +244,9 @@ useEffect(() => {
                 if (!mounted) return;
                 setErrorMsg(e?.message ?? t('loadReportsError'));
             } finally {
-                if (!mounted) return;
-                setLoading(false);
+                if (!mounted){
+                    setLoading(false);
+                }
             }
         };
 

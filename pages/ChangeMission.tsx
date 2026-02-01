@@ -84,7 +84,7 @@ export default function ChangeMission() {
       }
     };
     fetchMission();
-  }, [missionId, t]);
+  }, [missionId]);
 
   /**
    * Set placeholders for category and location once mission data is loaded.
@@ -98,7 +98,7 @@ export default function ChangeMission() {
     } else {
       setLieuPlaceholder(t('locationNotSpecified'));
     }
-  }, [mission, t]);
+  }, [mission]);
 
 
 

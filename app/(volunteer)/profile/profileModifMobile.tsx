@@ -24,7 +24,7 @@ import AlertToast from "@/components/AlertToast";
 import { useLanguage } from "@/context/LanguageContext";
 
 // --- MOCK DATA & TEST SWITCH ---
-const USE_MOCK_DATA = true; // Passez à `false` pour utiliser l'API réelle
+const USE_MOCK_DATA = __DEV__; // Passez à `false` pour utiliser l'API réelle
 
 // ... (MOCK_VOLUNTEER_DATA remains the same)
 const MOCK_VOLUNTEER_DATA: Volunteer = {
