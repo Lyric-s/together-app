@@ -218,7 +218,7 @@ export default function HomeVolunteer() {
         </View>
 
         {/* LISTE DES MISSIONS FAVORITES */}
-        { !loadingF && favorites.length > 0 &&
+        { !loadingF && (favorites.length > 0 || errorF) &&
         <View style={isMobile ? styles.sectionMobile : styles.sectionWeb}>
           <View style={styles.sectionHeader}>
             <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen ? {paddingLeft: 35} : {}]}>
@@ -232,7 +232,29 @@ export default function HomeVolunteer() {
             )}
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-             <View style={isMobile ? {alignItems:'center'} : styles.missionsGrid}>
+            {errorF ? (
+              <View style={{ alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+                <Text style={{ color: 'gray', textAlign: 'center', marginBottom: 10 }}>
+                  {errorF}
+                </Text>
+                <TouchableOpacity 
+                  onPress={loadMissionsFavorites}
+                  style={{
+                    paddingHorizontal: 20,
+                    paddingVertical: 10,
+                    backgroundColor: Colors.white,
+                    borderWidth: 1,
+                    borderColor: Colors.orange,
+                    borderRadius: 20
+                  }}
+                >
+                  <Text style={{ color: Colors.orange, fontWeight: '600' }}>
+                    {t('reload')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={isMobile ? {alignItems:'center'} : styles.missionsGrid}>
                 {favorites.slice(0, 3).map((mission) => (
                   <View key={`fav-${mission.id_mission}`} style={styles.cardWrapper}>
                     <MissionVolunteerCard
@@ -243,7 +265,8 @@ export default function HomeVolunteer() {
                     />
                   </View>
                 ))}
-             </View>
+              </View>
+            )}
           </View>
         </View>
         }

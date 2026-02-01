@@ -23,6 +23,8 @@ import { Colors } from "@/constants/colors";
 import AlertToast from "@/components/AlertToast";
 import { useLanguage } from "@/context/LanguageContext";
 
+type JoinStatus = 'none' | 'pending' | 'validated';
+
 /**
  * Display the mission details screen with responsive layout, mission metadata, and role-based actions.
  *
@@ -42,14 +44,28 @@ export default function JoinMissionPage() {
   const [mission, setMission] = useState<Mission | null>(null);
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isJoined, setIsJoined] = useState(false);
+  const [joinStatus, setJoinStatus] = useState<JoinStatus>('none');
   const [statusText, setStatusText] = useState(t('joinMission'));
   const [toast, setToast] = useState({ visible: false, title: '', message: '' });
   const [error, setError] = useState(false);
 
   // FETCH MISSION
   useEffect(() => {
-    setStatusText(t('joinMission')); // Reset text on language change or init
+    switch (joinStatus) {
+         case 'validated':
+             setStatusText(t('joinedValidated')); // "Validé / Rejoint"
+             break;
+         case 'pending':
+             setStatusText(t('waitingValidation')); // "En attente"
+             break;
+         case 'none':
+         default:
+             setStatusText(t('joinMission')); // "Rejoindre"
+             break;
+     }
+  }, [joinStatus, t]);
+
+  useEffect(() => {
     const rawId = Array.isArray(missionId) ? missionId[0] : missionId;
 
     if (!rawId) {
@@ -86,8 +102,11 @@ export default function JoinMissionPage() {
             // Check if already ACCEPTED
             const alreadyAccepted = myMissions.some(m => m.id_mission === numericId);
             if (alreadyAccepted) {
-                setIsJoined(true);
-                setStatusText(t('joinedValidated'));
+                setJoinStatus('validated');
+            } else {
+                // API LIMITATION: We do not know whether it is “pending” or “none” here.
+                // We set “none” by default. If the user clicks, the 409 will correct us.
+                setJoinStatus('none');
             }
           } catch (favError) {
             console.warn("Could not load volunteer data:", favError);
@@ -101,8 +120,8 @@ export default function JoinMissionPage() {
       }
     };
 
-    fetchMission();
-  }, [missionId, userType, t]);
+    if (!isNaN(numericId)) fetchMission();
+  }, [missionId, userType]);
 
   const showToast = useCallback((title: string, message: string) => {
     setToast({ visible: true, title, message });
@@ -190,7 +209,7 @@ export default function JoinMissionPage() {
       return;
     }
 
-    if (isJoined) {
+    if (joinStatus !== 'none') {
         showToast(t('info'), t('alreadyJoinedInfo'));
         return;
     }
@@ -198,20 +217,18 @@ export default function JoinMissionPage() {
     setLoading(true);
     try {
       await volunteerService.applyToMission(mission.id_mission);
-      setIsJoined(true);
-      setStatusText(t('waitingValidation'));
+      setJoinStatus('pending');
       showToast(t('success'), t('applicationSent'));
     } catch (e: any) {
+      const status = e.response?.status;
       const msg = e.response?.data?.detail || e.message || "";
       // Detect specific backend error for already applied
       if (
+          status === 409 || // Code standard pour "Already Exists"
           msg.toLowerCase().includes("already") || 
-          msg.toLowerCase().includes("existe déjà") ||
-          e.response?.status === 409 || 
-          e.response?.status === 400
+          msg.toLowerCase().includes("existe déjà")
       ) {
-          setIsJoined(true);
-          setStatusText(t('waitingValidation'));
+          setJoinStatus('pending');
           showToast(t('alreadyApplied'), t('alreadyAppliedMsg'));
       } else {
           showToast(t('error'), t('missionCreateErr')); // Generic error or create error used as fallback
@@ -353,8 +370,8 @@ export default function JoinMissionPage() {
                           <ButtonAuth 
                             text={statusText} 
                             onPress={handleJoinMission}
-                            disabled={isJoined}
-                            style={isJoined ? { backgroundColor: 'gray' } : undefined}
+                            disabled={joinStatus !== 'none'}
+                            style={joinStatus !== 'none' ? { backgroundColor: 'gray' } : undefined}
                           />
                       )}
                     </View>

@@ -222,7 +222,7 @@ export const translations = {
     associationNotSpecified: "Association non spécifiée",
     addToFavorites: "Ajouter aux Favoris",
     removeFromFavorites: "Retirer des Favoris",
-    
+    missionJoinErr: "Impossible de rejoindre la mission pour le moment.",    
 
     // --- Search & Filters ---
     allCategories: "Toutes les catégories",
@@ -703,6 +703,7 @@ export const translations = {
     associationNotSpecified: "Association not specified",
     addToFavorites: "Add to Favorites",
     removeFromFavorites: "Remove from Favorites",
+    missionJoinErr: "Unable to join the mission at this time.",    
 
     // --- Search & Filters ---
     allCategories: "All categories",
