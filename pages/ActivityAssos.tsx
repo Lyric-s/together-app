@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   TouchableOpacity,
   useWindowDimensions,
@@ -19,6 +18,7 @@ import { associationService } from '@/services/associationService';
 import { volunteerService } from '@/services/volunteerService';
 import { ProcessingStatus } from '@/models/enums';
 import { useLanguage } from '@/context/LanguageContext';
+import { Text } from '@/components/ThemedText';
 
 export const mapVolunteerStatusToVolunteerWithStatus = async (
   volunteerStatuses: VolunteerStatus[]
@@ -215,7 +215,7 @@ export default function ActivityAssos() {
     <View style={{ flex: 1, flexDirection: 'row', backgroundColor: Colors.darkerWhite }}>
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.content}>
-          <Text style={[styles.pageTitle, isSmallScreen && { paddingLeft: 55 }]}>
+          <Text style={[styles.pageTitle, isSmallScreen ? { paddingLeft: 55 } : {}]}>
             {t('finishedMissions')}
           </Text>
           <View style={styles.missionsList}>

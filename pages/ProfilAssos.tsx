@@ -10,7 +10,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   TextInput,
   Image,
@@ -18,6 +17,7 @@ import {
   useWindowDimensions,
   ActivityIndicator,
 } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as DocumentPicker from 'expo-document-picker';
 
@@ -54,7 +54,7 @@ export default function ProfilAssos() {
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 900;
   const isVerySmallScreen = width < 610;
-  const { t } = useLanguage();
+  const { t, getFontSize, fontFamily } = useLanguage();
 
   const [profileUser, setProfileUser] = useState<Association | null>(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -167,7 +167,7 @@ export default function ProfilAssos() {
     <View style={styles.card}>
       <Text style={[styles.cardTitle, { marginBottom: 16 }]}>{t('description')}</Text>
       <TextInput
-        style={styles.textArea}
+        style={[styles.textArea, { fontSize: getFontSize(14), fontFamily }]}
         value={profileUser?.description || ''}
         editable={isEditingDescription}
         multiline
@@ -206,7 +206,7 @@ export default function ProfilAssos() {
 
       <Text style={styles.label}>{t('address')}</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
         value={profileUser?.address || ''}
         editable={isEditingAddress}
         onChangeText={(text) => profileUser && setProfileUser({ ...profileUser, address: text })}
@@ -214,7 +214,7 @@ export default function ProfilAssos() {
 
       <Text style={styles.label}>{t('zipCode')}</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
         value={profileUser?.zip_code || ''}
         editable={isEditingAddress}
         keyboardType="numeric"
@@ -276,8 +276,8 @@ export default function ProfilAssos() {
       <AlertToast visible={alertModal.visible} title={alertModal.title} message={alertModal.message} onClose={handleAlertClose} />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={[styles.pageTitle, isSmallScreen && { paddingLeft: 40 }]}>{t('myProfile')}</Text>
-        <Text style={[styles.text, isSmallScreen && { paddingLeft: 40 }]}>{t('allYourData')}</Text>
+        <Text style={[styles.pageTitle, isSmallScreen ? { paddingLeft: 40 } : {}]}>{t('myProfile')}</Text>
+        <Text style={[styles.text, isSmallScreen ? { paddingLeft: 40 } : {}]}>{t('allYourData')}</Text>
 
         {isVerySmallScreen ? (
           <View style={{ alignItems: 'center', gap: 20 }}>
@@ -322,7 +322,6 @@ export default function ProfilAssos() {
                     userType="association"
                     userData={mapAssociationToProfile(profileUser, t)}
                     onSave={async (data: UserProfile) => {
-                        // Vérifie que c’est bien une association
                         if (data.type !== 'association') return;
 
                         const profileData = data as AssociationProfile;

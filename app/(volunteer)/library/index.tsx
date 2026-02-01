@@ -5,7 +5,8 @@
  * - MOBILE : Affiche l'interface complète avec gestion d'état locale (A venir / Historique).
  */
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, StyleSheet, Platform, ActivityIndicator, Image } from 'react-native';
+import { View, ScrollView, StyleSheet, Platform, ActivityIndicator, Image } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useRouter, Redirect } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { Mission } from '@/models/mission.model';

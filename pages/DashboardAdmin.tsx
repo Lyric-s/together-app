@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
     View,
-    Text,
     Image,
     TouchableOpacity,
     ScrollView,
@@ -14,6 +13,7 @@ import styles from "@/styles/pages/DashboardAdminStyles";
 import { adminService } from "@/services/adminService";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { Text } from '@/components/ThemedText';
 
 type DashboardStats = {
     associationsCount: number;

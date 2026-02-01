@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Text, View, StyleSheet} from "react-native";
+import { View, StyleSheet} from "react-native";
+import { Text } from '@/components/ThemedText';
 import { Colors } from "../constants/colors";
 
 // -------- component C13 Category Label

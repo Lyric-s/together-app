@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, Image, Platform } from "react-native";
+import { View, TouchableOpacity, Image, Platform } from "react-native";
+import { Text } from '@/components/ThemedText';
 import CategoryLabel from "./CategoryLabel";
 import { styles } from "../styles/components/MissionVolunteerCardStyle"
 import { Mission } from "@/models/mission.model";

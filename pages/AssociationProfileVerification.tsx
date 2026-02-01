@@ -11,7 +11,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import {
     View,
-    Text,
     ScrollView,
     TouchableOpacity,
     TextInput,
@@ -23,6 +22,7 @@ import {
 import styles from "@/styles/pages/AssociationProfileVerificationStyles";
 import { adminService } from "@/services/adminService";
 import { useLanguage } from "@/context/LanguageContext";
+import { Text } from '@/components/ThemedText';
 
 // --------------------
 // Types UI (pour la page)
@@ -56,7 +56,7 @@ const formatDateLocalized = (iso: string, locale: string) => {
 };
 
 export default function DocumentsVerification() {
-    const { t, language } = useLanguage();
+    const { t, language, getFontSize, fontFamily } = useLanguage();
     const [documents, setDocuments] = useState<AssociationDocument[]>([]);
     const [selectedDoc, setSelectedDoc] = useState<AssociationDocument | null>(null);
     const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
@@ -325,7 +325,7 @@ export default function DocumentsVerification() {
                             <View style={styles.filtersRow}>
                                 <View style={styles.searchWrapper}>
                                     <TextInput
-                                        style={styles.searchInput}
+                                        style={[styles.searchInput, { fontSize: getFontSize(14), fontFamily }]}
                                         placeholder={t('searchDocPlaceholder')}
                                         placeholderTextColor="#9CA3AF"
                                         value={search}

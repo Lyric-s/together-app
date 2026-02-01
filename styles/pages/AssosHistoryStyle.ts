@@ -6,7 +6,7 @@ import {
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.darkerWhite,
+    backgroundColor: Colors.white,
   },
 
   container: {
@@ -15,11 +15,11 @@ export const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 26,
-    fontWeight: '600',
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: Colors.black,
     marginBottom: 24,
   },
-
   cardsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',

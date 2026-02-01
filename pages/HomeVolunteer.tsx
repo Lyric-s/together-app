@@ -4,7 +4,6 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import MissionVolunteerCard from '@/components/MissionVolunteerCard';
 import {
   View,
-  Text,
   Image,
   ScrollView,
   TouchableOpacity,
@@ -12,6 +11,7 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { Colors } from '@/constants/colors';
 import { styles } from '@/styles/pages/AccountWithoutCoCSS';
 import { Mission } from '@/models/mission.model';
@@ -156,7 +156,7 @@ export default function HomeVolunteer() {
         {/* LISTE DES MISSIONS */}
         <View style={isMobile ? styles.sectionMobile : styles.sectionWeb}>
           <View style={styles.sectionHeader}>
-            <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen && {paddingLeft: 35}]}>
+            <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen ? {paddingLeft: 35} : {}]}>
                {isMobile ? t('recent') : t('recentMissions')}
             </Text>
             
@@ -218,7 +218,7 @@ export default function HomeVolunteer() {
         { !loadingF && favorites.length > 0 &&
         <View style={isMobile ? styles.sectionMobile : styles.sectionWeb}>
           <View style={styles.sectionHeader}>
-            <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen && {paddingLeft: 35}]}>
+            <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen ? {paddingLeft: 35} : {}]}>
                {isMobile ? t('favorites') : t('favoriteMissions')}
             </Text>
             

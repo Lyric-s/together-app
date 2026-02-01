@@ -4,7 +4,8 @@
  */
 
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleProp, ViewStyle } from 'react-native';
+import { View, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useRouter } from 'expo-router';
 import { styles, THEMES } from '@/styles/components/SwitchButton.styles';
 

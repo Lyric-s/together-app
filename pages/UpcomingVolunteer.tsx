@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, StyleSheet, Platform, ActivityIndicator, Image, useWindowDimensions } from 'react-native';
+import { View, ScrollView, Platform, ActivityIndicator, Image, useWindowDimensions } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { Mission } from '@/models/mission.model';
@@ -65,7 +66,7 @@ export default function LibraryUpcoming() {
                 </View>
             </View>
         )}
-        <Text style={[styles.pageTitle, isSmallScreen && {paddingLeft: 60, paddingTop: 10}]}>{t('myLibrary')}</Text>
+        <Text style={[styles.pageTitle, isSmallScreen ? {paddingLeft: 60, paddingTop: 10} : {}]}>{t('myLibrary')}</Text>
 
         <View>
         {loading ? (

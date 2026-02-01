@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, ImageSourcePropType } from "react-native";
+import { View, Image, TouchableOpacity, ImageSourcePropType } from "react-native";
+import { Text } from '@/components/ThemedText';
 import { styles } from "../styles/components/MissionAdminAssosCardStyle";
 import { Mission } from "@/models/mission.model";
 import { formatMissionDate } from "@/utils/date.utils";

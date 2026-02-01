@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform, ActivityIndicator, useWindowDimensions, Linking } from 'react-native';
+import { View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform, ActivityIndicator, useWindowDimensions, Linking } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import SwitchButton from '../components/SwitchButton'; 
 import { styles } from '../styles/pages/RegisterCSS';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -24,12 +25,12 @@ import { useLanguage } from '@/context/LanguageContext';
  */
 export default function Register() {
     const router = useRouter();
-    const { login, refetchUser } = useAuth();
+    const { login, logout, refetchUser } = useAuth();
     const { userType } = useLocalSearchParams<{ userType: string }>();
     const [userTypeTab, setUserTypeTab] = useState(userType === 'association' ? 'association' : 'volunteer');
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState({ visible: false, title: '', message: '' });
-    const { t } = useLanguage();
+    const { t, getFontSize, fontFamily } = useLanguage();
     
     const isWeb = Platform.OS === 'web';
 
@@ -190,10 +191,8 @@ export default function Register() {
                                 console.error("CRITIQUE : Échec de la suppression du compte orphelin", deleteError);
                             }
                         }
-                        // Déconnexion locale pour nettoyer l'état
-                        await authService.logout();
+                        await logout();
                         
-                        // On lance une erreur pour arrêter le processus et prévenir l'utilisateur
                         throw new Error(t('regCancelledDoc'));
                     }
                 }
@@ -315,7 +314,7 @@ export default function Register() {
                             <TextInput 
                                 placeholder={`${t('username')} *`} 
                                 placeholderTextColor="rgba(255,255,255,0.7)"
-                                style={styles.input}
+                                style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                 value={username} onChangeText={setUsername}
                             />
                             {userTypeTab === 'association' ? (
@@ -323,20 +322,20 @@ export default function Register() {
                                     <TextInput 
                                         placeholder={`${t('assoName')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         value={assoName} onChangeText={setAssoName}
                                     />
                                     <TextInput 
                                         placeholder={`${t('companyName')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         value={assoCompanyName} onChangeText={setAssoCompanyName}
                                     />
                                     <View style={[styles.fileInputContainer, {justifyContent: 'space-between'}]}>
                                         <TextInput 
                                             placeholder={`${t('rnaCode')} *`} 
                                             placeholderTextColor="rgba(255,255,255,0.7)"
-                                            style={styles.input}
+                                            style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                             value={rnaCode} onChangeText={setRnaCode}
                                         />
                                         <TouchableOpacity style={styles.btn_file} onPress={handlePickDocument}>
@@ -364,7 +363,7 @@ export default function Register() {
                                     <TextInput 
                                         placeholder={`${t('description')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         numberOfLines={4}
                                         multiline
                                         value={description} onChangeText={setDescription}
@@ -372,7 +371,7 @@ export default function Register() {
                                     <TextInput 
                                         placeholder={`${t('country')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         value={country} onChangeText={setCountry}
                                     />
                                 </>
@@ -381,41 +380,41 @@ export default function Register() {
                                     <TextInput 
                                         placeholder={`${t('lastName')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         value={lastName} onChangeText={setLastName}
                                     />
                                     <TextInput 
                                         placeholder={`${t('firstName')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         value={firstName} onChangeText={setFirstName}
                                     />
                                     <TextInput 
                                         placeholder={`${t('birthdate')} *`} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         value={birthdate} onChangeText={setBirthdate}
                                     />
                                     <TextInput 
                                         placeholder={t('bio')} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         value={bio} onChangeText={setBio}
                                     />
                                     <TextInput 
                                         placeholder={t('skills')} 
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         value={skills} onChangeText={setSkills}
                                     />
                                 </>
                             )}
-                            <TextInput placeholder={userTypeTab === 'association' ? `${t('address')} *` : t('address')} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} value={address} onChangeText={setAddress}/>
-                            <TextInput placeholder={userTypeTab === 'association' ? `${t('zipCode')} *` : t('zipCode')} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input}  value={zip_code} onChangeText={setZip_code}  />
-                            <TextInput placeholder={`${t('phone')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} keyboardType="numeric"  value={phone_number} onChangeText={setPhone_number} />
-                            <TextInput placeholder={`${t('email')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} />
-                            <TextInput placeholder={`${t('password')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} secureTextEntry={true}  value={password} onChangeText={setPassword} />
-                            <TextInput placeholder={`${t('confirmPwdPlaceholder')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={styles.input} secureTextEntry={true}  value={confirmPassword} onChangeText={setConfirmPassword} />
+                            <TextInput placeholder={userTypeTab === 'association' ? `${t('address')} *` : t('address')} placeholderTextColor="rgba(255,255,255,0.7)" style={[styles.input, { fontSize: getFontSize(14), fontFamily }]} value={address} onChangeText={setAddress}/>
+                            <TextInput placeholder={userTypeTab === 'association' ? `${t('zipCode')} *` : t('zipCode')} placeholderTextColor="rgba(255,255,255,0.7)" style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}  value={zip_code} onChangeText={setZip_code}  />
+                            <TextInput placeholder={`${t('phone')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={[styles.input, { fontSize: getFontSize(14), fontFamily }]} keyboardType="numeric"  value={phone_number} onChangeText={setPhone_number} />
+                            <TextInput placeholder={`${t('email')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={[styles.input, { fontSize: getFontSize(14), fontFamily }]} keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} />
+                            <TextInput placeholder={`${t('password')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={[styles.input, { fontSize: getFontSize(14), fontFamily }]} secureTextEntry={true}  value={password} onChangeText={setPassword} />
+                            <TextInput placeholder={`${t('confirmPwdPlaceholder')} *`} placeholderTextColor="rgba(255,255,255,0.7)" style={[styles.input, { fontSize: getFontSize(14), fontFamily }]} secureTextEntry={true}  value={confirmPassword} onChangeText={setConfirmPassword} />
 
                             <TouchableOpacity 
                                 style={[styles.submitBtn, loading && { opacity: 0.6 }]} 

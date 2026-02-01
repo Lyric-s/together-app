@@ -1,5 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, Text, ViewStyle, StyleProp } from 'react-native';
+import { TouchableOpacity, ViewStyle, StyleProp } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import styles from '@/styles/components/Button.styles';
 
 type Props = {

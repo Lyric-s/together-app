@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Platform, TouchableOpacity, Text, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
+import { Text } from '@/components/ThemedText';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Colors } from "../constants/colors";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useLanguage } from "@/context/LanguageContext";
-
-
-
 
 interface Props {
   date: Date | null;

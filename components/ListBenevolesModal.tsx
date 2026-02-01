@@ -2,16 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { Colors } from '@/constants/colors';
 import { VolunteerWithStatus } from '@/models/volunteer.model';
 import { styles } from '@/styles/pages/ChangeMissionCSS';
-import { FlatList, Image, Modal, Text, TextInput, TouchableOpacity, View, Platform } from 'react-native';
+import { FlatList, Image, Modal, TextInput, TouchableOpacity, View, Platform } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useLanguage } from '@/context/LanguageContext';
 import { ProcessingStatus } from '@/models/enums';
-
-type Benevole = {
-    id_volunteer: number;
-    last_name: string;
-    first_name: string;
-    state: ProcessingStatus;
-};
 
 type Props = {
     visible: boolean;
@@ -34,7 +28,7 @@ export default function ListeBenevolesModal({
     setBenevoles,
     missionId,
 }: Props) {
-    const { t } = useLanguage();
+    const { t, getFontSize, fontFamily } = useLanguage();
     const [rejectionReason, setRejectionReason] = React.useState('');
     const [volunteerIdToReject, setVolunteerIdToReject] = React.useState<number | null>(null);
 
@@ -130,7 +124,7 @@ export default function ListeBenevolesModal({
                     placeholder={t('searchVolunteer')}
                     value={search}
                     onChangeText={setSearch}
-                    style={{ flex: 1, fontSize: 16, padding: 0, margin: 0, borderWidth: 0, outlineWidth: 0 }}
+                    style={{ flex: 1, padding: 0, margin: 0, borderWidth: 0, outlineWidth: 0, fontSize: getFontSize(16), fontFamily }}
                 />
             </View>
 

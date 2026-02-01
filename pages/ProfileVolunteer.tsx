@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   Image,
   TouchableOpacity,
@@ -9,6 +8,7 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { LinearGradient } from 'expo-linear-gradient';
 import AlertToast from '@/components/AlertToast';
 import { Colors } from '@/constants/colors';
@@ -227,8 +227,8 @@ export default function ProfilVolunteer() {
             showsVerticalScrollIndicator={false}
         >
             <View style={styles1.headerContainer}>
-                <Text style={[styles1.pageTitle, isSmallScreen && {paddingLeft : 40}]}>{t('myProfile')}</Text>
-                <Text style={[styles1.headerSubtitle, isSmallScreen && {paddingLeft : 40}]}>{t('allYourData')}</Text>
+                <Text style={[styles1.pageTitle, isSmallScreen ? {paddingLeft : 40} : {}]}>{t('myProfile')}</Text>
+                <Text style={[styles1.headerSubtitle, isSmallScreen ? {paddingLeft : 40} : {}]}>{t('allYourData')}</Text>
             </View>
             <View style={[styles1.mainLayout, !isMobile && { flexDirection: 'column', alignItems: 'center', gap: 20 }]}>
                 {/* On ne gère plus de colonnes, on met les éléments les uns après les autres */}

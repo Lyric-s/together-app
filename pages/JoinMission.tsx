@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
-  Text,
   Image,
   ScrollView,
   TouchableOpacity,
@@ -9,6 +8,7 @@ import {
   ActivityIndicator,
   Platform,
 } from "react-native";
+import { Text } from '@/components/ThemedText';
 import { Href, router, useLocalSearchParams, useRouter } from 'expo-router';
 import BackButton from "@/components/BackButton";
 import ButtonAuth from "@/components/Button";
@@ -279,7 +279,7 @@ export default function JoinMissionPage() {
               <BackButton name_page="" />
           </View>
           <Text 
-              style={[ styles.headerTitle, isWeb && { fontSize: 24, marginLeft: 0 }, !isWeb && { textAlign: 'center', maxWidth: '70%' }]}
+              style={[ styles.headerTitle, isWeb ? { fontSize: 24, marginLeft: 0 } : {}, !isWeb ? { textAlign: 'center', maxWidth: '70%' } : {}]}
               numberOfLines={2}
           >
               {mission.name}

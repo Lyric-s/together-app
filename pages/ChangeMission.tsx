@@ -15,7 +15,8 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Modal, useWindowDimensions, Image, ScrollView, Text, TextInput, TouchableOpacity, View, ActivityIndicator, Platform } from 'react-native';
+import { Modal, useWindowDimensions, Image, ScrollView, TextInput, TouchableOpacity, View, ActivityIndicator, Platform } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { styles } from '@/styles/pages/ChangeMissionCSS';
@@ -43,7 +44,7 @@ export default function ChangeMission() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const missionId = Number(id);
-  const { t, language } = useLanguage();
+  const { t, language, getFontSize, fontFamily } = useLanguage();
 
 
   // ====== STATE VARIABLES ======
@@ -235,11 +236,11 @@ export default function ChangeMission() {
             <>
               {/* Title input */}
               <Text style={styles.label}>{t('missionTitleLabel')}</Text>
-              <TextInput style={styles.input} value={mission.name} onChangeText={(text) => handleChange("name", text)} />
+              <TextInput style={[styles.input, { fontSize: getFontSize(14), fontFamily }]} value={mission.name} onChangeText={(text) => handleChange("name", text)} />
 
               {/* Image URL */}
               <Text style={styles.label}>Image (URL)</Text>
-              <TextInput style={styles.input} value={mission.image_url || ''} onChangeText={(text) => handleChange("image_url", text)} />
+              <TextInput style={[styles.input, { fontSize: getFontSize(14), fontFamily }]} value={mission.image_url || ''} onChangeText={(text) => handleChange("image_url", text)} />
 
               {/* Start / End Dates */}
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20 }}>
@@ -250,7 +251,7 @@ export default function ChangeMission() {
                       type="datetime-local"
                       value={formatDateForInput(mission.date_start)}
                       onChange={(e) => handleChange("date_start", e.target.value)}
-                      style={{ width: "100%", padding: 10 }}
+                      style={{ width: "100%", padding: 10, fontSize: getFontSize(14), fontFamily }}
                     />
                   ) : (
                     <DatePickerField date={new Date(mission.date_start)} onChange={(date) => handleChange("date_start", date)} />
@@ -263,7 +264,7 @@ export default function ChangeMission() {
                       type="datetime-local"
                       value={formatDateForInput(mission.date_end)}
                       onChange={(e) => handleChange("date_end", e.target.value)}
-                      style={{ width: "100%", padding: 10 }}
+                      style={{ width: "100%", padding: 10, fontSize: getFontSize(14), fontFamily }}
                     />
                   ) : (
                     <DatePickerField date={new Date(mission.date_end)} onChange={(date) => handleChange("date_end", date)} />
@@ -282,20 +283,20 @@ export default function ChangeMission() {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 20 }}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.label}>{t('minVolunteersLabel')}</Text>
-                  <TextInput style={styles.input} value={mission.capacity_min.toString()} onChangeText={(text) => handleNumericChange("capacity_min", text)} keyboardType="numeric" />
+                  <TextInput style={[styles.input, { fontSize: getFontSize(14), fontFamily }]} value={mission.capacity_min.toString()} onChangeText={(text) => handleNumericChange("capacity_min", text)} keyboardType="numeric" />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.label}>{t('maxVolunteersLabel')}</Text>
-                  <TextInput style={styles.input} value={mission.capacity_max.toString()} onChangeText={(text) => handleNumericChange("capacity_max", text)} keyboardType="numeric" />
+                  <TextInput style={[styles.input, { fontSize: getFontSize(14), fontFamily }]} value={mission.capacity_max.toString()} onChangeText={(text) => handleNumericChange("capacity_max", text)} keyboardType="numeric" />
                 </View>
               </View>
 
               {/* Skills and description */}
               <Text style={styles.label}>{t('requiredSkillsLabel')}</Text>
-              <TextInput style={[styles.input, { height: 100, textAlignVertical: 'top' }]} multiline value={mission.skills || ''} onChangeText={(text) => handleChange("skills", text)} />
+              <TextInput style={[styles.input, { height: 100, textAlignVertical: 'top', fontSize: getFontSize(14), fontFamily }]} multiline value={mission.skills || ''} onChangeText={(text) => handleChange("skills", text)} />
 
               <Text style={styles.label}>{t('missionDescLabel')}</Text>
-              <TextInput style={[styles.input, { height: 150, textAlignVertical: 'top' }]} multiline value={mission.description} onChangeText={(text) => handleChange("description", text)} />
+              <TextInput style={[styles.input, { height: 150, textAlignVertical: 'top', fontSize: getFontSize(14), fontFamily }]} multiline value={mission.description} onChangeText={(text) => handleChange("description", text)} />
 
               {/* Buttons */}
               <View style={{ flexDirection: 'row', gap: 20, marginTop: 20 }}>

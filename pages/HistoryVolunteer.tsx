@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, Platform, ActivityIndicator, Image, useWindowDimensions } from 'react-native';
+import { View, ScrollView, Platform, ActivityIndicator, Image, useWindowDimensions } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { Mission } from '@/models/mission.model';
@@ -35,7 +36,7 @@ export default function LibraryHistory() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <Text style={[styles.pageTitle, isSmallScreen && {paddingLeft: 60, paddingTop: 10}]}>{t('myLibrary')}</Text>
+        <Text style={[styles.pageTitle, isSmallScreen ? {paddingLeft: 60, paddingTop: 10} : {}]}>{t('myLibrary')}</Text>
 
         {loading ? (
           <ActivityIndicator size="large" color={Colors.orange} style={{ marginTop: 50 }} />

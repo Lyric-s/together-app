@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
+import { Text } from '@/components/ThemedText';
 // import * as ImagePicker from "expo-image-picker";
 import { Picker } from "@react-native-picker/picker";
 import DatePickerField from "@/components/DatePickerFields"; 
@@ -19,6 +20,8 @@ import { useLanguage } from "@/context/LanguageContext";
 
 
 export default function MissionCreation() {
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 900;
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
@@ -31,11 +34,10 @@ export default function MissionCreation() {
   const [maxVolunteers, setMaxVolunteers] = useState("");
   const [skills, setSkills] = useState("");
   const [association, setAssociation] = useState<Association>();
-  const { t } = useLanguage();
+  const { t, getFontSize, fontFamily } = useLanguage();
 
 
   // --- Fetch categories from API ---
-// ... (rest of useEffects)
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -63,9 +65,6 @@ export default function MissionCreation() {
   }, []);
 
   const toIsoDate = (date: Date) => date.toISOString().split("T")[0];
-
-
-
 
   const handlePublish = async () => {
   if (
@@ -133,12 +132,11 @@ export default function MissionCreation() {
   }
 };
 
-
   return (
     <ScrollView style={styles.container}>
       <View >
-        <Text style={styles.mainTitle}>{t('missionCreation')}</Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.mainTitle, isSmallScreen ? { paddingLeft: 55 } : {}]}>{t('missionCreation')}</Text>
+        <Text style={[styles.subtitle, isSmallScreen ? { paddingLeft: 55 } : {}]}>
           {t('fillInfo')}
         </Text>
 
@@ -148,7 +146,7 @@ export default function MissionCreation() {
 
           <Text style={styles.label}>{t('missionTitleLabel')} *</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
             maxLength={100}
             value={title}
             onChangeText={setTitle}
@@ -156,7 +154,7 @@ export default function MissionCreation() {
 
           <Text style={styles.label}>{t('missionDescLabel')} *</Text>
           <TextInput
-            style={[styles.input, styles.textArea]}
+            style={[styles.input, styles.textArea, { fontSize: getFontSize(14), fontFamily }]}
             maxLength={500}
             multiline
             value={description}
@@ -213,7 +211,7 @@ export default function MissionCreation() {
 
           <Text style={styles.label}>{t('locationLabel')} *</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
             value={location}
             onChangeText={setLocation}
           />
@@ -222,7 +220,7 @@ export default function MissionCreation() {
             <View style={styles.half}>
               <Text style={styles.label}>{t('minVolunteersLabel')}</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                 keyboardType="numeric"
                 value={minVolunteers}
                 onChangeText={(t) => setMinVolunteers(t.replace(/[^0-9]/g, ""))}
@@ -232,7 +230,7 @@ export default function MissionCreation() {
             <View style={styles.half}>
               <Text style={styles.label}>{t('maxVolunteersLabel')} *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                 keyboardType="numeric"
                 value={maxVolunteers}
                 onChangeText={(t) => setMaxVolunteers(t.replace(/[^0-9]/g, ""))}
@@ -242,7 +240,7 @@ export default function MissionCreation() {
 
           <Text style={styles.label}>{t('requiredSkillsLabel')}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
             value={skills}
             onChangeText={setSkills}
           />

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   Image,
@@ -16,7 +15,7 @@ import { styles } from "../styles/components/MobileSearchBarStyle";
 import { Colors } from "@/constants/colors";
 import { SearchFilters } from "../types/search.types";
 import { useLanguage } from "@/context/LanguageContext";
-
+import { Text } from '@/components/ThemedText';
 interface Props {
   onSearch: (text: string, filters: SearchFilters) => void;
   category_list: string[];
@@ -45,7 +44,7 @@ export default function MobileSearchBar({
   category_list,
   default_city,
 }: Props) {
-  const { t, language } = useLanguage();
+  const { t, language, getFontSize, fontFamily } = useLanguage();
   const [searchText, setSearchText] = useState("");
 
   // Filters State
@@ -161,7 +160,7 @@ export default function MobileSearchBar({
         </TouchableOpacity>
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
           placeholder={t('searchPlaceholder')}
           placeholderTextColor={Colors.grayPlaceholder}
           value={searchText}
@@ -223,7 +222,7 @@ export default function MobileSearchBar({
               <Text style={styles.filterTitle}>{t('cityOrZipFull')}</Text>
               <TextInput
                 ref={cityInputRef}
-                style={[styles.filterInput, { borderWidth: 1, borderColor: Colors.grayBorder, padding: 10, borderRadius: 8 }]}
+                style={[styles.filterInput, { borderWidth: 1, borderColor: Colors.grayBorder, padding: 10, borderRadius: 8, fontSize: getFontSize(14), fontFamily }]}
                 placeholder={t('cityOrZipExample')}
                 value={cityInputText}
                 onChangeText={(text) => {

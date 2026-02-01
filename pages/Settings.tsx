@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Alert, Platform, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, ScrollView, TouchableOpacity, SafeAreaView, Alert, Platform, useWindowDimensions } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router'; 
 import { styles } from '@/styles/pages/SettingsStyle';
@@ -15,7 +16,7 @@ import { Colors } from '@/constants/colors';
 const PageReglages = () => { 
   const router = useRouter(); 
   const { logout, user } = useAuth(); 
-  const { t, getFontSize, fontFamily } = useLanguage();
+  const { t } = useLanguage();
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
@@ -51,8 +52,8 @@ const PageReglages = () => {
             try {
               if (user.user_type === UserType.VOLUNTEER && user.id_volunteer) {
                   await volunteerService.deleteProfile(user.id_volunteer);
-              } else if (user.user_type === UserType.ASSOCIATION && user.id_association) {
-                  await associationService.delete(user.id_association);
+              } else if (user.user_type === UserType.ASSOCIATION && user.id_asso) {
+                  await associationService.delete(user.id_asso);
               } else {
                   Alert.alert(t('error'), t('unsupportedUserType'));
                   return;
@@ -75,10 +76,10 @@ const PageReglages = () => {
   if (isWeb) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background, padding: 40 }}>
-        <Text style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 10, color: colors.text, fontFamily }}>
+        <Text style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 10, color: colors.text }}>
           {t('settings')}
         </Text>
-        <Text style={{ fontSize: 16, color: 'gray', marginBottom: 40, fontFamily }}>
+        <Text style={{ fontSize: 16, color: 'gray', marginBottom: 40 }}>
           {t('settingsDesc')}
         </Text>
 
@@ -112,10 +113,10 @@ const PageReglages = () => {
                 }}>
                   <Ionicons name={item.icon as any} size={28} color={Colors.orange} />
                 </View>
-                <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 8, color: colors.text, fontFamily }}>
+                <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 8, color: colors.text }}>
                   {item.title}
                 </Text>
-                <Text style={{ fontSize: 14, color: 'gray', lineHeight: 20, fontFamily }}>
+                <Text style={{ fontSize: 14, color: 'gray', lineHeight: 20 }}>
                   {item.description}
                 </Text>
               </TouchableOpacity>
@@ -167,7 +168,7 @@ const PageReglages = () => {
           </View>
           
           <View style={[styles.headerTitleContainer, { backgroundColor: colors.headerBackground }]}>
-            <Text style={[styles.headerTitle, { fontSize: getFontSize(18), color: colors.text, fontFamily }]}>
+            <Text style={[styles.headerTitle, { fontSize: 18, color: colors.text }]}>
               {t('settings')}
             </Text>
           </View>
@@ -183,7 +184,7 @@ const PageReglages = () => {
               <View style={styles.iconContainer}>
                 <Ionicons name={item.icon as any} size={22} color="#FFF" />
               </View>
-              <Text style={[styles.menuText, { fontSize: getFontSize(16), fontFamily: fontFamily }]}>
+              <Text style={[styles.menuText, { fontSize: 16 }]}>
                 {item.title}
               </Text>
             </TouchableOpacity>
@@ -194,14 +195,14 @@ const PageReglages = () => {
           <>
             <TouchableOpacity style={styles.logoutButton} onPress={logout}>
               <Ionicons name="log-out-outline" size={24} color="#FFF" style={{marginRight: 10}} />
-              <Text style={[styles.logoutText, { fontSize: getFontSize(16), fontFamily: fontFamily }]}>
+              <Text style={[styles.logoutText, { fontSize: 16 }]}>
                 {t('logout')}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteAccount}>
               <Ionicons name="trash-outline" size={24} color="#FFF" style={{marginRight: 10}} />
-              <Text style={[styles.logoutText, { fontSize: getFontSize(16), fontFamily: fontFamily }]}>
+              <Text style={[styles.logoutText, { fontSize: 16 }]}>
                 {t('deleteAccountTitle')}
               </Text>
             </TouchableOpacity>

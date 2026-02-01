@@ -49,33 +49,37 @@ const MOCK_VOLUNTEER_DATA: Volunteer = {
     }
   };
 
-// Helper component for form inputs
-const FormInput = ({ label, value, onChangeText, editable, required = false, ...props }: any) => (
-  <View style={styles.inputContainer}>
-    <Text style={styles.label}>
-      {label}
-      {required && <Text style={{ color: 'red' }}> *</Text>}
-    </Text>
-    <TextInput
-      style={[styles.input, !editable && styles.inputDisabled]}
-      value={value}
-      onChangeText={onChangeText}
-      editable={editable}
-      placeholderTextColor={Colors.gray}
-      {...props}
-    />
-  </View>
-);
-
 export default function ProfilModificationPage() {
   const { user, refetchUser } = useAuth();
-  const { t } = useLanguage();
+  const { t, getFontSize, fontFamily } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [alertModal, setAlertModal] = useState({ visible: false, title: '', message: '' });
 
   const [formData, setFormData] = useState<VolunteerUpdate & { password?: string; confirmPassword?: string }>({});
   const [initialValues, setInitialValues] = useState<VolunteerUpdate>({});
+
+  // Helper component for form inputs defined inside so it can access hooks
+  const FormInput = ({ label, value, onChangeText, editable, required = false, ...props }: any) => (
+    <View style={styles.inputContainer}>
+      <Text style={styles.label}>
+        {label}
+        {required && <Text style={{ color: 'red' }}> *</Text>}
+      </Text>
+      <TextInput
+        style={[
+            styles.input, 
+            !editable && styles.inputDisabled,
+            { fontSize: getFontSize(14), fontFamily }
+        ]}
+        value={value}
+        onChangeText={onChangeText}
+        editable={editable}
+        placeholderTextColor={Colors.gray}
+        {...props}
+      />
+    </View>
+  );
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -217,7 +221,7 @@ export default function ProfilModificationPage() {
             <FormInput label={t('address')} value={formData.address} onChangeText={(val: string) => handleInputChange("address", val)} editable={isEditing} />
             <FormInput label={t('zipCode')} value={formData.zip_code} onChangeText={(val: string) => handleInputChange("zip_code", val)} editable={isEditing} keyboardType="number-pad" />
             <FormInput label={t('skills')} value={formData.skills} onChangeText={(val: string) => handleInputChange("skills", val)} editable={isEditing} />
-            <FormInput label={t('bio')} value={formData.bio} onChangeText={(val: string) => handleInputChange("bio", val)} editable={isEditing} multiline style={[ styles.input, !isEditing && styles.inputDisabled,  { height: 100 }]} />
+            <FormInput label={t('bio')} value={formData.bio} onChangeText={(val: string) => handleInputChange("bio", val)} editable={isEditing} multiline style={[ styles.input, !isEditing && styles.inputDisabled,  { height: 100 }, { fontSize: getFontSize(14), fontFamily }]} />
 
             {isEditing && (
               <>

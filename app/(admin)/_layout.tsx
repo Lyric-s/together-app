@@ -4,7 +4,8 @@
  */
 
 import { Href, Redirect, Stack, router } from 'expo-router';
-import { Platform, View, Text, ActivityIndicator } from 'react-native';
+import { Platform, View, ActivityIndicator } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import Sidebar from '@/components/SideBar';
 import { useAuth } from '@/context/AuthContext';
 import { Colors } from '@/constants/colors';

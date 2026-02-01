@@ -7,10 +7,10 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, Platform, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Platform, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useRouter } from 'expo-router';
 import { styles } from '@/styles/components/FooterStyle';
-import { Colors } from '@/constants/colors';
 import { useLanguage } from '@/context/LanguageContext';
 
 type HoverLinkProps = {
@@ -33,7 +33,7 @@ const HoverLink = ({ children, onPress }: HoverLinkProps) => {
         onMouseLeave: () => setHovered(false),
       } : {})}
     >
-      <Text style={[styles.link, hovered && styles.linkHover]}>
+      <Text style={[styles.link, hovered ? styles.linkHover : {}]}>
         {children}
       </Text>
     </TouchableOpacity>

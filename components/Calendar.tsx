@@ -1,7 +1,8 @@
 // components/Calendar.tsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
-import { styles } from '@/styles/components/CalendarCSS'; // Assurez-vous d'avoir ce fichier CSS
+import { View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text } from '@/components/ThemedText';
+import { styles } from '@/styles/components/CalendarCSS';
 import { volunteerService } from '@/services/volunteerService';
 import { Mission } from '@/models/mission.model';
 import { Colors } from '@/constants/colors';
@@ -157,7 +158,7 @@ export default function Calendar() {
                             onPress={() => isValid && handleDayPress(dayNum)}
                             disabled={!isValid}
                         >
-                            <Text style={[styles.calendarDayText, isSelected(dayNum) && { color: 'white', fontWeight: 'bold' }]}>
+                            <Text style={[styles.calendarDayText, isSelected(dayNum) ? { color: 'white', fontWeight: 'bold' } : {}]}>
                                 {isValid ? dayNum : ''}
                             </Text>
                         </TouchableOpacity>

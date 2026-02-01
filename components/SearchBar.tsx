@@ -1,4 +1,5 @@
-import { View, TextInput, Text, TouchableOpacity, Image, FlatList, ActivityIndicator } from "react-native";
+import { View, TextInput, TouchableOpacity, Image, FlatList, ActivityIndicator } from "react-native";
+import { Text } from '@/components/ThemedText';
 import { useRef, useState, useEffect } from "react";
 import { Colors } from "../constants/colors";
 import { styles } from "../styles/components/SearchBarStyle";
@@ -35,7 +36,7 @@ export default function SearchBar({
     onSearch,
   }: SearchBarProps) {
 
-  const { t } = useLanguage();
+  const { t, getFontSize, fontFamily } = useLanguage();
   const [text, setText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("-");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -153,7 +154,7 @@ export default function SearchBar({
     <View style={[styles.container]}>
       
       <TextInput
-        style={[styles.input, { minWidth: 300 }]}
+        style={[styles.input, { minWidth: 300, fontSize: getFontSize(14), fontFamily }]}
         placeholder={t('searchPlaceholder')}
         placeholderTextColor={Colors.grayPlaceholder}
         value={text}
@@ -185,7 +186,7 @@ export default function SearchBar({
                         >
                             <Text style={[
                                 styles.suggestionText,
-                                item === selectedCategory && { fontWeight: 'bold', color: Colors.orange }
+                                item === selectedCategory ? { fontWeight: 'bold', color: Colors.orange } : {}
                             ]}>
                                 {item === "-" ? t('none') : item}
                             </Text>
@@ -199,7 +200,7 @@ export default function SearchBar({
       {/* --- LOCATION INPUT WITH AUTOCOMPLETE --- */}
       <View style={[styles.flexContainer, { maxWidth: 200, zIndex: 5000, elevation: 5000}]}>
         <TextInput
-          style={[styles.input]}
+          style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
           placeholder={t('cityOrZip')}
           placeholderTextColor={Colors.grayPlaceholder}
           value={locationInput}
@@ -231,7 +232,7 @@ export default function SearchBar({
       
       <View style={[styles.flexContainer]}>
         <TextInput
-          style={[styles.input]}
+          style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
           placeholder={t('startDatePlaceholder')}
           placeholderTextColor={Colors.grayPlaceholder}
           value={dateText}

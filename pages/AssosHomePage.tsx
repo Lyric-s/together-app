@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
   ScrollView,
   ActivityIndicator,
-  Platform
+  Platform,
+  useWindowDimensions
 } from "react-native";
 import MissionAdminAssosCard from "@/components/MissionAdminAssosCard";
 import { styles } from "@/styles/pages/AssosHomePageStyle";
@@ -15,6 +15,7 @@ import { mapMissionPublicToMission } from "@/utils/mission.utils";
 import { Colors } from "@/constants/colors";
 import Footer from "@/components/footer";
 import { useLanguage } from '@/context/LanguageContext';
+import { Text } from '@/components/ThemedText';
 
 /**
  * Represents a group of notifications displayed under the same date section.
@@ -36,10 +37,12 @@ type NotificationSection = {
  *   Displays notifications grouped by date.
  */
 export default function AssosHomePage() {
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 900;
   const [upcomingMissions, setUpcomingMissions] = useState<Mission[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     const loadData = async () => {
@@ -125,7 +128,7 @@ export default function AssosHomePage() {
         
         {/* LEFT COLUMN – MISSIONS (35%) */}
         <View style={styles.leftColumn}>
-            <Text style={styles.pageTitle}>{t('home')}</Text>
+            <Text style={[styles.pageTitle, isSmallScreen ? { paddingLeft: 55 } : {}]}>{t('home')}</Text>
             <Text style={styles.columnTitle}>{t('upcomingMissions')}</Text>
 
             <ScrollView showsVerticalScrollIndicator={true}>

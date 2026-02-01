@@ -1,6 +1,7 @@
 // components/VolunteerLibraryView.tsx
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { Colors } from '@/constants/colors';
 import { Mission } from '@/models/mission.model';
 import MissionVolunteerCard from '@/components/MissionVolunteerCard';

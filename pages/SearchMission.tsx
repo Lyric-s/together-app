@@ -4,11 +4,11 @@ import {
   FlatList,
   Platform,
   useWindowDimensions,
-  Text,
   ActivityIndicator,
   Image,
   KeyboardAvoidingView
 } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { Href, useRouter, useFocusEffect } from 'expo-router';
 import { styles } from '@/styles/pages/SearchMissionStyles';
 import { Colors } from '@/constants/colors';

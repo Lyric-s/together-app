@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { View, ScrollView, ActivityIndicator, useWindowDimensions } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 
@@ -19,6 +20,8 @@ import { useLanguage } from '@/context/LanguageContext';
 
 export default function AssosHistory() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 900;
   const { t } = useLanguage();
 
   const [missions, setMissions] = useState<Mission[]>([]);
@@ -51,7 +54,7 @@ export default function AssosHistory() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* TITLE */}
-        <Text style={styles.title}>{t('finishedMissionsTitle')}</Text>
+        <Text style={[styles.title, isSmallScreen ? { paddingLeft: 55 } : {}]}>{t('finishedMissionsTitle')}</Text>
 
         {/* CONTENT */}
         {loading ? (

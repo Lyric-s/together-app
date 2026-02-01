@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
+import { View, ScrollView, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '@/constants/colors';
@@ -12,7 +13,7 @@ import { useTheme } from '@/context/ThemeContext';
 const PrivacyPolicy = () => {
   const navigation = useNavigation();
   // Récupération des outils de personnalisation
-  const { t, getFontSize, fontFamily } = useLanguage();
+  const { t } = useLanguage();
   const { colors } = useTheme();
   const isWeb = Platform.OS === 'web';
 
@@ -21,33 +22,33 @@ const PrivacyPolicy = () => {
       <View style={{ flex: 1, backgroundColor: colors.background, padding: 40 }}>
          <TouchableOpacity onPress={() => navigation.goBack()} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 }}>
             <Ionicons name="arrow-back" size={24} color={Colors.orange} />
-            <Text style={{ marginLeft: 10, fontSize: 16, color: Colors.orange, fontFamily, fontWeight: '600' }}>{t('backToSettings')}</Text>
+            <Text style={{ marginLeft: 10, fontSize: 16, color: Colors.orange, fontWeight: '600' }}>{t('backToSettings')}</Text>
          </TouchableOpacity>
 
-         <Text style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 30, color: colors.text, fontFamily }}>
+         <Text style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 30, color: colors.text }}>
           {t('privacyPageTitle')}
         </Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={{ fontSize: 16, fontStyle: 'italic', marginBottom: 20, fontFamily, color: colors.text }}>
+          <Text style={{ fontSize: 16, fontStyle: 'italic', marginBottom: 20, color: colors.text }}>
             {t('lastUpdate')}
           </Text>
 
           <View style={{ gap: 24, paddingBottom: 50 }}>
             <View>
-              <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 8, fontFamily, color: colors.text }}>{t('priv1Title')}</Text>
-              <Text style={{ fontSize: 16, lineHeight: 24, fontFamily, color: colors.text }}>{t('priv1Text')}</Text>
+              <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 8, color: colors.text }}>{t('priv1Title')}</Text>
+              <Text style={{ fontSize: 16, lineHeight: 24, color: colors.text }}>{t('priv1Text')}</Text>
             </View>
             <View>
-              <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 8, fontFamily, color: colors.text }}>{t('priv2Title')}</Text>
-              <Text style={{ fontSize: 16, lineHeight: 24, fontFamily, color: colors.text }}>{t('priv2Text')}</Text>
+              <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 8, color: colors.text }}>{t('priv2Title')}</Text>
+              <Text style={{ fontSize: 16, lineHeight: 24, color: colors.text }}>{t('priv2Text')}</Text>
             </View>
             <View>
-              <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 8, fontFamily, color: colors.text }}>{t('priv3Title')}</Text>
-              <Text style={{ fontSize: 16, lineHeight: 24, fontFamily, color: colors.text }}>{t('priv3Text')}</Text>
+              <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 8, color: colors.text }}>{t('priv3Title')}</Text>
+              <Text style={{ fontSize: 16, lineHeight: 24, color: colors.text }}>{t('priv3Text')}</Text>
             </View>
             <View>
-              <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 8, fontFamily, color: colors.text }}>{t('priv4Title')}</Text>
-              <Text style={{ fontSize: 16, lineHeight: 24, fontFamily, color: colors.text }}>{t('priv4Text')}</Text>
+              <Text style={{ fontSize: 20, fontWeight: '600', marginBottom: 8, color: colors.text }}>{t('priv4Title')}</Text>
+              <Text style={{ fontSize: 16, lineHeight: 24, color: colors.text }}>{t('priv4Text')}</Text>
             </View>
           </View>
         </ScrollView>
@@ -74,7 +75,7 @@ const PrivacyPolicy = () => {
           <View style={[styles.headerTitleContainer, { backgroundColor: colors.headerBackground }]}>
             <Text style={[
                 styles.headerTitle, 
-                { fontSize: getFontSize(18), fontFamily: fontFamily, color: colors.text }
+                { fontSize: 18, color: colors.text }
             ]}>
               {t('settings')}
             </Text>
@@ -83,7 +84,7 @@ const PrivacyPolicy = () => {
 
         <Text style={[
             styles.pageTitle, 
-            { fontSize: getFontSize(22), fontFamily: fontFamily, color: colors.text }
+            { fontSize: 22, color: colors.text }
         ]}>
           {t('privacyPageTitle')}
         </Text>
@@ -93,10 +94,9 @@ const PrivacyPolicy = () => {
           <Text style={[
               styles.paragraph, 
               { 
-                fontSize: getFontSize(14), 
+                fontSize: 14, 
                 fontStyle: 'italic', 
                 marginBottom: 20, 
-                fontFamily: fontFamily, 
                 color: colors.text 
               }
           ]}>
@@ -104,34 +104,34 @@ const PrivacyPolicy = () => {
           </Text>
 
           {/* Section 1 */}
-          <Text style={[styles.sectionTitle, { fontSize: getFontSize(18), fontFamily: fontFamily }]}>
+          <Text style={[styles.sectionTitle, { fontSize: 18 }]}>
             {t('priv1Title')}
           </Text>
-          <Text style={[styles.paragraph, { fontSize: getFontSize(14), fontFamily: fontFamily, color: colors.text }]}>
+          <Text style={[styles.paragraph, { fontSize: 14, color: colors.text }]}>
             {t('priv1Text')}
           </Text>
 
           {/* Section 2 */}
-          <Text style={[styles.sectionTitle, { fontSize: getFontSize(18), fontFamily: fontFamily }]}>
+          <Text style={[styles.sectionTitle, { fontSize: 18 }]}>
             {t('priv2Title')}
           </Text>
-          <Text style={[styles.paragraph, { fontSize: getFontSize(14), fontFamily: fontFamily, color: colors.text }]}>
+          <Text style={[styles.paragraph, { fontSize: 14, color: colors.text }]}>
             {t('priv2Text')}
           </Text>
 
           {/* Section 3 */}
-          <Text style={[styles.sectionTitle, { fontSize: getFontSize(18), fontFamily: fontFamily }]}>
+          <Text style={[styles.sectionTitle, { fontSize: 18 }]}>
             {t('priv3Title')}
           </Text>
-          <Text style={[styles.paragraph, { fontSize: getFontSize(14), fontFamily: fontFamily, color: colors.text }]}>
+          <Text style={[styles.paragraph, { fontSize: 14, color: colors.text }]}>
             {t('priv3Text')}
           </Text>
 
           {/* Section 4 */}
-          <Text style={[styles.sectionTitle, { fontSize: getFontSize(18), fontFamily: fontFamily }]}>
+          <Text style={[styles.sectionTitle, { fontSize: 18 }]}>
             {t('priv4Title')}
           </Text>
-          <Text style={[styles.paragraph, { fontSize: getFontSize(14), fontFamily: fontFamily, color: colors.text }]}>
+          <Text style={[styles.paragraph, { fontSize: 14, color: colors.text }]}>
             {t('priv4Text')}
           </Text>
         </View>

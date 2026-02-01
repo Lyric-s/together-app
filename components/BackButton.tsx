@@ -1,4 +1,5 @@
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import { View, TouchableOpacity, Image } from "react-native";
+import { Text } from '@/components/ThemedText';
 import { styles } from '@/styles/pages/ChangeMissionCSS'
 import { useNavigation } from '@react-navigation/native'
 

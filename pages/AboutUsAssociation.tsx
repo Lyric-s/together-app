@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, Platform, useWindowDimensions, ScrollView } from 'react-native';
+import { View, ActivityIndicator, Platform, useWindowDimensions, ScrollView } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useLocalSearchParams } from 'expo-router';
 import BackButton from '@/components/BackButton';
 import { styles } from '@/styles/pages/AboutAssociationStyle';
@@ -103,8 +104,8 @@ export default function AboutUsAssociation() {
             <Text 
                 style={[ 
                     styles.headerTitle,
-                    isWeb && { fontSize: 24, marginLeft: 0 },
-                    !isWeb && { textAlign: 'center' }
+                    isWeb ? { fontSize: 24, marginLeft: 0 } : {},
+                    !isWeb ? { textAlign: 'center' } : {}
                 ]}
                 numberOfLines={2}
             >

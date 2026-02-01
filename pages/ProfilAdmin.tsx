@@ -1,6 +1,7 @@
 // pages/ProfilAdmin.tsx
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, ScrollView, useWindowDimensions, Platform, ActivityIndicator } from 'react-native';
+import { View, ScrollView, useWindowDimensions, Platform, ActivityIndicator } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { Redirect } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import AlertToast from '@/components/AlertToast';
@@ -158,8 +159,8 @@ export default function ProfilAdmin() {
 
                 <View style={{ flex: 1 }}>
                     <ScrollView style={styles.content}>
-                        <Text style={[styles.pageTitle, isSmallScreen && {paddingLeft: 40}]}>{t('myProfile')}</Text>
-                        <Text style={[styles.text, isSmallScreen && {paddingLeft: 40}]}>{t('allYourData')}</Text>
+                        <Text style={[styles.pageTitle, isSmallScreen ? {paddingLeft: 40} : {}]}>{t('myProfile')}</Text>
+                        <Text style={[styles.text, isSmallScreen ? {paddingLeft: 40} : {}]}>{t('allYourData')}</Text>
                         <View>
                             <ProfilCard
                                 userType = 'admin'

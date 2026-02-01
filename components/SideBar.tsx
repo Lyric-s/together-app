@@ -1,7 +1,6 @@
 import React from "react";
 import {
   View,
-  Text,
   Image,
   TouchableOpacity,
   ScrollView,
@@ -13,6 +12,7 @@ import { usePathname, Href } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { normalizePath } from '@/utils/path.utils';
+import { Text } from '@/components/ThemedText';
 
 const MOBILE_BREAKPOINT = 900;
 

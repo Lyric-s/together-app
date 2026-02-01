@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Image } from "react-native";
+import { View, ScrollView, TouchableOpacity, TextInput, Image } from "react-native";
+import { Text } from '@/components/ThemedText';
 
 import reportStyles from "@/styles/pages/ReportsVerificationStyles";
 
@@ -81,7 +82,7 @@ type Report = {
 };
 
 export default function ReportsVerification() {
-    const { t, language } = useLanguage();
+    const { t, language, getFontSize, fontFamily } = useLanguage();
     const [reports, setReports] = useState<Report[]>([]);
     const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
@@ -347,7 +348,7 @@ useEffect(() => {
                             <View style={reportStyles.searchWrapper}>
                                 <Image source={require("../assets/images/loupe.png")} style={reportStyles.searchIcon} />
                                 <TextInput
-                                    style={reportStyles.searchInput}
+                                    style={[reportStyles.searchInput, { fontSize: getFontSize(14), fontFamily }]}
                                     placeholder={t('searchReportPlaceholder')}
                                     placeholderTextColor="#9CA3AF"
                                     value={search}

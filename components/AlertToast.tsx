@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { styles } from '@/styles/components/AlertToastStyles';
-import { Text, TouchableOpacity, Animated, StyleSheet, Platform, useWindowDimensions } from 'react-native';
+import { TouchableOpacity, Animated, StyleSheet, Platform, useWindowDimensions } from 'react-native';
+import { Text } from '@/components/ThemedText';
 
 type Props = {
   visible: boolean;

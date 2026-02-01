@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform, ActivityIndicator } from 'react-native';
+import { View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform, ActivityIndicator } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import SwitchButton from '../components/SwitchButton';
 import { styles } from '../styles/pages/RegisterCSS';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -24,7 +25,7 @@ export default function Login() {
     const { login, refetchUser } = useAuth();
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState({ visible: false, title: '', message: '' });
-    const { t } = useLanguage();
+    const { t, getFontSize, fontFamily } = useLanguage();
 
     const isWeb = Platform.OS === 'web';
 
@@ -157,7 +158,7 @@ export default function Login() {
                                     <TextInput
                                         placeholder={`${t('username')} *`}
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         value={username} onChangeText={setUsername}
                                         accessibilityLabel={t('username')}
                                         accessibilityHint={t('enterUsername')}
@@ -166,7 +167,7 @@ export default function Login() {
                                     <TextInput
                                         placeholder={`${t('password')} *`}
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         secureTextEntry={true}
                                         value={password}
                                         onChangeText={setPassword}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { styles } from '@/styles/components/ProfilCardStyle';
-import { ScrollView, Image, Text, TextInput, TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { ScrollView, Image, TextInput, TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import * as ImagePicker from 'expo-image-picker';
 import CustomButton from './ImageButton';
 import { UserType } from '@/context/AuthContext';
@@ -393,6 +394,7 @@ export default function ProfilCard({
 
 const InputBlock = ({ label, value, isEditing, onChange, secure, multiline, required }: InputBlockProps) => {
     const hasValue = value && value.trim().length > 0;
+    const { getFontSize, fontFamily } = useLanguage();
 
     if (!isEditing && !hasValue) {
         return null;
@@ -409,7 +411,11 @@ const InputBlock = ({ label, value, isEditing, onChange, secure, multiline, requ
         <View style={styles.inputWrapper}>
             {isEditing ? (
                 <TextInput
-                    style={[styles.input, multiline && { minHeight: 100 }]}
+                    style={[
+                        styles.input,
+                        multiline && { minHeight: 100 },
+                        { fontSize: getFontSize(14), fontFamily }
+                    ]}
                     value={value}
                     onChangeText={onChange}
                     placeholder={label + (required ? '*' : '')}
