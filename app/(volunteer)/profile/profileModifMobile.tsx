@@ -23,6 +23,17 @@ import { UserType } from '@/models/enums';
 import AlertToast from "@/components/AlertToast";
 import { useLanguage } from "@/context/LanguageContext";
 
+interface FormInputProps {
+  label: string;
+  value: string | undefined;
+  onChangeText: (text: string) => void;
+  editable: boolean;
+  required?: boolean;
+  getFontSize: (size: number) => number;
+  fontFamily?: string;
+  [key: string]: any;
+}
+
 // --- MOCK DATA & TEST SWITCH ---
 const USE_MOCK_DATA = __DEV__; // Passez à `false` pour utiliser l'API réelle
 
@@ -49,6 +60,28 @@ const MOCK_VOLUNTEER_DATA: Volunteer = {
     }
   };
 
+// Helper component for form inputs defined inside so it can access hooks
+const FormInput = ({ label, value, onChangeText, editable, required = false, getFontSize, fontFamily, ...props }: FormInputProps) => (
+  <View style={styles.inputContainer}>
+    <Text style={styles.label}>
+      {label}
+      {required && <Text style={{ color: 'red' }}> *</Text>}
+    </Text>
+    <TextInput
+      style={[
+          styles.input, 
+          !editable && styles.inputDisabled,
+          { fontSize: getFontSize(14), fontFamily }
+      ]}
+      value={value}
+      onChangeText={onChangeText}
+      editable={editable}
+      placeholderTextColor={Colors.gray}
+      {...props}
+    />
+  </View>
+);
+
 export default function ProfilModificationPage() {
   const { user, refetchUser } = useAuth();
   const { t, getFontSize, fontFamily } = useLanguage();
@@ -60,28 +93,6 @@ export default function ProfilModificationPage() {
   const [initialValues, setInitialValues] = useState<VolunteerUpdate>({});
 
   const [imageUri, setImageUri] = useState<string | null>(null);
-
-  // Helper component for form inputs defined inside so it can access hooks
-  const FormInput = ({ label, value, onChangeText, editable, required = false, ...props }: any) => (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>
-        {label}
-        {required && <Text style={{ color: 'red' }}> *</Text>}
-      </Text>
-      <TextInput
-        style={[
-            styles.input, 
-            !editable && styles.inputDisabled,
-            { fontSize: getFontSize(14), fontFamily }
-        ]}
-        value={value}
-        onChangeText={onChangeText}
-        editable={editable}
-        placeholderTextColor={Colors.gray}
-        {...props}
-      />
-    </View>
-  );
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -191,7 +202,10 @@ export default function ProfilModificationPage() {
       return;
     }
 
-    if (!user?.id_volunteer) return;
+    if (!user?.id_volunteer) {
+      showAlert(t('error'), t('sessionExpired'));
+      return;
+    }
     try {
       await volunteerService.updateMe(user.id_volunteer, payload);
       // await volunteerService.uploadAvatar(user.id_volunteer, imageUri); // Call your image upload service here
@@ -213,6 +227,12 @@ export default function ProfilModificationPage() {
   if (loading) {
     return <ActivityIndicator style={{ flex: 1 }} size="large" color={Colors.orange} />;
   }
+
+  const commonInputProps = {
+      editable: isEditing,
+      getFontSize,
+      fontFamily
+  };
 
   return (
     <KeyboardAvoidingView
@@ -251,20 +271,20 @@ export default function ProfilModificationPage() {
             </TouchableOpacity>
           </View>
           <View style={styles.form}>
-            <FormInput label={t('lastName')} value={formData.last_name} onChangeText={(val: string) => handleInputChange("last_name", val)} editable={isEditing} required />
-            <FormInput label={t('firstName')} value={formData.first_name} onChangeText={(val: string) => handleInputChange("first_name", val)} editable={isEditing} required />
-            <FormInput label={t('email')} value={formData.email} onChangeText={(val: string) => handleInputChange("email", val)} editable={isEditing} required keyboardType="email-address" />
-            <FormInput label={t('phone')} value={formData.phone_number} onChangeText={(val: string) => handleInputChange("phone_number", val)} editable={isEditing} required keyboardType="phone-pad" />
-            <FormInput label={t('birthdateEx')} value={formData.birthdate} onChangeText={(val: string) => handleInputChange("birthdate", val)} editable={isEditing} required />
-            <FormInput label={t('address')} value={formData.address} onChangeText={(val: string) => handleInputChange("address", val)} editable={isEditing} />
-            <FormInput label={t('zipCode')} value={formData.zip_code} onChangeText={(val: string) => handleInputChange("zip_code", val)} editable={isEditing} keyboardType="number-pad" />
-            <FormInput label={t('skills')} value={formData.skills} onChangeText={(val: string) => handleInputChange("skills", val)} editable={isEditing} />
-            <FormInput label={t('bio')} value={formData.bio} onChangeText={(val: string) => handleInputChange("bio", val)} editable={isEditing} multiline style={[ styles.input, !isEditing && styles.inputDisabled,  { height: 100 }, { fontSize: getFontSize(14), fontFamily }]} />
+            <FormInput label={t('lastName')} value={formData.last_name} onChangeText={(val: string) => handleInputChange("last_name", val)} required {...commonInputProps}/>
+            <FormInput label={t('firstName')} value={formData.first_name} onChangeText={(val: string) => handleInputChange("first_name", val)} required {...commonInputProps}/>
+            <FormInput label={t('email')} value={formData.email} onChangeText={(val: string) => handleInputChange("email", val)} required keyboardType="email-address" {...commonInputProps}/>
+            <FormInput label={t('phone')} value={formData.phone_number} onChangeText={(val: string) => handleInputChange("phone_number", val)} required keyboardType="phone-pad" {...commonInputProps}/>
+            <FormInput label={t('birthdateEx')} value={formData.birthdate} onChangeText={(val: string) => handleInputChange("birthdate", val)} required {...commonInputProps}/>
+            <FormInput label={t('address')} value={formData.address} onChangeText={(val: string) => handleInputChange("address", val)} {...commonInputProps}/>
+            <FormInput label={t('zipCode')} value={formData.zip_code} onChangeText={(val: string) => handleInputChange("zip_code", val)} keyboardType="number-pad" {...commonInputProps}/>
+            <FormInput label={t('skills')} value={formData.skills} onChangeText={(val: string) => handleInputChange("skills", val)} {...commonInputProps}/>
+            <FormInput label={t('bio')} value={formData.bio} onChangeText={(val: string) => handleInputChange("bio", val)} multiline style={[ styles.input, !isEditing && styles.inputDisabled,  { height: 100 }, { fontSize: getFontSize(14), fontFamily }]} {...commonInputProps}/>
 
             {isEditing && (
               <>
-                <FormInput label={t('newPwd')} value={formData.password} onChangeText={(val: string) => handleInputChange("password", val)} editable={isEditing} secureTextEntry placeholder={t('leaveEmpty')} placeholderTextColor={Colors.white} />
-                <FormInput label={t('confirmPwd')} value={formData.confirmPassword} onChangeText={(val: string) => handleInputChange("confirmPassword", val)} editable={isEditing} secureTextEntry placeholderTextColor={Colors.white} />
+                <FormInput label={t('newPwd')} value={formData.password} onChangeText={(val: string) => handleInputChange("password", val)} secureTextEntry placeholder={t('leaveEmpty')} placeholderTextColor={Colors.white} {...commonInputProps}/>
+                <FormInput label={t('confirmPwd')} value={formData.confirmPassword} onChangeText={(val: string) => handleInputChange("confirmPassword", val)} secureTextEntry placeholderTextColor={Colors.white} {...commonInputProps}/>
               </>
             )}
           </View>

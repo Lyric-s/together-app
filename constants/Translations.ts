@@ -17,7 +17,7 @@ export const translations = {
 
     // --- Sidebar & Navigation ---
     general: "GENERAL",
-    security: "SECURITE",
+    security: "SÉCURITÉ",
     account: "COMPTE",
     togetherAssos: "Together Association",
     togetherMgmt: "Together Management",
@@ -72,6 +72,7 @@ export const translations = {
     defaultFont: "Par défaut",
     imagePickError: "Impossible de sélectionner l'image.",
     mediaPermissionDenied: "Permission d'accès aux médias refusée.",
+    sessionExpired: "Session expirée. Veuillez vous reconnecter.",
 
     // --- Admin Dashboard ---
     accessDeniedAdmin: "Accès refusé : vous devez être admin.",
@@ -180,7 +181,7 @@ export const translations = {
     missionNotFound: "Mission introuvable.",
     categoryNotSpecified: "Catégorie non spécifiée",
     locationNotSpecified: "Lieu non précisé",
-    registeredVolunteers: "Bénévole inscrits",
+    registeredVolunteers: "Bénévoles inscrits",
     confirmDeleteTitle: "Confirmer la suppression",
     confirmDeleteMsg: "Êtes-vous sûr de vouloir supprimer cette mission ? Cette action est irréversible.",
     deleteSuccess: "Mission supprimée.",
@@ -300,7 +301,7 @@ export const translations = {
     loadError: "Impossible de charger les missions pour le moment.",
     noRecentMissions: "Aucune mission récente disponible pour le moment.",
     favorites: "Favoris",
-    favoriteMissions: "Missions favoris",
+    favoriteMissions: "Missions favorites",
 
     // --- Switch Buttons ---
     loginBtn: "Connexion",
@@ -545,6 +546,7 @@ export const translations = {
     defaultFont: "Default",
     imagePickError: "Unable to select the image.",
     mediaPermissionDenied: "Permission to access media denied.",
+    sessionExpired: "Session expired. Please log in again.",
 
     // --- Admin Dashboard ---
     accessDeniedAdmin: "Access denied: you must be an admin.",
