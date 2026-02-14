@@ -96,6 +96,7 @@ export const styles = StyleSheet.create({
 
     dateDot: {
 <<<<<<< HEAD
+<<<<<<< HEAD
         color: Colors.palePurple,
         fontSize: 12,
     },
@@ -107,6 +108,13 @@ export const styles = StyleSheet.create({
     },
 
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+        color: Colors.palePurple,
+        fontSize: 12,
+    },
+
+
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
     dateText: {
         fontSize: 12.5,
         color: Colors.black,

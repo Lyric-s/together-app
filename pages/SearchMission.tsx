@@ -118,7 +118,13 @@ export default function ResearchMission() {
 =======
     const [currentLocationLabel, setCurrentLocationLabel] = useState("Veuillez entrer une adresse");
 
+<<<<<<< HEAD
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+    // ✅ NEW: garde l'adresse saisie (évite le reset quand on revient sur la page)
+    const [manualLocation, setManualLocation] = useState(false);
+
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
     // coords & distances
     const [userCoords, setUserCoords] = useState<{ lat: number; lon: number } | null>(null);
     const [distanceByMissionId, setDistanceByMissionId] = useState<Map<number, number>>(new Map());
@@ -317,6 +323,9 @@ export default function ResearchMission() {
                             const meAddr = (me?.address || "").trim();
                             const meZip = (me?.zip_code || "").trim();
 
+                            // ✅ adresse profil = pas "manual"
+                            setManualLocation(false);
+
                             setAddress(meAddr);
                             setZip(meZip);
 
@@ -326,16 +335,34 @@ export default function ResearchMission() {
                                 await recomputeDistancesFromAddress(meAddr, meZip, missions);
                             }
                         } catch {
+                            // si erreur, on ne casse pas l'adresse manuelle si elle existe
+                            if (!manualLocation) {
+                                setAddress("");
+                                setZip("");
+                                clearGeo("Veuillez entrer une adresse");
+                            } else {
+                                await recomputeDistancesFromAddress(address, zip, missions);
+                            }
+                        }
+                    } else {
+                        // guest (ou autre userType)
+                        if (!manualLocation) {
                             setAddress("");
                             setZip("");
                             clearGeo("Veuillez entrer une adresse");
+                        } else {
+                            // ✅ garder l'adresse saisie et recalculer si besoin
+                            await recomputeDistancesFromAddress(address, zip, missions);
                         }
+<<<<<<< HEAD
                     } else {
                         // guest
                         setAddress("");
                         setZip("");
                         clearGeo("Veuillez entrer une adresse");
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                     }
                 } catch (e) {
                     if (!cancelled) {
@@ -351,17 +378,27 @@ export default function ResearchMission() {
                 cancelled = true;
             };
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
         }, [
             userType,
             recomputeDistancesFromAddress,
             clearGeo,
             resetPagination,
             manualLocation,
+<<<<<<< HEAD
             allMissions.length,
         ])
 =======
         }, [userType, recomputeDistancesFromAddress, clearGeo, resetPagination])
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+            address,
+            zip,
+            allMissions.length,
+        ])
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
     );
 
     const handleToggleFavorite = useCallback(
@@ -475,10 +512,14 @@ export default function ResearchMission() {
         // volunteers
         base.sort((a, b) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
             const va = (a as any).volunteers_enrolled ?? 0;
 =======
             const va = (a as any).volunteers_enrolled ?? 0; // adapte si ton champ s'appelle autrement
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+            const va = (a as any).volunteers_enrolled ?? 0;
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
             const vb = (b as any).volunteers_enrolled ?? 0;
             return vb - va;
         });
@@ -486,10 +527,14 @@ export default function ResearchMission() {
     }, [filteredMissions, allSort]);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
     const totalPages = useMemo(
         () => Math.max(1, Math.ceil(allMissionsSorted.length / PAGE_SIZE)),
         [allMissionsSorted.length]
     );
+<<<<<<< HEAD
     const safePage = Math.min(page, totalPages);
 
     const allMissionsPaged = useMemo(() => {
@@ -515,6 +560,8 @@ export default function ResearchMission() {
 =======
 
     const totalPages = useMemo(() => Math.max(1, Math.ceil(allMissionsSorted.length / PAGE_SIZE)), [allMissionsSorted.length]);
+=======
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
     const safePage = Math.min(page, totalPages);
 
     const allMissionsPaged = useMemo(() => {
@@ -525,7 +572,6 @@ export default function ResearchMission() {
 
     const goPrev = useCallback(() => setPage((p) => Math.max(1, p - 1)), []);
     const goNext = useCallback(() => setPage((p) => Math.min(totalPages, p + 1)), [totalPages]);
-
 
     const scrollNearTo = useCallback((index: number) => {
         if (!nearListRef.current) return;
@@ -567,6 +613,7 @@ export default function ResearchMission() {
 
         setLocationModalVisible(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         // marque comme adresse saisie manuellement (donc on ne reset plus au retour)
         setManualLocation(true);
@@ -582,6 +629,12 @@ export default function ResearchMission() {
             showToast(t("error"), t("geoUpdateError"));
         }
 =======
+=======
+
+        // ✅ NEW: marque comme adresse saisie manuellement (donc on ne reset plus au retour)
+        setManualLocation(true);
+
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
         setAddress(addr);
         setZip(z);
 
@@ -632,6 +685,7 @@ export default function ResearchMission() {
                 {hasLocation ? (
                     <Text style={styles.locationText}>
 <<<<<<< HEAD
+<<<<<<< HEAD
                         {t("geoInput")} <Text style={{ fontWeight: "800" }}>{currentLocationLabel}</Text>
                     </Text>
                 ) : (
@@ -639,6 +693,9 @@ export default function ResearchMission() {
                         <Text style={{ fontWeight: "800" }}>{t("geoAddress")}</Text>
 =======
                         vous etes a <Text style={{ fontWeight: "800" }}>{currentLocationLabel}</Text>
+=======
+                        vous êtes à <Text style={{ fontWeight: "800" }}>{currentLocationLabel}</Text>
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                     </Text>
                 ) : (
                     <Text style={styles.locationText}>
@@ -662,8 +719,15 @@ export default function ResearchMission() {
                 </TouchableOpacity>
             </View>
 
+<<<<<<< HEAD
             <KeyboardAvoidingView style={{ flex: 1, width: "100%" }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+            <KeyboardAvoidingView
+                style={{ flex: 1, width: "100%" }}
+                behavior={Platform.OS === "ios" ? "padding" : undefined}
+            >
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                 {loading ? (
                     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                         <ActivityIndicator size="large" color={Colors.orange} />
@@ -725,12 +789,11 @@ export default function ResearchMission() {
                                         Entrez une adresse pour voir les missions les plus proches.
                                     </Text>
                                 ) : nearMissions.length === 0 ? (
-                                    <Text style={{ color: "#888", paddingVertical: 10 }}>
-                                        Aucune mission proche trouvée.
-                                    </Text>
+                                    <Text style={{ color: "#888", paddingVertical: 10 }}>Aucune mission proche trouvée.</Text>
                                 ) : (
                                     <View style={{ position: "relative" }}>
                                         {/* Flèches */}
+<<<<<<< HEAD
                                         <View
                                             style={{
                                                 position: "absolute",
@@ -740,6 +803,9 @@ export default function ResearchMission() {
                                             }}
                                         >
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                        <View style={{ position: "absolute", left: 0, top: "40%", zIndex: 5 }}>
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                                             <TouchableOpacity
                                                 onPress={nearPrev}
                                                 disabled={nearIndex === 0}
@@ -759,6 +825,7 @@ export default function ResearchMission() {
                                         </View>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                                         <View style={{ position: "absolute", right: 0, top: "40%", zIndex: 5 }}>
 =======
                                         <View
@@ -770,6 +837,9 @@ export default function ResearchMission() {
                                             }}
                                         >
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                        <View style={{ position: "absolute", right: 0, top: "40%", zIndex: 5 }}>
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                                             <TouchableOpacity
                                                 onPress={nearNext}
                                                 disabled={nearIndex >= nearMissions.length - 1}
@@ -867,16 +937,21 @@ export default function ResearchMission() {
                         )}
                         ListEmptyComponent={
 <<<<<<< HEAD
+<<<<<<< HEAD
                             <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>{t("noMissionsFound")}</Text>
 =======
                             <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>
                                 Aucune mission trouvée.
                             </Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                            <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>Aucune mission trouvée.</Text>
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                         }
                         ListFooterComponent={
                             <View style={styles.pagination}>
                                 <TouchableOpacity onPress={goPrev} disabled={safePage === 1} activeOpacity={0.85}>
+<<<<<<< HEAD
 <<<<<<< HEAD
                                     <Text style={[styles.paginationArrow, { opacity: safePage === 1 ? 0.35 : 1 }]}>
                                         {"<"}
@@ -884,6 +959,11 @@ export default function ResearchMission() {
 =======
                                     <Text style={[styles.paginationArrow, { opacity: safePage === 1 ? 0.35 : 1 }]}>{"<"}</Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                    <Text style={[styles.paginationArrow, { opacity: safePage === 1 ? 0.35 : 1 }]}>
+                                        {"<"}
+                                    </Text>
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                                 </TouchableOpacity>
 
                                 <Text style={styles.paginationText}>
@@ -892,14 +972,20 @@ export default function ResearchMission() {
 
                                 <TouchableOpacity onPress={goNext} disabled={safePage === totalPages} activeOpacity={0.85}>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                                     <Text
                                         style={[styles.paginationArrow, { opacity: safePage === totalPages ? 0.35 : 1 }]}
                                     >
                                         {">"}
                                     </Text>
+<<<<<<< HEAD
 =======
                                     <Text style={[styles.paginationArrow, { opacity: safePage === totalPages ? 0.35 : 1 }]}>{">"}</Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                                 </TouchableOpacity>
                             </View>
                         }
@@ -937,6 +1023,7 @@ export default function ResearchMission() {
                         }}
                     >
 <<<<<<< HEAD
+<<<<<<< HEAD
                         <Text style={{ fontSize: 18, fontWeight: "800", marginBottom: 6 }}>{t("geoUpdateMsg")}</Text>
                         <Text style={{ color: "#666", marginBottom: 14 }}>
                             {t("geoUpdate")}
@@ -947,6 +1034,9 @@ export default function ResearchMission() {
                         <Text style={{ fontSize: 18, fontWeight: "800", marginBottom: 6 }}>
                             Modifier la localisation
                         </Text>
+=======
+                        <Text style={{ fontSize: 18, fontWeight: "800", marginBottom: 6 }}>Modifier la localisation</Text>
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                         <Text style={{ color: "#666", marginBottom: 14 }}>
                             Entrez une adresse et/ou un code postal. On géocode et on met à jour les missions proches.
                         </Text>

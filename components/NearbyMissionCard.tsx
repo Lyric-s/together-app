@@ -10,9 +10,13 @@ import { Colors } from "@/constants/colors";
 import CategoryLabel from "@/components/CategoryLabel";
 import { formatMissionDate } from "@/utils/date.utils";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { styles } from "@/styles/components/NearbyMissionStyles";
 =======
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+import { styles } from "@/styles/components/NearbyMissionStyles";
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
 
 type Props = {
     mission: Mission;
@@ -39,6 +43,7 @@ export default function NearbyMissionCard({
     const categoryColor = Colors.orange;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const missionLocation =
         [mission.location?.zip_code, mission.location?.country].filter(Boolean).join(", ") || "Lieu non précisé";
 
@@ -50,16 +55,25 @@ export default function NearbyMissionCard({
 =======
     const enrolled = mission.volunteers_enrolled ?? 0;
 
+=======
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
     const missionLocation =
-        [mission.location?.zip_code, mission.location?.country]
-            .filter(Boolean)
-            .join(", ") || "Lieu non précisé";
+        [mission.location?.zip_code, mission.location?.country].filter(Boolean).join(", ") || "Lieu non précisé";
 
+<<<<<<< HEAD
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+    const blurActiveElementOnWeb = () => {
+        if (Platform.OS === "web" && document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+    };
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
 
     return (
         <TouchableOpacity
             onPress={() => {
+<<<<<<< HEAD
 <<<<<<< HEAD
                 blurActiveElementOnWeb();
                 onPressMission();
@@ -77,34 +91,32 @@ export default function NearbyMissionCard({
                 if (Platform.OS === "web" && document.activeElement instanceof HTMLElement) {
                     document.activeElement.blur();
                 }
+=======
+                blurActiveElementOnWeb();
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                 onPressMission();
             }}
-            style={{
-                width: 260,
-                backgroundColor: Colors.white,
-                borderRadius: 14,
-                overflow: "hidden",
-                shadowColor: Colors.black,
-                shadowOpacity: 0.08,
-                shadowRadius: 8,
-                shadowOffset: { width: 0, height: 3 },
-                elevation: 2,
-            }}
+            style={styles.card}
             activeOpacity={0.9}
         >
             {/* IMAGE */}
-            <View style={{ height: 120, width: "100%" }}>
-                <Image source={imageSource} style={{ width: "100%", height: "100%" }} />
+            <View style={styles.imageContainer}>
+                <Image source={imageSource} style={styles.image} />
 
                 {/* Category badge */}
+<<<<<<< HEAD
                 <View style={{ position: "absolute", top: 10, left: 10 }}>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                <View style={styles.categoryBadge}>
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                     <CategoryLabel text={categoryLabel} backgroundColor={categoryColor} />
                 </View>
 
                 {/* Heart */}
                 {onPressFavorite && (
                     <TouchableOpacity
+<<<<<<< HEAD
 <<<<<<< HEAD
                         style={styles.heartButton}
                         onPress={() => {
@@ -116,6 +128,11 @@ export default function NearbyMissionCard({
                                 document.activeElement.blur();
                             }
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                        style={styles.heartButton}
+                        onPress={() => {
+                            blurActiveElementOnWeb();
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                             onPressFavorite();
                         }}
                         activeOpacity={0.8}
@@ -132,6 +149,7 @@ export default function NearbyMissionCard({
                 )}
 
                 {/* People badge (top-right pill like your mock) */}
+<<<<<<< HEAD
 <<<<<<< HEAD
                 <View style={styles.peopleBadge}>
                     <Text style={styles.peopleText}>
@@ -160,10 +178,18 @@ export default function NearbyMissionCard({
                     </Text>
                     <Image source={require("@/assets/images/people.png")} style={{ width: 18, height: 18 }} />
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                <View style={styles.peopleBadge}>
+                    <Text style={styles.peopleText}>
+                        {mission.volunteers_enrolled} / {mission.capacity_max}
+                    </Text>
+                    <Image source={require("@/assets/images/people.png")} style={styles.peopleIcon} />
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                 </View>
             </View>
 
             {/* CONTENT */}
+<<<<<<< HEAD
 <<<<<<< HEAD
             <View style={styles.content}>
                 <Text style={styles.title} numberOfLines={1}>
@@ -183,24 +209,34 @@ export default function NearbyMissionCard({
 =======
             <View style={{ padding: 12, gap: 3 }}>
                 <Text style={{ fontSize: 15, fontWeight: "800", color: Colors.black }} numberOfLines={1}>
+=======
+            <View style={styles.content}>
+                <Text style={styles.title} numberOfLines={1}>
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                     {mission.name}
                 </Text>
-                <Text style={{ fontSize: 12.5, color: Colors.grayPlaceholder }} numberOfLines={1}>
+
+                <Text style={styles.association} numberOfLines={1}>
                     {assoName}
                 </Text>
 
-                <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginTop: 2 }}>
-                    <Text style={{ color: '#81458F', fontSize: 12 }}>●</Text>
-                    <Text style={{ fontSize: 12.5, color: Colors.black }}>{formattedDate}</Text>
+                <View style={styles.dateRow}>
+                    <Text style={[styles.dateDot, { color: Colors.palePurple }]}>●</Text>
+                    <Text style={styles.dateText}>{formattedDate}</Text>
                 </View>
 
+<<<<<<< HEAD
                 <Text style={{ fontSize: 12.5, color: Colors.grayPlaceholder }} numberOfLines={1}>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                <Text style={styles.location} numberOfLines={1}>
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                     {missionLocation}
                 </Text>
 
                 {/* DISTANCE line */}
                 {!!distanceLabel && (
+<<<<<<< HEAD
 <<<<<<< HEAD
                     <View style={styles.distanceRow}>
                         <Text style={{ fontSize: 15 }}>📍</Text>
@@ -212,6 +248,11 @@ export default function NearbyMissionCard({
                             {distanceLabel}
                         </Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                    <View style={styles.distanceRow}>
+                        <Text style={{ fontSize: 15 }}>📍</Text>
+                        <Text style={styles.distanceText}>{distanceLabel}</Text>
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                     </View>
                 )}
             </View>
