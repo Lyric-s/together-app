@@ -62,6 +62,9 @@ export default function ResearchMission() {
     const [zip, setZip] = useState("");
     const [currentLocationLabel, setCurrentLocationLabel] = useState("Veuillez entrer une adresse");
 
+    // ✅ NEW: garde l'adresse saisie (évite le reset quand on revient sur la page)
+    const [manualLocation, setManualLocation] = useState(false);
+
     // coords & distances
     const [userCoords, setUserCoords] = useState<{ lat: number; lon: number } | null>(null);
     const [distanceByMissionId, setDistanceByMissionId] = useState<Map<number, number>>(new Map());
@@ -171,6 +174,9 @@ export default function ResearchMission() {
                             const meAddr = (me?.address || "").trim();
                             const meZip = (me?.zip_code || "").trim();
 
+                            // ✅ adresse profil = pas "manual"
+                            setManualLocation(false);
+
                             setAddress(meAddr);
                             setZip(meZip);
 
@@ -180,15 +186,25 @@ export default function ResearchMission() {
                                 await recomputeDistancesFromAddress(meAddr, meZip, missions);
                             }
                         } catch {
+                            // si erreur, on ne casse pas l'adresse manuelle si elle existe
+                            if (!manualLocation) {
+                                setAddress("");
+                                setZip("");
+                                clearGeo("Veuillez entrer une adresse");
+                            } else {
+                                await recomputeDistancesFromAddress(address, zip, missions);
+                            }
+                        }
+                    } else {
+                        // guest (ou autre userType)
+                        if (!manualLocation) {
                             setAddress("");
                             setZip("");
                             clearGeo("Veuillez entrer une adresse");
+                        } else {
+                            // ✅ garder l'adresse saisie et recalculer si besoin
+                            await recomputeDistancesFromAddress(address, zip, missions);
                         }
-                    } else {
-                        // guest
-                        setAddress("");
-                        setZip("");
-                        clearGeo("Veuillez entrer une adresse");
                     }
                 } catch (e) {
                     if (!cancelled) {
@@ -203,7 +219,16 @@ export default function ResearchMission() {
             return () => {
                 cancelled = true;
             };
-        }, [userType, recomputeDistancesFromAddress, clearGeo, resetPagination])
+        }, [
+            userType,
+            recomputeDistancesFromAddress,
+            clearGeo,
+            resetPagination,
+            manualLocation,
+            address,
+            zip,
+            allMissions.length,
+        ])
     );
 
     const handleToggleFavorite = useCallback(
@@ -312,15 +337,17 @@ export default function ResearchMission() {
 
         // volunteers
         base.sort((a, b) => {
-            const va = (a as any).volunteers_enrolled ?? 0; // adapte si ton champ s'appelle autrement
+            const va = (a as any).volunteers_enrolled ?? 0;
             const vb = (b as any).volunteers_enrolled ?? 0;
             return vb - va;
         });
         return base;
     }, [filteredMissions, allSort]);
 
-
-    const totalPages = useMemo(() => Math.max(1, Math.ceil(allMissionsSorted.length / PAGE_SIZE)), [allMissionsSorted.length]);
+    const totalPages = useMemo(
+        () => Math.max(1, Math.ceil(allMissionsSorted.length / PAGE_SIZE)),
+        [allMissionsSorted.length]
+    );
     const safePage = Math.min(page, totalPages);
 
     const allMissionsPaged = useMemo(() => {
@@ -331,7 +358,6 @@ export default function ResearchMission() {
 
     const goPrev = useCallback(() => setPage((p) => Math.max(1, p - 1)), []);
     const goNext = useCallback(() => setPage((p) => Math.min(totalPages, p + 1)), [totalPages]);
-
 
     const scrollNearTo = useCallback((index: number) => {
         if (!nearListRef.current) return;
@@ -367,6 +393,10 @@ export default function ResearchMission() {
         }
 
         setLocationModalVisible(false);
+
+        // ✅ NEW: marque comme adresse saisie manuellement (donc on ne reset plus au retour)
+        setManualLocation(true);
+
         setAddress(addr);
         setZip(z);
 
@@ -407,7 +437,7 @@ export default function ResearchMission() {
 
                 {hasLocation ? (
                     <Text style={styles.locationText}>
-                        vous etes a <Text style={{ fontWeight: "800" }}>{currentLocationLabel}</Text>
+                        vous êtes à <Text style={{ fontWeight: "800" }}>{currentLocationLabel}</Text>
                     </Text>
                 ) : (
                     <Text style={styles.locationText}>
@@ -420,7 +450,10 @@ export default function ResearchMission() {
                 </TouchableOpacity>
             </View>
 
-            <KeyboardAvoidingView style={{ flex: 1, width: "100%" }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+            <KeyboardAvoidingView
+                style={{ flex: 1, width: "100%" }}
+                behavior={Platform.OS === "ios" ? "padding" : undefined}
+            >
                 {loading ? (
                     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                         <ActivityIndicator size="large" color={Colors.orange} />
@@ -460,20 +493,11 @@ export default function ResearchMission() {
                                         Entrez une adresse pour voir les missions les plus proches.
                                     </Text>
                                 ) : nearMissions.length === 0 ? (
-                                    <Text style={{ color: "#888", paddingVertical: 10 }}>
-                                        Aucune mission proche trouvée.
-                                    </Text>
+                                    <Text style={{ color: "#888", paddingVertical: 10 }}>Aucune mission proche trouvée.</Text>
                                 ) : (
                                     <View style={{ position: "relative" }}>
                                         {/* Flèches */}
-                                        <View
-                                            style={{
-                                                position: "absolute",
-                                                left: 0,
-                                                top: "40%",
-                                                zIndex: 5,
-                                            }}
-                                        >
+                                        <View style={{ position: "absolute", left: 0, top: "40%", zIndex: 5 }}>
                                             <TouchableOpacity
                                                 onPress={nearPrev}
                                                 disabled={nearIndex === 0}
@@ -492,14 +516,7 @@ export default function ResearchMission() {
                                             </TouchableOpacity>
                                         </View>
 
-                                        <View
-                                            style={{
-                                                position: "absolute",
-                                                right: 0,
-                                                top: "40%",
-                                                zIndex: 5,
-                                            }}
-                                        >
+                                        <View style={{ position: "absolute", right: 0, top: "40%", zIndex: 5 }}>
                                             <TouchableOpacity
                                                 onPress={nearNext}
                                                 disabled={nearIndex >= nearMissions.length - 1}
@@ -584,14 +601,14 @@ export default function ResearchMission() {
                             </View>
                         )}
                         ListEmptyComponent={
-                            <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>
-                                Aucune mission trouvée.
-                            </Text>
+                            <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>Aucune mission trouvée.</Text>
                         }
                         ListFooterComponent={
                             <View style={styles.pagination}>
                                 <TouchableOpacity onPress={goPrev} disabled={safePage === 1} activeOpacity={0.85}>
-                                    <Text style={[styles.paginationArrow, { opacity: safePage === 1 ? 0.35 : 1 }]}>{"<"}</Text>
+                                    <Text style={[styles.paginationArrow, { opacity: safePage === 1 ? 0.35 : 1 }]}>
+                                        {"<"}
+                                    </Text>
                                 </TouchableOpacity>
 
                                 <Text style={styles.paginationText}>
@@ -599,7 +616,11 @@ export default function ResearchMission() {
                                 </Text>
 
                                 <TouchableOpacity onPress={goNext} disabled={safePage === totalPages} activeOpacity={0.85}>
-                                    <Text style={[styles.paginationArrow, { opacity: safePage === totalPages ? 0.35 : 1 }]}>{">"}</Text>
+                                    <Text
+                                        style={[styles.paginationArrow, { opacity: safePage === totalPages ? 0.35 : 1 }]}
+                                    >
+                                        {">"}
+                                    </Text>
                                 </TouchableOpacity>
                             </View>
                         }
@@ -636,9 +657,7 @@ export default function ResearchMission() {
                             elevation: 6,
                         }}
                     >
-                        <Text style={{ fontSize: 18, fontWeight: "800", marginBottom: 6 }}>
-                            Modifier la localisation
-                        </Text>
+                        <Text style={{ fontSize: 18, fontWeight: "800", marginBottom: 6 }}>Modifier la localisation</Text>
                         <Text style={{ color: "#666", marginBottom: 14 }}>
                             Entrez une adresse et/ou un code postal. On géocode et on met à jour les missions proches.
                         </Text>

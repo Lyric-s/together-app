@@ -86,9 +86,10 @@ export const styles = StyleSheet.create({
     },
 
     dateDot: {
-        color: '#81458F',
+        color: Colors.palePurple,
         fontSize: 12,
     },
+
 
     dateText: {
         fontSize: 12.5,
