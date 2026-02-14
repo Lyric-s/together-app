@@ -190,6 +190,7 @@ export default function ResearchMission() {
             setCurrentLocationLabel(query);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             try {
                 const coords = await geocodeAddressNominatim(query);
                 setUserCoords(coords);
@@ -226,24 +227,46 @@ export default function ResearchMission() {
 =======
             const coords = await geocodeAddressNominatim(query);
             setUserCoords(coords);
+=======
+            try {
+                const coords = await geocodeAddressNominatim(query);
+                setUserCoords(coords);
+>>>>>>> a74469f (fix: coderabbit suggestions fixed)
 
-            if (!coords) {
-                setDistanceByMissionId(new Map());
-                return;
-            }
-
-            const map = new Map<number, number>();
-            for (const mission of missions) {
-                const mLat = mission.location?.lat;
-                const mLon = mission.location?.longitude;
-                if (typeof mLat === "number" && typeof mLon === "number") {
-                    map.set(mission.id_mission, haversineKm(coords.lat, coords.lon, mLat, mLon));
+                if (!coords) {
+                    setDistanceByMissionId(new Map());
+                    return;
                 }
+
+                const map = new Map<number, number>();
+                for (const mission of missions) {
+                    const mLat = mission.location?.lat;
+                    const mLon = mission.location?.longitude;
+                    if (typeof mLat === "number" && typeof mLon === "number") {
+                        map.set(mission.id_mission, haversineKm(coords.lat, coords.lon, mLat, mLon));
+                    }
+                }
+                setDistanceByMissionId(map);
+            } catch (error) {
+                console.warn("Recompute distances failed:", error);
+
+                // On garde une UI stable
+                setUserCoords(null);
+                setDistanceByMissionId(new Map());
+                setCurrentLocationLabel("Veuillez entrer une adresse");
+
+                showToast(
+                    "Erreur de géolocalisation",
+                    "Impossible de contacter le service de géocodage. Réessayez dans quelques instants."
+                );
             }
-            setDistanceByMissionId(map);
         },
+<<<<<<< HEAD
         [buildQuery, clearGeo]
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+        [buildQuery, clearGeo, showToast]
+>>>>>>> a74469f (fix: coderabbit suggestions fixed)
     );
 
     const resetPagination = useCallback(() => {
@@ -626,6 +649,7 @@ export default function ResearchMission() {
         } catch (error) {
             // Normalement déjà géré dans recompute, mais on protège quand même.
             console.warn("saveLocation failed:", error);
+<<<<<<< HEAD
             showToast(t("error"), t("geoUpdateError"));
         }
 =======
@@ -640,6 +664,10 @@ export default function ResearchMission() {
 
         await recomputeDistancesFromAddress(addr, z, allMissions);
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+            showToast("Erreur", "Impossible de mettre à jour la localisation.");
+        }
+>>>>>>> a74469f (fix: coderabbit suggestions fixed)
     }, [editAddress, editZip, recomputeDistancesFromAddress, allMissions, showToast]);
 
     const canSave = useMemo(() => editAddress.trim().length > 0 || editZip.trim().length > 0, [editAddress, editZip]);
