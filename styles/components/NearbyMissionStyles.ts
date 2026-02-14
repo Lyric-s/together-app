@@ -26,13 +26,22 @@ export const styles = StyleSheet.create({
 
     categoryBadge: {
         position: "absolute",
+<<<<<<< HEAD
         top: 0,
         left: 0,
+=======
+        top: 10,
+        left: 10,
+>>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
     },
 
     heartButton: {
         position: "absolute",
+<<<<<<< HEAD
         bottom: 5,
+=======
+        bottom: 10,
+>>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
         left: 10,
         padding: 4,
     },
@@ -86,11 +95,18 @@ export const styles = StyleSheet.create({
     },
 
     dateDot: {
+<<<<<<< HEAD
         color: Colors.palePurple,
         fontSize: 12,
     },
 
 
+=======
+        color: '#81458F',
+        fontSize: 12,
+    },
+
+>>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
     dateText: {
         fontSize: 12.5,
         color: Colors.black,

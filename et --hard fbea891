@@ -1,0 +1,217 @@
+[33md07005a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/TA-130-btn-signaler[m[33m)[m HEAD@{0}: checkout: moving from feature/TA-130-btn-signaler to feature/TA-130-btn-signaler
+[33md07005a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/TA-130-btn-signaler[m[33m)[m HEAD@{1}: rebase (finish): returning to refs/heads/feature/TA-130-btn-signaler
+[33md07005a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/TA-130-btn-signaler[m[33m)[m HEAD@{2}: rebase (continue): chore: remove coverage artifacts and ignore coverage/
+[33m7822fce[m HEAD@{3}: rebase (continue): test: add geolocation utils tests + ci
+[33mf947196[m HEAD@{4}: rebase (pick): feat: TA-130 Adding the possibility to a user to report an association
+[33mda0f9dd[m HEAD@{5}: rebase (pick): feat: TA-130 Adding the possibility to a user to report a mission
+[33m88040de[m[33m ([m[1;31morigin/dev[m[33m, [m[1;32mdev[m[33m)[m HEAD@{6}: rebase (start): checkout dev
+[33mfbea891[m[33m ([m[1;31morigin/feature/TA-130-btn-signaler[m[33m)[m HEAD@{7}: checkout: moving from dev to feature/TA-130-btn-signaler
+[33m88040de[m[33m ([m[1;31morigin/dev[m[33m, [m[1;32mdev[m[33m)[m HEAD@{8}: pull origin dev (finish): returning to refs/heads/dev
+[33m88040de[m[33m ([m[1;31morigin/dev[m[33m, [m[1;32mdev[m[33m)[m HEAD@{9}: pull origin dev (start): checkout 88040dee2124768979294ff5b3e187c97fb87c5c
+[33m63fad88[m HEAD@{10}: checkout: moving from feature/TA-130-btn-signaler to dev
+[33mfbea891[m[33m ([m[1;31morigin/feature/TA-130-btn-signaler[m[33m)[m HEAD@{11}: pull --rebase origin feature/TA-130-btn-signaler (finish): returning to refs/heads/feature/TA-130-btn-signaler
+[33mfbea891[m[33m ([m[1;31morigin/feature/TA-130-btn-signaler[m[33m)[m HEAD@{12}: pull --rebase origin feature/TA-130-btn-signaler (pick): chore: TA-135 adding tests
+[33ma28dceb[m HEAD@{13}: pull --rebase origin feature/TA-130-btn-signaler (pick): chore: TA-135 adding tests
+[33m80feb07[m HEAD@{14}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-126 Stale closure and add link codecov and codspeed
+[33m7cc7b19[m HEAD@{15}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-126 you can change the address
+[33mf9512ed[m HEAD@{16}: pull --rebase origin feature/TA-130-btn-signaler (pick): chore: TA-135 adding tests
+[33m9ab54b5[m HEAD@{17}: pull --rebase origin feature/TA-130-btn-signaler (pick): chore: TA-133 adding codspeed and its workflow
+[33m4e04f02[m HEAD@{18}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-96 modif translations for geo
+[33mc0a81da[m HEAD@{19}: pull --rebase origin feature/TA-130-btn-signaler (pick): feat: TA-96 add translations for geo
+[33mcafce15[m HEAD@{20}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-96 modif style of label cat and heartButton of NearbyMissionCard
+[33m50efb98[m HEAD@{21}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-96 add keys translations for geo
+[33md11ef23[m HEAD@{22}: pull --rebase origin feature/TA-130-btn-signaler (pick): chore: remove coverage artifacts and ignore coverage/
+[33m89b5279[m HEAD@{23}: pull --rebase origin feature/TA-130-btn-signaler (pick): test: add geolocation utils tests + ci
+[33me9f3564[m HEAD@{24}: pull --rebase origin feature/TA-130-btn-signaler (pick): test: setup Jest + coverage configuration
+[33m41714c0[m HEAD@{25}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-96 modif keys translations for geo
+[33m58e4ace[m HEAD@{26}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-96 add translations for geo, add slash for getAll missionService
+[33mb1bfd66[m HEAD@{27}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-132 delete useless code
+[33ma64e44b[m HEAD@{28}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-132 debuggerHost and localhost are computed but never used
+[33mb6ce861[m HEAD@{29}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-132 modif and add env var
+[33m27d1483[m HEAD@{30}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-132 fix missing fallback
+[33mb678e8c[m HEAD@{31}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: TA-132 modif and add env variable
+[33ma74469f[m HEAD@{32}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: coderabbit suggestions fixed
+[33mec463ec[m HEAD@{33}: pull --rebase origin feature/TA-130-btn-signaler (pick): fix: coderabbit suggestions fixed
+[33mefb5352[m HEAD@{34}: pull --rebase origin feature/TA-130-btn-signaler (pick): feat: TA-126 adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation
+[33m965b5ec[m HEAD@{35}: pull --rebase origin feature/TA-130-btn-signaler (start): checkout 965b5ec474376269ba5a97290458bf304c2e3e9b
+[33m82307c7[m HEAD@{36}: pull origin dev --rebase (finish): returning to refs/heads/feature/TA-130-btn-signaler
+[33m82307c7[m HEAD@{37}: pull origin dev --rebase (pick): feat: TA-130 Adding the possibility to a user to report an association
+[33m0178277[m HEAD@{38}: pull origin dev --rebase (pick): feat: TA-130 Adding the possibility to a user to report a mission
+[33m63fad88[m HEAD@{39}: pull origin dev --rebase (start): checkout 63fad8889b1df686ea4c1f7e28a67d06c8b0b6df
+[33m965b5ec[m HEAD@{40}: checkout: moving from dev to feature/TA-130-btn-signaler
+[33m63fad88[m HEAD@{41}: pull origin dev: Fast-forward
+[33mbcbb612[m HEAD@{42}: checkout: moving from feature/TA-130-btn-signaler to dev
+[33m965b5ec[m HEAD@{43}: commit: feat: TA-130 Adding the possibility to a user to report an association
+[33mc273504[m HEAD@{44}: commit: feat: TA-130 Adding the possibility to a user to report a mission
+[33mbcbb612[m HEAD@{45}: checkout: moving from dev to feature/TA-130-btn-signaler
+[33mbcbb612[m HEAD@{46}: pull --tags origin dev: Fast-forward
+[33mb8d38e9[m HEAD@{47}: checkout: moving from feature/TA-96-page-reglages to dev
+[33mdc7faeb[m[33m ([m[1;31morigin/feature/TA-96-page-reglages[m[33m, [m[1;32mfeature/TA-96-page-reglages[m[33m)[m HEAD@{48}: checkout: moving from dev to feature/TA-96-page-reglages
+[33mb8d38e9[m HEAD@{49}: pull: Fast-forward
+[33m0ec3395[m HEAD@{50}: checkout: moving from feature/TA-96-page-reglages to dev
+[33mdc7faeb[m[33m ([m[1;31morigin/feature/TA-96-page-reglages[m[33m, [m[1;32mfeature/TA-96-page-reglages[m[33m)[m HEAD@{51}: checkout: moving from dev to feature/TA-96-page-reglages
+[33m0ec3395[m HEAD@{52}: pull: Fast-forward
+[33m2c5ef86[m HEAD@{53}: checkout: moving from feature/TA-96-page-reglages to dev
+[33mdc7faeb[m[33m ([m[1;31morigin/feature/TA-96-page-reglages[m[33m, [m[1;32mfeature/TA-96-page-reglages[m[33m)[m HEAD@{54}: rebase (finish): returning to refs/heads/feature/TA-96-page-reglages
+[33mdc7faeb[m[33m ([m[1;31morigin/feature/TA-96-page-reglages[m[33m, [m[1;32mfeature/TA-96-page-reglages[m[33m)[m HEAD@{55}: rebase (continue): feat: TA-96 Ajout page réglages
+[33mcec0d54[m HEAD@{56}: pull origin dev --rebase (start): checkout cec0d5477079763b8c89dedf4ee854ef9b409cd4
+[33me79818b[m HEAD@{57}: commit: feat: TA-96 Ajout page réglages
+[33m0b05a04[m HEAD@{58}: pull origin dev --rebase: Fast-forward
+[33m2c5ef86[m HEAD@{59}: reset: moving to HEAD
+[33m2c5ef86[m HEAD@{60}: checkout: moving from dev to feature/TA-96-page-reglages
+[33m2c5ef86[m HEAD@{61}: checkout: moving from feature/TA-8-page-inscription to dev
+[33m224171b[m[33m ([m[1;31morigin/feature/TA-8-page-inscription[m[33m, [m[1;32mfeature/TA-8-page-inscription[m[33m)[m HEAD@{62}: checkout: moving from 856a2ecc2ba16fbf62398e91931b534361e1f8fd to feature/TA-8-page-inscription
+[33m856a2ec[m HEAD@{63}: checkout: moving from feature/TA-8-page-inscription to origin/feature/TA-7-login-page
+[33m224171b[m[33m ([m[1;31morigin/feature/TA-8-page-inscription[m[33m, [m[1;32mfeature/TA-8-page-inscription[m[33m)[m HEAD@{64}: commit: feat: TA-8 adding the inscription page
+[33m2c5ef86[m HEAD@{65}: checkout: moving from dev to feature/TA-8-page-inscription
+[33m2c5ef86[m HEAD@{66}: pull (finish): returning to refs/heads/dev
+[33m2c5ef86[m HEAD@{67}: pull (start): checkout 2c5ef86d37a8b2adc18b61802fe4c4b256a309e4
+[33m949353c[m[33m ([m[1;31morigin/fix/TA-61-add-switch-button[m[33m, [m[1;32mfix/TA-61-add-switch-button[m[33m)[m HEAD@{68}: checkout: moving from fix/TA-61-add-switch-button to dev
+[33m949353c[m[33m ([m[1;31morigin/fix/TA-61-add-switch-button[m[33m, [m[1;32mfix/TA-61-add-switch-button[m[33m)[m HEAD@{69}: checkout: moving from dev to fix/TA-61-add-switch-button
+[33m949353c[m[33m ([m[1;31morigin/fix/TA-61-add-switch-button[m[33m, [m[1;32mfix/TA-61-add-switch-button[m[33m)[m HEAD@{70}: checkout: moving from fix/TA-61-add-switch-button to dev
+[33m949353c[m[33m ([m[1;31morigin/fix/TA-61-add-switch-button[m[33m, [m[1;32mfix/TA-61-add-switch-button[m[33m)[m HEAD@{71}: checkout: moving from dev to fix/TA-61-add-switch-button
+[33m949353c[m[33m ([m[1;31morigin/fix/TA-61-add-switch-button[m[33m, [m[1;32mfix/TA-61-add-switch-button[m[33m)[m HEAD@{72}: pull --tags origin dev (finish): returning to refs/heads/dev
+[33m949353c[m[33m ([m[1;31morigin/fix/TA-61-add-switch-button[m[33m, [m[1;32mfix/TA-61-add-switch-button[m[33m)[m HEAD@{73}: pull --tags origin dev (pick): feat: TA-61 Added the prop to have two diffferent uses for this component
+[33mdf544c5[m HEAD@{74}: pull --tags origin dev (start): checkout df544c5fd076178a91c83a365a3748e3c03c9bc7
+[33m6f31228[m HEAD@{75}: checkout: moving from feature/TA-76-mobile-navigation-bar to dev
+[33m7123820[m[33m ([m[1;31morigin/feature/TA-76-mobile-navigation-bar[m[33m, [m[1;32mfeature/TA-76-mobile-navigation-bar[m[33m)[m HEAD@{76}: rebase (finish): returning to refs/heads/feature/TA-76-mobile-navigation-bar
+[33m7123820[m[33m ([m[1;31morigin/feature/TA-76-mobile-navigation-bar[m[33m, [m[1;32mfeature/TA-76-mobile-navigation-bar[m[33m)[m HEAD@{77}: rebase (pick): feat: TA-76 Made some fixes
+[33m8f43fc3[m HEAD@{78}: rebase (pick): feat: TA-76 Added Coderabbit fixes
+[33mbc10bd3[m HEAD@{79}: rebase (pick): feat: TA-76 Added Coderabbit fixes
+[33m5a2d093[m HEAD@{80}: rebase (pick): feat: TA-76 Added english translation of docstring
+[33m6728939[m HEAD@{81}: rebase (pick): feat: TA-76 Adding more french docstrings
+[33m2513e95[m HEAD@{82}: rebase (pick): feat: TA-76 Adding French docstrings
+[33m9cbfccd[m HEAD@{83}: rebase (pick): 📝 Add docstrings to `feature/TA-76-mobile-navigation-bar`
+[33m5f1627e[m HEAD@{84}: rebase (pick): feat: TA-76 Adding handlePress function
+[33m3d86c43[m HEAD@{85}: rebase (pick): feat: TA-76 Adding Coderabbit modifications
+[33m91abf9b[m HEAD@{86}: rebase (pick): feat: TA-76 Adding Coderabbit modifications
+[33m6602c8b[m HEAD@{87}: rebase (pick): feat: TA-76 Adding Coderabbit modifications
+[33mcd61b0b[m HEAD@{88}: rebase (pick): feat: TA-76 Adding Coderabbit modifications
+[33m6c2a584[m HEAD@{89}: rebase (pick): feat: TA-76 Adding Coderabbit modifications
+[33m42797d5[m HEAD@{90}: rebase (pick): feat: TA-76 Adding the index.tsx file
+[33mf075787[m HEAD@{91}: rebase (pick): feat: TA-76 Change of the file name and move in the right folder
+[33m3af308c[m HEAD@{92}: rebase (continue): feat: TA-76 adding C22 mobile navigation bar component
+[33m867f7d0[m HEAD@{93}: pull origin dev --rebase (start): checkout 867f7d0e538ade9f9f0f1acc0d28d9e881be9a67
+[33md605b90[m HEAD@{94}: checkout: moving from dev to feature/TA-76-mobile-navigation-bar
+[33m6f31228[m HEAD@{95}: checkout: moving from feature/TA-76-mobile-navigation-bar to dev
+[33md605b90[m HEAD@{96}: commit: feat: TA-76 Made some fixes
+[33me3bf632[m HEAD@{97}: reset: moving to HEAD~1
+[33mfd86db9[m HEAD@{98}: checkout: moving from dev to feature/TA-76-mobile-navigation-bar
+[33m6f31228[m HEAD@{99}: rebase (finish): returning to refs/heads/dev
+[33m6f31228[m HEAD@{100}: rebase (continue): feat: TA-61 Added the prop to have two diffferent uses for this component
+[33m867f7d0[m HEAD@{101}: pull origin dev (start): checkout 867f7d0e538ade9f9f0f1acc0d28d9e881be9a67
+[33md39a637[m HEAD@{102}: checkout: moving from dev to dev
+[33md39a637[m HEAD@{103}: checkout: moving from feature/TA-61-switch-button to dev
+[33m363573a[m[33m ([m[1;31morigin/feature/TA-61-switch-button[m[33m, [m[1;32mfeature/TA-61-switch-button[m[33m)[m HEAD@{104}: rebase (finish): returning to refs/heads/feature/TA-61-switch-button
+[33m363573a[m[33m ([m[1;31morigin/feature/TA-61-switch-button[m[33m, [m[1;32mfeature/TA-61-switch-button[m[33m)[m HEAD@{105}: rebase (continue): feat: TA-61 Added English Docstring for index file and made some fixes in the style
+[33m9e09d9e[m HEAD@{106}: rebase (pick): feat: TA-61 Added the prop to have two diffferent uses for this component
+[33m2b0ba85[m HEAD@{107}: rebase (pick): feat: TA-61 Adding the Switch button component
+[33ma9a1f89[m HEAD@{108}: rebase (pick): feat: TA-61 Added English DocString
+[33mbd50d0d[m HEAD@{109}: rebase (pick): feat: TA-61 Change the colors of the differents types of buttons
+[33m01a41ec[m HEAD@{110}: rebase (pick): feat: TA-61 Added the prop to have two diffferent uses for this component
+[33mecc2cf6[m HEAD@{111}: rebase (pick): feat: TA-61 Change the code wiith CodeRabbit reviews
+[33m2089954[m HEAD@{112}: rebase (pick): feat: TA-61 Change the code wiith CodeRabbit reviews
+[33m3c6c712[m HEAD@{113}: rebase (pick): feat: TA-61 Added english translation of docstring
+[33m9afcabd[m HEAD@{114}: rebase (pick): feat: TA-61 Adding more french docstrings
+[33m0a5bf5e[m HEAD@{115}: rebase (pick): feat: TA-61 Adding french docstrings
+[33m43d57ce[m HEAD@{116}: rebase (pick): 📝 Add docstrings to `feature/TA-61-switch-button`
+[33m03d4f71[m HEAD@{117}: rebase (pick): feat: TA-61 Adding the handlePress function
+[33mbd868cc[m HEAD@{118}: rebase (pick): feat: TA-61 Adding the reviews from Lucie
+[33ma57abd0[m HEAD@{119}: rebase (pick): feat: TA-61 Adding the Coderabbit modifications
+[33mb7b8531[m HEAD@{120}: rebase (pick): feat: TA-61 Rename the commits
+[33m91d7122[m HEAD@{121}: rebase (pick): feat: TA-61 Change of the file name and move in the right folder
+[33m81b76b8[m HEAD@{122}: rebase (continue): feat: TA-61 Adding the Switch button component
+[33m7d5f195[m HEAD@{123}: pull origin dev --rebase (start): checkout 7d5f195d58039d37a16d2c2b8c9308577061e4bf
+[33mae7b2a0[m HEAD@{124}: reset: moving to HEAD~1
+[33m373b94e[m HEAD@{125}: pull --tags origin feature/TA-61-switch-button: Fast-forward
+[33mae7b2a0[m HEAD@{126}: rebase (finish): returning to refs/heads/feature/TA-61-switch-button
+[33mae7b2a0[m HEAD@{127}: rebase (continue): feat: TA-61 Added English Docstring for index file and made some fixes in the style
+[33m29c43e6[m HEAD@{128}: rebase (pick): feat: TA-61 Added the prop to have two diffferent uses for this component
+[33m7bbadf9[m HEAD@{129}: rebase (pick): feat: TA-61 Adding the Switch button component
+[33mbe5eec4[m HEAD@{130}: rebase (pick): feat: TA-61 Added English DocString
+[33m2106632[m HEAD@{131}: rebase (pick): feat: TA-61 Change the colors of the differents types of buttons
+[33mf981f95[m HEAD@{132}: rebase (continue): feat: TA-61 Added the prop to have two diffferent uses for this component
+[33m062c630[m HEAD@{133}: rebase (pick): feat: TA-61 Change the code wiith CodeRabbit reviews
+[33mca3493f[m HEAD@{134}: rebase (pick): feat: TA-61 Change the code wiith CodeRabbit reviews
+[33m3b837f6[m HEAD@{135}: rebase (start): checkout 3b837f650a6e7fd7c9f363de030ac090915a2db9
+[33mc196c63[m HEAD@{136}: checkout: moving from feature/TA-61-switch-button to feature/TA-61-switch-button
+[33mc196c63[m HEAD@{137}: checkout: moving from feature/TA-76-mobile-navigation-bar to feature/TA-61-switch-button
+[33mfd86db9[m HEAD@{138}: checkout: moving from feature/TA-76-mobile-navigation-bar to feature/TA-76-mobile-navigation-bar
+[33mfd86db9[m HEAD@{139}: checkout: moving from dev to feature/TA-76-mobile-navigation-bar
+[33md39a637[m HEAD@{140}: reset: moving to HEAD~1
+[33mc196c63[m HEAD@{141}: merge feature/TA-61-switch-button: Fast-forward
+[33md39a637[m HEAD@{142}: checkout: moving from feature/TA-61-switch-button to dev
+[33mc196c63[m HEAD@{143}: checkout: moving from dev to feature/TA-61-switch-button
+[33md39a637[m HEAD@{144}: reset: moving to HEAD~1
+[33mc196c63[m HEAD@{145}: checkout: moving from dev to dev
+[33mc196c63[m HEAD@{146}: merge feature/TA-61-switch-button: Fast-forward
+[33m7d5f195[m HEAD@{147}: checkout: moving from feature/TA-61-switch-button to dev
+[33mc196c63[m HEAD@{148}: commit: feat: TA-61 Added English Docstring for index file and made some fixes in the style
+[33md39a637[m HEAD@{149}: checkout: moving from feature/TA-76-mobile-navigation-bar to feature/TA-61-switch-button
+[33mfd86db9[m HEAD@{150}: checkout: moving from feature/TA-61-switch-button to feature/TA-76-mobile-navigation-bar
+[33md39a637[m HEAD@{151}: rebase (finish): returning to refs/heads/feature/TA-61-switch-button
+[33md39a637[m HEAD@{152}: rebase (continue): feat: TA-61 Added the prop to have two diffferent uses for this component
+[33m51459a1[m HEAD@{153}: rebase (continue): feat: TA-61 Adding the Switch button component
+[33mc891e4d[m HEAD@{154}: rebase (start): checkout refs/remotes/origin/feature/TA-61-switch-button
+[33m071dff1[m HEAD@{155}: rebase (finish): returning to refs/heads/feature/TA-61-switch-button
+[33m071dff1[m HEAD@{156}: rebase (pick): feat: TA-61 Added English DocString
+[33m3c3f661[m HEAD@{157}: rebase (pick): feat: TA-61 Change the colors of the differents types of buttons
+[33m8cae825[m HEAD@{158}: rebase (continue): feat: TA-61 Added the prop to have two diffferent uses for this component
+[33m0e154ed[m HEAD@{159}: rebase (pick): feat: TA-61 Change the code wiith CodeRabbit reviews
+[33mc020b46[m HEAD@{160}: rebase (pick): feat: TA-61 Change the code wiith CodeRabbit reviews
+[33m17fa548[m HEAD@{161}: rebase (pick): feat: TA-61 Added english translation of docstring
+[33m21026b0[m HEAD@{162}: rebase (pick): feat: TA-61 Adding more french docstrings
+[33mde34c2c[m HEAD@{163}: rebase (pick): feat: TA-61 Adding french docstrings
+[33mc05ef34[m HEAD@{164}: rebase (pick): 📝 Add docstrings to `feature/TA-61-switch-button`
+[33m78c2567[m HEAD@{165}: rebase (pick): feat: TA-61 Adding the handlePress function
+[33mc2dc84e[m HEAD@{166}: rebase (pick): feat: TA-61 Adding the reviews from Lucie
+[33md061abe[m HEAD@{167}: rebase (pick): feat: TA-61 Adding the Coderabbit modifications
+[33m5c14842[m HEAD@{168}: rebase (pick): feat: TA-61 Rename the commits
+[33ma9daa46[m HEAD@{169}: rebase (pick): feat: TA-61 Change of the file name and move in the right folder
+[33m5e839fd[m HEAD@{170}: rebase (continue): feat: TA-61 Adding the Switch button component
+[33m7d5f195[m HEAD@{171}: pull origin dev --rebase (start): checkout 7d5f195d58039d37a16d2c2b8c9308577061e4bf
+[33mc891e4d[m HEAD@{172}: checkout: moving from 7d5f195d58039d37a16d2c2b8c9308577061e4bf to feature/TA-61-switch-button
+[33m7d5f195[m HEAD@{173}: checkout: moving from feature/TA-61-switch-button to origin/dev
+[33mc891e4d[m HEAD@{174}: commit: feat: TA-61 Added English DocString
+[33mcfda018[m HEAD@{175}: commit: feat: TA-61 Change the colors of the differents types of buttons
+[33m242373e[m HEAD@{176}: commit: feat: TA-61 Added the prop to have two diffferent uses for this component
+[33mbdb703b[m HEAD@{177}: commit: feat: TA-61 Change the code wiith CodeRabbit reviews
+[33m74678b4[m HEAD@{178}: rebase (finish): returning to refs/heads/feature/TA-61-switch-button
+[33m74678b4[m HEAD@{179}: rebase (continue): feat: TA-61 Change the code wiith CodeRabbit reviews
+[33md3e8abe[m HEAD@{180}: pull --rebase origin feature/TA-61-switch-button (start): checkout d3e8abe419fb8f42b195d8bd34d611bc8ab592cd
+[33mcae691a[m HEAD@{181}: commit: feat: TA-61 Change the code wiith CodeRabbit reviews
+[33m3b837f6[m HEAD@{182}: checkout: moving from feature/TA-76-mobile-navigation-bar to feature/TA-61-switch-button
+[33mfd86db9[m HEAD@{183}: commit: feat: TA-76 Added Coderabbit fixes
+[33me3bf632[m HEAD@{184}: commit: feat: TA-76 Added Coderabbit fixes
+[33m0920126[m HEAD@{185}: commit: feat: TA-76 Added Coderabbit fixes
+[33m83ced56[m HEAD@{186}: checkout: moving from feature/TA-61-switch-button to feature/TA-76-mobile-navigation-bar
+[33m3b837f6[m HEAD@{187}: commit: feat: TA-61 Added english translation of docstring
+[33m366e8ef[m HEAD@{188}: checkout: moving from feature/TA-76-mobile-navigation-bar to feature/TA-61-switch-button
+[33m83ced56[m HEAD@{189}: commit: feat: TA-76 Added english translation of docstring
+[33mb56a301[m HEAD@{190}: commit: feat: TA-76 Adding more french docstrings
+[33mcbe9294[m HEAD@{191}: checkout: moving from feature/TA-61-switch-button to feature/TA-76-mobile-navigation-bar
+[33m366e8ef[m HEAD@{192}: commit: feat: TA-61 Adding more french docstrings
+[33mfd19e0c[m HEAD@{193}: commit: feat: TA-61 Adding french docstrings
+[33mf619836[m HEAD@{194}: checkout: moving from feature/TA-76-mobile-navigation-bar to feature/TA-61-switch-button
+[33mcbe9294[m HEAD@{195}: commit: feat: TA-76 Adding French docstrings
+[33md20d1db[m HEAD@{196}: pull --tags origin feature/TA-76-mobile-navigation-bar: Fast-forward
+[33m42b159e[m HEAD@{197}: checkout: moving from feature/TA-61-switch-button to feature/TA-76-mobile-navigation-bar
+[33mf619836[m HEAD@{198}: pull --tags origin feature/TA-61-switch-button: Fast-forward
+[33mbb162ec[m HEAD@{199}: commit: feat: TA-61 Adding the handlePress function
+[33m3afc99b[m HEAD@{200}: checkout: moving from feature/TA-76-mobile-navigation-bar to feature/TA-61-switch-button
+[33m42b159e[m HEAD@{201}: commit: feat: TA-76 Adding handlePress function
+[33m0740a75[m HEAD@{202}: checkout: moving from feature/TA-61-switch-button to feature/TA-76-mobile-navigation-bar
+[33m3afc99b[m HEAD@{203}: commit: feat: TA-61 Adding the reviews from Lucie
+[33m074e8fc[m HEAD@{204}: commit: feat: TA-61 Adding the Coderabbit modifications
+[33m6d51da7[m HEAD@{205}: checkout: moving from feature/TA-76-mobile-navigation-bar to feature/TA-61-switch-button
+[33m0740a75[m HEAD@{206}: commit: feat: TA-76 Adding Coderabbit modifications
+[33m343d717[m HEAD@{207}: commit: feat: TA-76 Adding Coderabbit modifications
+[33me6218e1[m HEAD@{208}: checkout: moving from feature/TA-76-mobile-navigation-bar to feature/TA-76-mobile-navigation-bar
+[33me6218e1[m HEAD@{209}: commit: feat: TA-76 Adding Coderabbit modifications
+[33mff80238[m HEAD@{210}: commit: feat: TA-76 Adding Coderabbit modifications
+[33m9b6f53c[m HEAD@{211}: commit: feat: TA-76 Adding Coderabbit modifications
+[33m259f2d1[m HEAD@{212}: checkout: moving from feature/TA-61-switch-button to feature/TA-76-mobile-navigation-bar
+[33m6d51da7[m HEAD@{213}: checkout: moving from feature/TA-76-mobile-navigation-bar to feature/TA-61-switch-button
+[33m259f2d1[m HEAD@{214}: commit: feat: TA-76 Adding the index.tsx file
+[33m6084993[m HEAD@{215}: checkout: moving from main to feature/TA-76-mobile-navigation-bar
+[33m914f7e5[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{216}: clone: from https://github.com/Lyric-s/together-app.git
