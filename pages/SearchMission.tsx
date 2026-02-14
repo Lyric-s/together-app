@@ -117,25 +117,39 @@ export default function ResearchMission() {
 
             setCurrentLocationLabel(query);
 
-            const coords = await geocodeAddressNominatim(query);
-            setUserCoords(coords);
+            try {
+                const coords = await geocodeAddressNominatim(query);
+                setUserCoords(coords);
 
-            if (!coords) {
-                setDistanceByMissionId(new Map());
-                return;
-            }
-
-            const map = new Map<number, number>();
-            for (const mission of missions) {
-                const mLat = mission.location?.lat;
-                const mLon = mission.location?.longitude;
-                if (typeof mLat === "number" && typeof mLon === "number") {
-                    map.set(mission.id_mission, haversineKm(coords.lat, coords.lon, mLat, mLon));
+                if (!coords) {
+                    setDistanceByMissionId(new Map());
+                    return;
                 }
+
+                const map = new Map<number, number>();
+                for (const mission of missions) {
+                    const mLat = mission.location?.lat;
+                    const mLon = mission.location?.longitude;
+                    if (typeof mLat === "number" && typeof mLon === "number") {
+                        map.set(mission.id_mission, haversineKm(coords.lat, coords.lon, mLat, mLon));
+                    }
+                }
+                setDistanceByMissionId(map);
+            } catch (error) {
+                console.warn("Recompute distances failed:", error);
+
+                // On garde une UI stable
+                setUserCoords(null);
+                setDistanceByMissionId(new Map());
+                setCurrentLocationLabel("Veuillez entrer une adresse");
+
+                showToast(
+                    "Erreur de géolocalisation",
+                    "Impossible de contacter le service de géocodage. Réessayez dans quelques instants."
+                );
             }
-            setDistanceByMissionId(map);
         },
-        [buildQuery, clearGeo]
+        [buildQuery, clearGeo, showToast]
     );
 
     const resetPagination = useCallback(() => {
@@ -394,13 +408,19 @@ export default function ResearchMission() {
 
         setLocationModalVisible(false);
 
-        // ✅ NEW: marque comme adresse saisie manuellement (donc on ne reset plus au retour)
+        // marque comme adresse saisie manuellement (donc on ne reset plus au retour)
         setManualLocation(true);
 
         setAddress(addr);
         setZip(z);
 
-        await recomputeDistancesFromAddress(addr, z, allMissions);
+        try {
+            await recomputeDistancesFromAddress(addr, z, allMissions);
+        } catch (error) {
+            // Normalement déjà géré dans recompute, mais on protège quand même.
+            console.warn("saveLocation failed:", error);
+            showToast("Erreur", "Impossible de mettre à jour la localisation.");
+        }
     }, [editAddress, editZip, recomputeDistancesFromAddress, allMissions, showToast]);
 
     const canSave = useMemo(() => editAddress.trim().length > 0 || editZip.trim().length > 0, [editAddress, editZip]);
