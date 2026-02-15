@@ -9,6 +9,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci --legacy-peer-deps
 
+ARG EXPO_PUBLIC_API_URL
+ENV EXPO_PUBLIC_API_URL=$EXPO_PUBLIC_API_URL
+
 # Copy the rest of the application code
 COPY . .
 
