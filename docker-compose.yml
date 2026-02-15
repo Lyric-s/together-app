@@ -3,7 +3,11 @@ services:
     build:
       context: .
       args:
+<<<<<<< HEAD
         - EXPO_PUBLIC_API_URL=${API_URL:?ERREUR_VARIABLE_API_URL_MANQUANTE_DANS_COOLIFY}
+=======
+        - EXPO_PUBLIC_API_URL=${API_URL}
+>>>>>>> b678e8c (fix: TA-132 modif and add env variable)
     container_name: together-frontend
     restart: unless-stopped
     ports:

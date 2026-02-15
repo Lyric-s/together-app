@@ -11,7 +11,10 @@ RUN npm ci --legacy-peer-deps
 
 ARG EXPO_PUBLIC_API_URL
 ENV EXPO_PUBLIC_API_URL=$EXPO_PUBLIC_API_URL
+<<<<<<< HEAD
 RUN if [ -z "$EXPO_PUBLIC_API_URL" ]; then echo "ERREUR : EXPO_PUBLIC_API_URL est vide au moment du build !"; exit 1; fi
+=======
+>>>>>>> b678e8c (fix: TA-132 modif and add env variable)
 
 # Copy the rest of the application code
 COPY . .
