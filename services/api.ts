@@ -1,6 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { storageService } from './storageService';
-import Constants from 'expo-constants';
 
 /**
  * Determines the base URL for API requests based on the execution environment.
