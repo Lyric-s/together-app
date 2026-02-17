@@ -3,7 +3,7 @@ services:
     build:
       context: .
       args:
-        - EXPO_PUBLIC_API_URL=${API_URL}
+        - EXPO_PUBLIC_API_URL=${API_URL:?ERREUR_VARIABLE_API_URL_MANQUANTE_DANS_COOLIFY}
     container_name: together-frontend
     restart: unless-stopped
     ports:
