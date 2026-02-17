@@ -17,11 +17,15 @@ const getBaseUrl = () => {
     const debuggerHost = Constants.expoConfig?.hostUri || Constants.experienceUrl || '';
     const localhost = debuggerHost.split('//')[1]?.split(':')[0] || 'localhost';
 <<<<<<< HEAD
+<<<<<<< HEAD
     return process.env.EXPO_PUBLIC_API_URL //`http://${localhost}:8000`;
 >>>>>>> b678e8c (fix: TA-132 modif and add env variable)
 =======
     return process.env.EXPO_PUBLIC_API_URL || `http://${localhost}:8000`;
 >>>>>>> 27d1483 (fix: TA-132 fix missing fallback)
+=======
+    return process.env.EXPO_PUBLIC_API_URL;
+>>>>>>> b6ce861 (fix: TA-132 modif and add env var)
   }
 
   // ---------------------------------------------------------
@@ -32,6 +36,7 @@ const getBaseUrl = () => {
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
        return process.env.EXPO_PUBLIC_API_URL;
 =======
        return process.env.EXPO_PUBLIC_API_URL //|| 'http://localhost:8000';
@@ -39,6 +44,9 @@ const getBaseUrl = () => {
 =======
        return process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
 >>>>>>> 27d1483 (fix: TA-132 fix missing fallback)
+=======
+       return process.env.EXPO_PUBLIC_API_URL;
+>>>>>>> b6ce861 (fix: TA-132 modif and add env var)
     }
 
     // CASE B: You are in PRODUCTION

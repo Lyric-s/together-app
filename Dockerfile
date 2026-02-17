@@ -19,6 +19,11 @@ RUN if [ -z "$EXPO_PUBLIC_API_URL" ]; then echo "ERREUR : EXPO_PUBLIC_API_URL es
 # Copy the rest of the application code
 COPY . .
 
+ARG EXPO_PUBLIC_API_URL
+ENV EXPO_PUBLIC_API_URL=$EXPO_PUBLIC_API_URL
+
+RUN if [ -z "$EXPO_PUBLIC_API_URL" ]; then echo "ERREUR : EXPO_PUBLIC_API_URL est vide au moment du build !"; exit 1; fi
+
 # Build for the web with Expo
 RUN npm run build:web
 
