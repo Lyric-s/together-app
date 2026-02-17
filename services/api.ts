@@ -12,8 +12,6 @@ const getBaseUrl = () => {
   // CASE MOBILE (Expo Go ou build standalone)
   // ---------------------------------------------------------
   if (__DEV__ && typeof window === 'undefined') {
-    const debuggerHost = Constants.expoConfig?.hostUri || Constants.experienceUrl || '';
-    const localhost = debuggerHost.split('//')[1]?.split(':')[0] || 'localhost';
     return process.env.EXPO_PUBLIC_API_URL;
   }
 
