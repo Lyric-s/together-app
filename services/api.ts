@@ -12,6 +12,7 @@ const getBaseUrl = () => {
   // ---------------------------------------------------------
   if (__DEV__ && typeof window === 'undefined') {
 <<<<<<< HEAD
+<<<<<<< HEAD
     return process.env.EXPO_PUBLIC_API_URL;
 =======
     const debuggerHost = Constants.expoConfig?.hostUri || Constants.experienceUrl || '';
@@ -24,6 +25,8 @@ const getBaseUrl = () => {
     return process.env.EXPO_PUBLIC_API_URL || `http://${localhost}:8000`;
 >>>>>>> 27d1483 (fix: TA-132 fix missing fallback)
 =======
+=======
+>>>>>>> a64e44b (fix: TA-132 debuggerHost and localhost are computed but never used)
     return process.env.EXPO_PUBLIC_API_URL;
 >>>>>>> b6ce861 (fix: TA-132 modif and add env var)
   }
