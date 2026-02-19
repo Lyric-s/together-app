@@ -737,10 +737,14 @@ export const translations = {
     addToFavorites: "Add to Favorites",
     removeFromFavorites: "Remove from Favorites",
 <<<<<<< HEAD
+<<<<<<< HEAD
     favoriteUpdateError: "Unable to update favorites.",
 =======
     favoriteUpdateError: "Unable to update favourites.",
 >>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
+=======
+    favoriteUpdateError: "Unable to update favorites.",
+>>>>>>> 4e04f02 (fix: TA-96 modif translations for geo)
     missionJoinErr: "Unable to join the mission at this time.",    
 
     // --- Search & Filters ---
@@ -775,7 +779,7 @@ export const translations = {
     geoUpdateError: "Unable to update location. Please try again.",
     changeLocation: "change",
     geoUpdateMsg: "Change location",
-    geoUpdate: "Enter an address and/or postcode. We geocode and update nearby assignments.",
+    geoUpdate: "Enter an address and/or postcode. We geocode and update nearby missions.",
     geoInput: "you are at",
     noNearbyMissionsFound: "No nearby missions found.",
 
