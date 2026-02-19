@@ -222,6 +222,7 @@ export const translations = {
     associationNotSpecified: "Association non spécifiée",
     addToFavorites: "Ajouter aux Favoris",
     removeFromFavorites: "Retirer des Favoris",
+    favoriteUpdateError: "Impossible de mettre à jour les favoris.",
     missionJoinErr: "Impossible de rejoindre la mission pour le moment.",    
 
     // --- Search & Filters ---
@@ -249,7 +250,16 @@ export const translations = {
     geoMsgRecent: "Récentes",
     geoMsgPertinent: "Pertinence",
     geoMsgVolunteer: "Bénévoles",
-
+    geoErrorTitle: "Erreur de géolocalisation",
+    geoErrorMsg: "Impossible de contacter le service de géocodage. Réessayez dans quelques instants.",
+    geoAddressRequired: "Adresse requise",
+    geoAddressRequiredMsg: "Veuillez saisir une adresse et/ou un code postal.",
+    geoUpdateError: "Impossible de mettre à jour la localisation. Veuillez réessayer.",
+    changeLocation: "changer",
+    geoUpdateMsg: "Modifier la localisation",
+    geoUpdate: "Entrez une adresse et/ou un code postal. On géocode et on met à jour les missions proches.",
+    geoInput: "vous êtes à ",
+    
     // --- Mission Cards & Utils ---
     unknownAssociation: "Association inconnue",
     locationUnspecified: "Lieu non précisé",
@@ -393,6 +403,7 @@ export const translations = {
 
     // --- Page Search ---
     searchMission: "Rechercher une mission",
+    searchMissionSubtitle: "Recherche des missions",
     loginRequired: "Connexion requise",
     loginToAct: "Vous devez être connecté pour effectuer cette action.",
     noMissionsFound: "Aucune mission trouvée.",
@@ -712,6 +723,7 @@ export const translations = {
     associationNotSpecified: "Association not specified",
     addToFavorites: "Add to Favorites",
     removeFromFavorites: "Remove from Favorites",
+    favoriteUpdateError: "Unable to update favourites.",
     missionJoinErr: "Unable to join the mission at this time.",    
 
     // --- Search & Filters ---
@@ -739,6 +751,15 @@ export const translations = {
     geoMsgRecent: "Recent",
     geoMsgPertinent: "Relevance",
     geoMsgVolunteer: "Volunteers",
+    geoErrorTitle: "Geolocation error",
+    geoErrorMsg: "Unable to contact the geocoding service. Please try again in a few moments.",
+    geoAddressRequired: "Address required",
+    geoAddressRequiredMsg: "Please enter an address and/or postal code.",
+    geoUpdateError: "Unable to update location. Please try again.",
+    changeLocation: "change",
+    geoUpdateMsg: "Change location",
+    geoUpdate: "Enter an address and/or postcode. We geocode and update nearby assignments.",
+    geoInput: "you are at ",
 
     // --- Mission Cards & Utils ---
     unknownAssociation: "Unknown Association",
@@ -882,6 +903,7 @@ export const translations = {
 
     // --- Page Search ---
     searchMission: "Search for a mission",
+    searchMissionSubtitle: "Search for missions",
     loginRequired: "Login required",
     loginToAct: "You must be logged in to perform this action.",
     noMissionsFound: "No missions found.",
