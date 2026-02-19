@@ -1,4 +1,7 @@
 # 🚀 Together App (Frontend)
+[![codecov](https://codecov.io/gh/lyric-s/together-app/branch/dev/graph/badge.svg)](https://codecov.io/gh/lyric-s/together-app)
+[![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://codspeed.io/lyric-s/together-app)
+
 
 A cross-platform mobile and web application built with **React Native** and **Expo**. This project focuses on a modern user experience, unified routing with **Expo Router**, and containerized web deployment using **Docker** and **Nginx**.
 
