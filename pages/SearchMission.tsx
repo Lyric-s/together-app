@@ -518,7 +518,7 @@ export default function ResearchMission() {
                                         {t("geoMsgAddress")}
                                     </Text>
                                 ) : nearMissions.length === 0 ? (
-                                    <Text style={{ color: "#888", paddingVertical: 10 }}>Aucune mission proche trouvée.</Text>
+                                    <Text style={{ color: "#888", paddingVertical: 10 }}>{t("noNearbyMissionsFound")}</Text>
                                 ) : (
                                     <View style={{ position: "relative" }}>
                                         {/* Flèches */}
