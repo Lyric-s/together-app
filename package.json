@@ -22,11 +22,15 @@
     "test": "jest",
     "test:watch": "jest --watch",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "test:cov": "jest --ci --coverage --runInBand",
     "bench": "vitest bench --run"
 =======
     "test:cov": "jest --coverage"
 >>>>>>> e9f3564 (test: setup Jest + coverage configuration)
+=======
+    "test:cov": "jest --ci --coverage --runInBand"
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

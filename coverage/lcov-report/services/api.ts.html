@@ -25,14 +25,22 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
+<<<<<<< HEAD
                 <span class='fraction'>0/60</span>
+=======
+                <span class='fraction'>0/62</span>
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
+<<<<<<< HEAD
                 <span class='fraction'>0/30</span>
+=======
+                <span class='fraction'>0/35</span>
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
             </div>
         
             
@@ -46,7 +54,11 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
+<<<<<<< HEAD
                 <span class='fraction'>0/58</span>
+=======
+                <span class='fraction'>0/60</span>
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
             </div>
         
             
@@ -196,7 +208,15 @@
 <a name='L131'></a><a href='#L131'>131</a>
 <a name='L132'></a><a href='#L132'>132</a>
 <a name='L133'></a><a href='#L133'>133</a>
+<<<<<<< HEAD
 <a name='L134'></a><a href='#L134'>134</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+=======
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -210,6 +230,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<<<<<<< HEAD
+=======
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -331,6 +356,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { storageService } from './storageService';
+<<<<<<< HEAD
+=======
+import Constants from 'expo-constants';
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
 &nbsp;
 /**
  * Determines the base URL for API requests based on the execution environment.
@@ -342,7 +371,13 @@ const getBaseUrl = <span class="cstat-no" title="statement not covered" ><span c
   // CASE MOBILE (Expo Go ou build standalone)
   // ---------------------------------------------------------
 <span class="cstat-no" title="statement not covered" >  if (__DEV__ &amp;&amp; typeof window === 'undefined') {</span>
+<<<<<<< HEAD
 <span class="cstat-no" title="statement not covered" >    return process.env.EXPO_PUBLIC_API_URL;</span>
+=======
+    const debuggerHost = <span class="cstat-no" title="statement not covered" >Constants.expoConfig?.hostUri || Constants.experienceUrl || '';</span>
+    const localhost = <span class="cstat-no" title="statement not covered" >debuggerHost.split('//')[1]?.split(':')[0] || 'localhost';</span>
+<span class="cstat-no" title="statement not covered" >    return `http://${localhost}:8000`;</span>
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
   }
 &nbsp;
   // ---------------------------------------------------------
@@ -351,17 +386,29 @@ const getBaseUrl = <span class="cstat-no" title="statement not covered" ><span c
 <span class="cstat-no" title="statement not covered" >  if (typeof window !== 'undefined') {</span>
     // CASE A: You are LOCAL (http://localhost:3000)
 <span class="cstat-no" title="statement not covered" >    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {</span>
+<<<<<<< HEAD
 <span class="cstat-no" title="statement not covered" >       return process.env.EXPO_PUBLIC_API_URL;</span>
+=======
+<span class="cstat-no" title="statement not covered" >       return 'http://localhost:8000';</span>
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
     }
 &nbsp;
     // CASE B: You are in PRODUCTION
     // This is where the magic of the backend happens.
     // Leave the URL blank. Axios will automatically use the current domain.
+<<<<<<< HEAD
 <span class="cstat-no" title="statement not covered" >    return process.env.EXPO_PUBLIC_API_URL; </span>
   }
 &nbsp;
   // Security fallback (should not occur on the web)
 <span class="cstat-no" title="statement not covered" >  return process.env.EXPO_PUBLIC_API_URL;</span>
+=======
+<span class="cstat-no" title="statement not covered" >    return ''; </span>
+  }
+&nbsp;
+  // Security fallback (should not occur on the web)
+<span class="cstat-no" title="statement not covered" >  return '';</span>
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
 };
 &nbsp;
 const api = <span class="cstat-no" title="statement not covered" >axios.create({</span>
@@ -469,7 +516,11 @@ export default api;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+<<<<<<< HEAD
                 at 2026-02-20T00:31:57.409Z
+=======
+                at 2026-02-19T21:17:56.345Z
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
             </div>
         <script src="../prettify.js"></script>
         <script>
