@@ -883,6 +883,7 @@ export default function ResearchMission() {
                                     </Text>
                                 ) : nearMissions.length === 0 ? (
                                     <Text style={{ color: "#888", paddingVertical: 10 }}>{t("noNearbyMissionsFound")}</Text>
+<<<<<<< HEAD
                                 ) : (
                                     <View style={{ position: "relative" }}>
                                         {/* Flèches */}
@@ -895,6 +896,8 @@ export default function ResearchMission() {
                                     </Text>
                                 ) : nearMissions.length === 0 ? (
                                     <Text style={{ color: "#888", paddingVertical: 10 }}>Aucune mission proche trouvée.</Text>
+=======
+>>>>>>> c0a81da (feat: TA-96 add translations for geo)
                                 ) : (
                                     <View style={{ position: "relative" }}>
                                         {/* Flèches */}

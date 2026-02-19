@@ -258,7 +258,8 @@ export const translations = {
     changeLocation: "changer",
     geoUpdateMsg: "Modifier la localisation",
     geoUpdate: "Entrez une adresse et/ou un code postal. On géocode et on met à jour les missions proches.",
-    geoInput: "vous êtes à ",
+    geoInput: "vous êtes à",
+    noNearbyMissionsFound: "Aucune mission proche trouvée.",
     
     // --- Mission Cards & Utils ---
     unknownAssociation: "Association inconnue",
@@ -775,7 +776,8 @@ export const translations = {
     changeLocation: "change",
     geoUpdateMsg: "Change location",
     geoUpdate: "Enter an address and/or postcode. We geocode and update nearby assignments.",
-    geoInput: "you are at ",
+    geoInput: "you are at",
+    noNearbyMissionsFound: "No nearby missions found.",
 
     // --- Mission Cards & Utils ---
     unknownAssociation: "Unknown Association",
