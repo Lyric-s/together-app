@@ -240,7 +240,16 @@ export const translations = {
     seeResults: "Voir les résultats",
     from: "Dès le",
     zone: "Zone",
-    
+    geoAdress: "Veuillez entrer une adresse",
+    geoNear: "Mission proche de chez vous",
+    geoAllMission: "Toutes les missions",
+    geoMsgAdress: "Entrez une adresse pour voir les missions les plus proches.",
+    geoMsgSort: "Trier par:",
+    geoMsgDistance: "Distance",
+    geoMsgRecent: "Récentes",
+    geoMsgPertinent: "Pertinence",
+    geoMsgVolunteer: "Bénévoles",
+
     // --- Mission Cards & Utils ---
     unknownAssociation: "Association inconnue",
     locationUnspecified: "Lieu non précisé",
@@ -721,6 +730,15 @@ export const translations = {
     seeResults: "See results",
     from: "From",
     zone: "Zone",
+    geoAdress: "Please enter an address",
+    geoNear: "Mission near you",
+    geoAllMission: "All missions",
+    geoMsgAdress: "Enter an address to see the nearest assignments.",
+    geoMsgSort: "Sort by:",
+    geoMsgDistance: "Distance",
+    geoMsgRecent: "Recent",
+    geoMsgPertinent: "Relevance",
+    geoMsgVolunteer: "Volunteers",
 
     // --- Mission Cards & Utils ---
     unknownAssociation: "Unknown Association",
