@@ -1,10 +1,15 @@
 import React from "react";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { View, TouchableOpacity, Image, Platform } from "react-native";
 import { Text } from "@/components/ThemedText";
 =======
 import { View, Text, TouchableOpacity, Image, Platform } from "react-native";
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+import { View, TouchableOpacity, Image, Platform } from "react-native";
+import { Text } from "@/components/ThemedText";
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
 import { Mission } from "@/models/mission.model";
 import { Colors } from "@/constants/colors";
 import CategoryLabel from "@/components/CategoryLabel";

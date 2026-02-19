@@ -9,9 +9,12 @@ import {
     Platform,
     useWindowDimensions,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     Text,
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
     ActivityIndicator,
     TouchableOpacity,
     KeyboardAvoidingView,
@@ -19,9 +22,13 @@ import {
     TextInput,
 } from "react-native";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Text } from "@/components/ThemedText";
 =======
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+import { Text } from "@/components/ThemedText";
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
 import { Href, useRouter, useFocusEffect } from "expo-router";
 
 import { haversineKm, formatDistance } from "@/utils/geo";
@@ -71,6 +78,8 @@ import { useAuth } from "@/context/AuthContext";
 import { Mission } from "@/models/mission.model";
 import { Category } from "@/models/category.model";
 
+import { useLanguage } from '@/context/LanguageContext';
+
 type NearSortMode = "distance" | "relevance";
 type AllSortMode = "recent" | "volunteers";
 
@@ -82,9 +91,13 @@ export default function ResearchMission() {
     const { width } = useWindowDimensions();
     const isSmallScreen = width < 900;
 <<<<<<< HEAD
+<<<<<<< HEAD
     const { t, getFontSize, fontFamily } = useLanguage();
 =======
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+    const { t, getFontSize, fontFamily } = useLanguage();
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
 
     // DATA
     const [allMissions, setAllMissions] = useState<Mission[]>([]);
@@ -103,6 +116,7 @@ export default function ResearchMission() {
     const [address, setAddress] = useState("");
     const [zip, setZip] = useState("");
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     const addressRef = useRef(address);
     const zipRef = useRef(zip);
@@ -110,6 +124,8 @@ export default function ResearchMission() {
     useEffect(() => { addressRef.current = address; }, [address]);
     useEffect(() => { zipRef.current    = zip;     }, [zip]);
     
+=======
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
     const [currentLocationLabel, setCurrentLocationLabel] = useState(t("geoAddress"));
 
     // ✅ NEW: garde l'adresse saisie (évite le reset quand on revient sur la page)
@@ -149,10 +165,14 @@ export default function ResearchMission() {
     const checkAuthAndRedirect = useCallback(() => {
         if (!userType || userType === "volunteer_guest") {
 <<<<<<< HEAD
+<<<<<<< HEAD
             showToast(t("loginRequired"), t("loginToAct"));
 =======
             showToast("Connexion requise", "Vous devez être connecté pour effectuer cette action.");
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+            showToast(t("loginRequired"), t("loginToAct"));
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
             return false;
         }
         return true;
@@ -168,10 +188,14 @@ export default function ResearchMission() {
         setUserCoords(null);
         setDistanceByMissionId(new Map());
 <<<<<<< HEAD
+<<<<<<< HEAD
         setCurrentLocationLabel(label ?? t("geoAddress"));
 =======
         setCurrentLocationLabel(label ?? "Veuillez entrer une adresse");
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+        setCurrentLocationLabel(label ?? t("geoAddress"));
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
     }, []);
 
     const recomputeDistancesFromAddress = useCallback(
@@ -180,10 +204,14 @@ export default function ResearchMission() {
 
             if (!query) {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 clearGeo(t("geoAddress"));
 =======
                 clearGeo("Veuillez entrer une adresse");
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                clearGeo(t("geoAddress"));
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                 return;
             }
 
@@ -216,6 +244,7 @@ export default function ResearchMission() {
                 setUserCoords(null);
                 setDistanceByMissionId(new Map());
                 setCurrentLocationLabel(t("geoAddress"));
+<<<<<<< HEAD
 
                 showToast(
                     t("geoErrorTitle"),
@@ -254,10 +283,12 @@ export default function ResearchMission() {
                 setUserCoords(null);
                 setDistanceByMissionId(new Map());
                 setCurrentLocationLabel("Veuillez entrer une adresse");
+=======
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
 
                 showToast(
-                    "Erreur de géolocalisation",
-                    "Impossible de contacter le service de géocodage. Réessayez dans quelques instants."
+                    t("geoErrorTitle"),
+                    t("geoErrorMsg")
                 );
             }
         },
@@ -353,7 +384,7 @@ export default function ResearchMission() {
                             setZip(meZip);
 
                             if (!meAddr && !meZip) {
-                                clearGeo("Veuillez entrer une adresse");
+                                clearGeo(t("geoAddress"));
                             } else {
                                 await recomputeDistancesFromAddress(meAddr, meZip, missions);
                             }
@@ -362,7 +393,7 @@ export default function ResearchMission() {
                             if (!manualLocation) {
                                 setAddress("");
                                 setZip("");
-                                clearGeo("Veuillez entrer une adresse");
+                                clearGeo(t("geoAddress"));
                             } else {
                                 await recomputeDistancesFromAddress(address, zip, missions);
                             }
@@ -372,7 +403,7 @@ export default function ResearchMission() {
                         if (!manualLocation) {
                             setAddress("");
                             setZip("");
-                            clearGeo("Veuillez entrer une adresse");
+                            clearGeo(t("geoAddress"));
                         } else {
                             // ✅ garder l'adresse saisie et recalculer si besoin
                             await recomputeDistancesFromAddress(address, zip, missions);
@@ -437,10 +468,14 @@ export default function ResearchMission() {
             } catch {
                 setFavoriteIds((prev) => (isFav ? [...prev, missionId] : prev.filter((id) => id !== missionId)));
 <<<<<<< HEAD
+<<<<<<< HEAD
                 showToast(t("error"), t("favoriteUpdateError"));
 =======
                 showToast("Erreur", "Impossible de mettre à jour les favoris.");
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                showToast(t("error"), t("favoriteUpdateError"));
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
             }
         },
         [checkAuthAndRedirect, favoriteIds, showToast]
@@ -627,10 +662,14 @@ export default function ResearchMission() {
 
         if (!addr && !z) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             showToast(t("geoAddressRequired"), t("geoAddressRequiredMsg"));
 =======
             showToast("Adresse requise", "Veuillez saisir une adresse et/ou un code postal.");
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+            showToast(t("geoAddressRequired"), t("geoAddressRequiredMsg"));
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
             return;
         }
 
@@ -650,6 +689,7 @@ export default function ResearchMission() {
             // Normalement déjà géré dans recompute, mais on protège quand même.
             console.warn("saveLocation failed:", error);
 <<<<<<< HEAD
+<<<<<<< HEAD
             showToast(t("error"), t("geoUpdateError"));
         }
 =======
@@ -666,6 +706,9 @@ export default function ResearchMission() {
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
 =======
             showToast("Erreur", "Impossible de mettre à jour la localisation.");
+=======
+            showToast(t("error"), t("geoUpdateError"));
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
         }
 >>>>>>> a74469f (fix: coderabbit suggestions fixed)
     }, [editAddress, editZip, recomputeDistancesFromAddress, allMissions, showToast]);
@@ -685,16 +728,23 @@ export default function ResearchMission() {
             <View style={{ width: "100%" }}>
                 <Text style={[styles.pageTitle, { paddingLeft: isWeb ? (isSmallScreen ? 60 : 0) : 0 }]}>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                     {t("searchMission")}
                 </Text>
                 <Text style={[styles.pageSubtitle, { paddingLeft: isWeb ? (isSmallScreen ? 60 : 0) : 0 }]}>
                     {t("searchMissionSubtitle")}
+<<<<<<< HEAD
                 </Text>
 =======
                     Recherche Mission
                 </Text>
                 <Text style={styles.pageSubtitle}>Recherche des missions</Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                </Text>
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
             </View>
 
             {/* Filters row */}
@@ -714,6 +764,7 @@ export default function ResearchMission() {
                     <Text style={styles.locationText}>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         {t("geoInput")} <Text style={{ fontWeight: "800" }}>{currentLocationLabel}</Text>
                     </Text>
                 ) : (
@@ -729,11 +780,21 @@ export default function ResearchMission() {
                     <Text style={styles.locationText}>
                         <Text style={{ fontWeight: "800" }}>Veuillez entrer une adresse</Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                        {t("geoInput")} <Text style={{ fontWeight: "800" }}>{currentLocationLabel}</Text>
+                    </Text>
+                ) : (
+                    <Text style={styles.locationText}>
+                        <Text style={{ fontWeight: "800" }}>{t("geoAddress")}</Text>
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                     </Text>
                 )}
 
                 <TouchableOpacity onPress={openLocationModal} activeOpacity={0.8}>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                     <Text style={styles.locationChange}>{t("changeLocation")}</Text>
                 </TouchableOpacity>
             </View>
@@ -773,6 +834,7 @@ export default function ResearchMission() {
                                     <View style={styles.sectionTitleRow}>
                                         <Text style={styles.sectionIcon}>📍</Text>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                         <Text style={styles.sectionTitle}>{t("geoNear")}</Text>
                                     </View>
 
@@ -785,6 +847,13 @@ export default function ResearchMission() {
                                     <View style={styles.sortRow}>
                                         <Text style={styles.sortLabel}>Trier par :</Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                        <Text style={styles.sectionTitle}>{t("geoNear")}</Text>
+                                    </View>
+
+                                    <View style={styles.sortRow}>
+                                        <Text style={styles.sortLabel}>{t("geoMsgSort")}</Text>
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                                         <TouchableOpacity
                                             onPress={() => setNearSort((p) => (p === "distance" ? "relevance" : "distance"))}
                                             style={styles.sortButton}
@@ -792,10 +861,14 @@ export default function ResearchMission() {
                                         >
                                             <Text style={styles.sortButtonText}>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                 {nearSort === "distance" ? t("geoMsgDistance") : t("geoMsgPertinent")}
 =======
                                                 {nearSort === "distance" ? "Distance" : "Pertinence"}
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                                {nearSort === "distance" ? t("geoMsgDistance") : t("geoMsgPertinent")}
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                                             </Text>
                                             <Text style={styles.sortChevron}>▼</Text>
                                         </TouchableOpacity>
@@ -804,6 +877,7 @@ export default function ResearchMission() {
 
                                 {!hasLocation ? (
                                     <Text style={{ color: "#888", paddingVertical: 10 }}>
+<<<<<<< HEAD
 <<<<<<< HEAD
                                         {t("geoMsgAddress")}
                                     </Text>
@@ -815,6 +889,9 @@ export default function ResearchMission() {
                                         <View style={{ position: "absolute", left: 0, top: "40%", zIndex: 5 }}>
 =======
                                         Entrez une adresse pour voir les missions les plus proches.
+=======
+                                        {t("geoMsgAddress")}
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                                     </Text>
                                 ) : nearMissions.length === 0 ? (
                                     <Text style={{ color: "#888", paddingVertical: 10 }}>Aucune mission proche trouvée.</Text>
@@ -916,6 +993,7 @@ export default function ResearchMission() {
                                     <View style={styles.sectionTitleRow}>
                                         <Text style={styles.sectionIcon}>📍</Text>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                         <Text style={styles.sectionTitle}>{t("geoAllMission")}</Text>
                                     </View>
 
@@ -928,6 +1006,13 @@ export default function ResearchMission() {
                                     <View style={styles.sortRow}>
                                         <Text style={styles.sortLabel}>Trier par :</Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                        <Text style={styles.sectionTitle}>{t("geoAllMission")}</Text>
+                                    </View>
+
+                                    <View style={styles.sortRow}>
+                                        <Text style={styles.sortLabel}>{t("geoMsgSort")}</Text>
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                                         <TouchableOpacity
                                             onPress={() => {
                                                 setAllSort((p) => (p === "recent" ? "volunteers" : "recent"));
@@ -938,10 +1023,14 @@ export default function ResearchMission() {
                                         >
                                             <Text style={styles.sortButtonText}>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                 {allSort === "recent" ? t("geoMsgRecent") : t("geoMsgVolunteer")}
 =======
                                                 {allSort === "recent" ? "Récentes" : "Bénévoles"}
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                                {allSort === "recent" ? t("geoMsgRecent") : t("geoMsgVolunteer")}
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                                             </Text>
                                             <Text style={styles.sortChevron}>▼</Text>
                                         </TouchableOpacity>
@@ -966,6 +1055,7 @@ export default function ResearchMission() {
                         ListEmptyComponent={
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                             <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>{t("noMissionsFound")}</Text>
 =======
                             <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>
@@ -975,6 +1065,9 @@ export default function ResearchMission() {
 =======
                             <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>Aucune mission trouvée.</Text>
 >>>>>>> ec463ec (fix: coderabbit suggestions fixed)
+=======
+                            <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>{t("noMissionsFound")}</Text>
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                         }
                         ListFooterComponent={
                             <View style={styles.pagination}>
@@ -1052,6 +1145,7 @@ export default function ResearchMission() {
                     >
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         <Text style={{ fontSize: 18, fontWeight: "800", marginBottom: 6 }}>{t("geoUpdateMsg")}</Text>
                         <Text style={{ color: "#666", marginBottom: 14 }}>
                             {t("geoUpdate")}
@@ -1065,12 +1159,19 @@ export default function ResearchMission() {
 =======
                         <Text style={{ fontSize: 18, fontWeight: "800", marginBottom: 6 }}>Modifier la localisation</Text>
 >>>>>>> ec463ec (fix: coderabbit suggestions fixed)
+=======
+                        <Text style={{ fontSize: 18, fontWeight: "800", marginBottom: 6 }}>{t("geoUpdateMsg")}</Text>
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                         <Text style={{ color: "#666", marginBottom: 14 }}>
-                            Entrez une adresse et/ou un code postal. On géocode et on met à jour les missions proches.
+                            {t("geoUpdate")}
                         </Text>
 
+<<<<<<< HEAD
                         <Text style={{ fontWeight: "700", marginBottom: 6 }}>Adresse</Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                        <Text style={{ fontWeight: "700", marginBottom: 6 }}>{t("address")}</Text>
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                         <TextInput
                             value={editAddress}
                             onChangeText={setEditAddress}
@@ -1083,6 +1184,7 @@ export default function ResearchMission() {
                                 paddingVertical: Platform.OS === "web" ? 10 : 8,
                                 marginBottom: 12,
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 fontSize: getFontSize(14), fontFamily,
                             }}
                         />
@@ -1094,6 +1196,13 @@ export default function ResearchMission() {
 
                         <Text style={{ fontWeight: "700", marginBottom: 6 }}>Code postal</Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                fontSize: getFontSize(14), fontFamily,
+                            }}
+                        />
+
+                        <Text style={{ fontWeight: "700", marginBottom: 6 }}>{t("zipCode")}</Text>
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                         <TextInput
                             value={editZip}
                             onChangeText={setEditZip}
@@ -1107,9 +1216,13 @@ export default function ResearchMission() {
                                 paddingVertical: Platform.OS === "web" ? 10 : 8,
                                 marginBottom: 16,
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 fontSize: getFontSize(14), fontFamily,
 =======
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                fontSize: getFontSize(14), fontFamily,
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                             }}
                         />
 
@@ -1126,10 +1239,14 @@ export default function ResearchMission() {
                                 activeOpacity={0.85}
                             >
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <Text style={{ fontWeight: "700" }}>{t("cancel")}</Text>
 =======
                                 <Text style={{ fontWeight: "700" }}>Annuler</Text>
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                <Text style={{ fontWeight: "700" }}>{t("cancel")}</Text>
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                             </TouchableOpacity>
 
                             <TouchableOpacity
@@ -1145,10 +1262,14 @@ export default function ResearchMission() {
                             >
                                 <Text style={{ fontWeight: "800", color: canSave ? Colors.white : "#999" }}>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     {t("save")}
 =======
                                     Enregistrer
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                                    {t("save")}
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
                                 </Text>
                             </TouchableOpacity>
                         </View>
