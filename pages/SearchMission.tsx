@@ -4,13 +4,13 @@ import {
     FlatList,
     Platform,
     useWindowDimensions,
-    Text,
     ActivityIndicator,
     TouchableOpacity,
     KeyboardAvoidingView,
     Modal,
     TextInput,
 } from "react-native";
+import { Text } from "@/components/ThemedText";
 import { Href, useRouter, useFocusEffect } from "expo-router";
 
 import { haversineKm, formatDistance } from "@/utils/geo";
@@ -34,6 +34,8 @@ import { useAuth } from "@/context/AuthContext";
 import { Mission } from "@/models/mission.model";
 import { Category } from "@/models/category.model";
 
+import { useLanguage } from '@/context/LanguageContext';
+
 type NearSortMode = "distance" | "relevance";
 type AllSortMode = "recent" | "volunteers";
 
@@ -43,6 +45,7 @@ export default function ResearchMission() {
     const isWeb = Platform.OS === "web";
     const { width } = useWindowDimensions();
     const isSmallScreen = width < 900;
+    const { t, getFontSize, fontFamily } = useLanguage();
 
     // DATA
     const [allMissions, setAllMissions] = useState<Mission[]>([]);
@@ -60,7 +63,7 @@ export default function ResearchMission() {
     // Adresse (bénévole si dispo, sinon saisie)
     const [address, setAddress] = useState("");
     const [zip, setZip] = useState("");
-    const [currentLocationLabel, setCurrentLocationLabel] = useState("Veuillez entrer une adresse");
+    const [currentLocationLabel, setCurrentLocationLabel] = useState(t("geoAddress"));
 
     // ✅ NEW: garde l'adresse saisie (évite le reset quand on revient sur la page)
     const [manualLocation, setManualLocation] = useState(false);
@@ -88,7 +91,7 @@ export default function ResearchMission() {
 
     const checkAuthAndRedirect = useCallback(() => {
         if (!userType || userType === "volunteer_guest") {
-            showToast("Connexion requise", "Vous devez être connecté pour effectuer cette action.");
+            showToast(t("loginRequired"), t("loginToAct"));
             return false;
         }
         return true;
@@ -103,7 +106,7 @@ export default function ResearchMission() {
     const clearGeo = useCallback((label?: string) => {
         setUserCoords(null);
         setDistanceByMissionId(new Map());
-        setCurrentLocationLabel(label ?? "Veuillez entrer une adresse");
+        setCurrentLocationLabel(label ?? t("geoAddress"));
     }, []);
 
     const recomputeDistancesFromAddress = useCallback(
@@ -111,7 +114,7 @@ export default function ResearchMission() {
             const query = buildQuery(addr, z);
 
             if (!query) {
-                clearGeo("Veuillez entrer une adresse");
+                clearGeo(t("geoAddress"));
                 return;
             }
 
@@ -141,11 +144,11 @@ export default function ResearchMission() {
                 // On garde une UI stable
                 setUserCoords(null);
                 setDistanceByMissionId(new Map());
-                setCurrentLocationLabel("Veuillez entrer une adresse");
+                setCurrentLocationLabel(t("geoAddress"));
 
                 showToast(
-                    "Erreur de géolocalisation",
-                    "Impossible de contacter le service de géocodage. Réessayez dans quelques instants."
+                    t("geoErrorTitle"),
+                    t("geoErrorMsg")
                 );
             }
         },
@@ -195,7 +198,7 @@ export default function ResearchMission() {
                             setZip(meZip);
 
                             if (!meAddr && !meZip) {
-                                clearGeo("Veuillez entrer une adresse");
+                                clearGeo(t("geoAddress"));
                             } else {
                                 await recomputeDistancesFromAddress(meAddr, meZip, missions);
                             }
@@ -204,7 +207,7 @@ export default function ResearchMission() {
                             if (!manualLocation) {
                                 setAddress("");
                                 setZip("");
-                                clearGeo("Veuillez entrer une adresse");
+                                clearGeo(t("geoAddress"));
                             } else {
                                 await recomputeDistancesFromAddress(address, zip, missions);
                             }
@@ -214,7 +217,7 @@ export default function ResearchMission() {
                         if (!manualLocation) {
                             setAddress("");
                             setZip("");
-                            clearGeo("Veuillez entrer une adresse");
+                            clearGeo(t("geoAddress"));
                         } else {
                             // ✅ garder l'adresse saisie et recalculer si besoin
                             await recomputeDistancesFromAddress(address, zip, missions);
@@ -257,7 +260,7 @@ export default function ResearchMission() {
                 else await volunteerService.addFavorite(missionId);
             } catch {
                 setFavoriteIds((prev) => (isFav ? [...prev, missionId] : prev.filter((id) => id !== missionId)));
-                showToast("Erreur", "Impossible de mettre à jour les favoris.");
+                showToast(t("error"), t("favoriteUpdateError"));
             }
         },
         [checkAuthAndRedirect, favoriteIds, showToast]
@@ -402,7 +405,7 @@ export default function ResearchMission() {
         const z = editZip.trim();
 
         if (!addr && !z) {
-            showToast("Adresse requise", "Veuillez saisir une adresse et/ou un code postal.");
+            showToast(t("geoAddressRequired"), t("geoAddressRequiredMsg"));
             return;
         }
 
@@ -419,7 +422,7 @@ export default function ResearchMission() {
         } catch (error) {
             // Normalement déjà géré dans recompute, mais on protège quand même.
             console.warn("saveLocation failed:", error);
-            showToast("Erreur", "Impossible de mettre à jour la localisation.");
+            showToast(t("error"), t("geoUpdateError"));
         }
     }, [editAddress, editZip, recomputeDistancesFromAddress, allMissions, showToast]);
 
@@ -437,9 +440,11 @@ export default function ResearchMission() {
             {/* Titre */}
             <View style={{ width: "100%" }}>
                 <Text style={[styles.pageTitle, { paddingLeft: isWeb ? (isSmallScreen ? 60 : 0) : 0 }]}>
-                    Recherche Mission
+                    {t("searchMission")}
                 </Text>
-                <Text style={styles.pageSubtitle}>Recherche des missions</Text>
+                <Text style={[styles.pageSubtitle, { paddingLeft: isWeb ? (isSmallScreen ? 60 : 0) : 0 }]}>
+                    {t("searchMissionSubtitle")}
+                </Text>
             </View>
 
             {/* Filters row */}
@@ -457,16 +462,16 @@ export default function ResearchMission() {
 
                 {hasLocation ? (
                     <Text style={styles.locationText}>
-                        vous êtes à <Text style={{ fontWeight: "800" }}>{currentLocationLabel}</Text>
+                        {t("geoInput")} <Text style={{ fontWeight: "800" }}>{currentLocationLabel}</Text>
                     </Text>
                 ) : (
                     <Text style={styles.locationText}>
-                        <Text style={{ fontWeight: "800" }}>Veuillez entrer une adresse</Text>
+                        <Text style={{ fontWeight: "800" }}>{t("geoAddress")}</Text>
                     </Text>
                 )}
 
                 <TouchableOpacity onPress={openLocationModal} activeOpacity={0.8}>
-                    <Text style={styles.locationChange}>(changer)</Text>
+                    <Text style={styles.locationChange}>{t("changeLocation")}</Text>
                 </TouchableOpacity>
             </View>
 
@@ -490,18 +495,18 @@ export default function ResearchMission() {
                                 <View style={styles.sectionHeaderRow}>
                                     <View style={styles.sectionTitleRow}>
                                         <Text style={styles.sectionIcon}>📍</Text>
-                                        <Text style={styles.sectionTitle}>Mission proche de chez vous</Text>
+                                        <Text style={styles.sectionTitle}>{t("geoNear")}</Text>
                                     </View>
 
                                     <View style={styles.sortRow}>
-                                        <Text style={styles.sortLabel}>Trier par :</Text>
+                                        <Text style={styles.sortLabel}>{t("geoMsgSort")}</Text>
                                         <TouchableOpacity
                                             onPress={() => setNearSort((p) => (p === "distance" ? "relevance" : "distance"))}
                                             style={styles.sortButton}
                                             activeOpacity={0.85}
                                         >
                                             <Text style={styles.sortButtonText}>
-                                                {nearSort === "distance" ? "Distance" : "Pertinence"}
+                                                {nearSort === "distance" ? t("geoMsgDistance") : t("geoMsgPertinent")}
                                             </Text>
                                             <Text style={styles.sortChevron}>▼</Text>
                                         </TouchableOpacity>
@@ -510,7 +515,7 @@ export default function ResearchMission() {
 
                                 {!hasLocation ? (
                                     <Text style={{ color: "#888", paddingVertical: 10 }}>
-                                        Entrez une adresse pour voir les missions les plus proches.
+                                        {t("geoMsgAddress")}
                                     </Text>
                                 ) : nearMissions.length === 0 ? (
                                     <Text style={{ color: "#888", paddingVertical: 10 }}>Aucune mission proche trouvée.</Text>
@@ -584,11 +589,11 @@ export default function ResearchMission() {
                                 <View style={[styles.sectionHeaderRow, { marginTop: 18 }]}>
                                     <View style={styles.sectionTitleRow}>
                                         <Text style={styles.sectionIcon}>📍</Text>
-                                        <Text style={styles.sectionTitle}>Toutes les missions</Text>
+                                        <Text style={styles.sectionTitle}>{t("geoAllMission")}</Text>
                                     </View>
 
                                     <View style={styles.sortRow}>
-                                        <Text style={styles.sortLabel}>Trier par :</Text>
+                                        <Text style={styles.sortLabel}>{t("geoMsgSort")}</Text>
                                         <TouchableOpacity
                                             onPress={() => {
                                                 setAllSort((p) => (p === "recent" ? "volunteers" : "recent"));
@@ -598,7 +603,7 @@ export default function ResearchMission() {
                                             activeOpacity={0.85}
                                         >
                                             <Text style={styles.sortButtonText}>
-                                                {allSort === "recent" ? "Récentes" : "Bénévoles"}
+                                                {allSort === "recent" ? t("geoMsgRecent") : t("geoMsgVolunteer")}
                                             </Text>
                                             <Text style={styles.sortChevron}>▼</Text>
                                         </TouchableOpacity>
@@ -621,7 +626,7 @@ export default function ResearchMission() {
                             </View>
                         )}
                         ListEmptyComponent={
-                            <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>Aucune mission trouvée.</Text>
+                            <Text style={{ textAlign: "center", marginTop: 40, color: "gray" }}>{t("noMissionsFound")}</Text>
                         }
                         ListFooterComponent={
                             <View style={styles.pagination}>
@@ -677,12 +682,12 @@ export default function ResearchMission() {
                             elevation: 6,
                         }}
                     >
-                        <Text style={{ fontSize: 18, fontWeight: "800", marginBottom: 6 }}>Modifier la localisation</Text>
+                        <Text style={{ fontSize: 18, fontWeight: "800", marginBottom: 6 }}>{t("geoUpdateMsg")}</Text>
                         <Text style={{ color: "#666", marginBottom: 14 }}>
-                            Entrez une adresse et/ou un code postal. On géocode et on met à jour les missions proches.
+                            {t("geoUpdate")}
                         </Text>
 
-                        <Text style={{ fontWeight: "700", marginBottom: 6 }}>Adresse</Text>
+                        <Text style={{ fontWeight: "700", marginBottom: 6 }}>{t("address")}</Text>
                         <TextInput
                             value={editAddress}
                             onChangeText={setEditAddress}
@@ -694,10 +699,11 @@ export default function ResearchMission() {
                                 paddingHorizontal: 12,
                                 paddingVertical: Platform.OS === "web" ? 10 : 8,
                                 marginBottom: 12,
+                                fontSize: getFontSize(14), fontFamily,
                             }}
                         />
 
-                        <Text style={{ fontWeight: "700", marginBottom: 6 }}>Code postal</Text>
+                        <Text style={{ fontWeight: "700", marginBottom: 6 }}>{t("zipCode")}</Text>
                         <TextInput
                             value={editZip}
                             onChangeText={setEditZip}
@@ -710,6 +716,7 @@ export default function ResearchMission() {
                                 paddingHorizontal: 12,
                                 paddingVertical: Platform.OS === "web" ? 10 : 8,
                                 marginBottom: 16,
+                                fontSize: getFontSize(14), fontFamily,
                             }}
                         />
 
@@ -725,7 +732,7 @@ export default function ResearchMission() {
                                 }}
                                 activeOpacity={0.85}
                             >
-                                <Text style={{ fontWeight: "700" }}>Annuler</Text>
+                                <Text style={{ fontWeight: "700" }}>{t("cancel")}</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
@@ -740,7 +747,7 @@ export default function ResearchMission() {
                                 activeOpacity={0.85}
                             >
                                 <Text style={{ fontWeight: "800", color: canSave ? Colors.white : "#999" }}>
-                                    Enregistrer
+                                    {t("save")}
                                 </Text>
                             </TouchableOpacity>
                         </View>
