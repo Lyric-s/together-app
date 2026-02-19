@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image, Platform } from "react-native";
+import { View, TouchableOpacity, Image, Platform } from "react-native";
+import { Text } from "@/components/ThemedText";
 import { Mission } from "@/models/mission.model";
 import { Colors } from "@/constants/colors";
 import CategoryLabel from "@/components/CategoryLabel";
