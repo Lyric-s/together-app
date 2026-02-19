@@ -1,5 +1,5 @@
 # 🚀 Together App (Frontend)
-[![codecov](https://codecov.io/gh/lyric-s/together-app/branch/dev/graph/badge.svg)](https://codecov.io/gh/lyric-s/together-app)
+[![codecov](https://codecov.io/gh/lyric-s/together-app/branch/main/graph/badge.svg)](https://codecov.io/gh/lyric-s/together-app)
 [![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://codspeed.io/lyric-s/together-app)
 
 
