@@ -83,7 +83,7 @@ services:
       - DATABASE_URL=postgresql+psycopg2://api_user:dev_pass@postgres:5432/together
       - LOG_LEVEL=debug
       # CORS origins for frontend development
-      - BACKEND_CORS_ORIGINS=http://localhost:3000,http://localhost:5173,http://localhost:8080
+      - BACKEND_CORS_ORIGINS=http://localhost:3000,http://localhost:5173,http://localhost:8080,http://localhost:8081
       # Authentication configuration
       - SECRET_KEY=dev_secret_key_not_for_production_use_openssl_rand_hex_32_for_an_appropriate_one
       - ALGORITHM=HS256
