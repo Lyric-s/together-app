@@ -26,13 +26,13 @@ export const styles = StyleSheet.create({
 
     categoryBadge: {
         position: "absolute",
-        top: 10,
-        left: 10,
+        top: 0,
+        left: 0,
     },
 
     heartButton: {
         position: "absolute",
-        bottom: 10,
+        bottom: 5,
         left: 10,
         padding: 4,
     },
