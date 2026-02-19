@@ -724,7 +724,7 @@ export const translations = {
     associationNotSpecified: "Association not specified",
     addToFavorites: "Add to Favorites",
     removeFromFavorites: "Remove from Favorites",
-    favoriteUpdateError: "Unable to update favourites.",
+    favoriteUpdateError: "Unable to update favorites.",
     missionJoinErr: "Unable to join the mission at this time.",    
 
     // --- Search & Filters ---
@@ -759,7 +759,7 @@ export const translations = {
     geoUpdateError: "Unable to update location. Please try again.",
     changeLocation: "change",
     geoUpdateMsg: "Change location",
-    geoUpdate: "Enter an address and/or postcode. We geocode and update nearby assignments.",
+    geoUpdate: "Enter an address and/or postcode. We geocode and update nearby missions.",
     geoInput: "you are at",
     noNearbyMissionsFound: "No nearby missions found.",
 
