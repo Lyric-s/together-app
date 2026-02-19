@@ -49,7 +49,7 @@ export const missionService = {
     }
 
     try {
-      const response = await api.get<any[]>('/missions', { params });
+      const response = await api.get<any[]>('/missions/', { params });
       // Transformation de chaque élément du tableau
       return response.data.map(mapApiToMission);
     } catch (error) {
