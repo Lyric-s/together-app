@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef } from "react";
+import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import {
     View,
     FlatList,
@@ -63,6 +63,13 @@ export default function ResearchMission() {
     // Adresse (bénévole si dispo, sinon saisie)
     const [address, setAddress] = useState("");
     const [zip, setZip] = useState("");
+
+    const addressRef = useRef(address);
+    const zipRef = useRef(zip);
+
+    useEffect(() => { addressRef.current = address; }, [address]);
+    useEffect(() => { zipRef.current    = zip;     }, [zip]);
+    
     const [currentLocationLabel, setCurrentLocationLabel] = useState(t("geoAddress"));
 
     // ✅ NEW: garde l'adresse saisie (évite le reset quand on revient sur la page)
@@ -204,7 +211,7 @@ export default function ResearchMission() {
                                     await recomputeDistancesFromAddress(meAddr, meZip, missions);
                                 }
                             } else {
-                                await recomputeDistancesFromAddress(address, zip, missions);
+                                await recomputeDistancesFromAddress(addressRef.current, zipRef.current, missions);
                             }
                         } catch {
                             // si erreur, on ne casse pas l'adresse manuelle si elle existe
@@ -213,7 +220,7 @@ export default function ResearchMission() {
                                 setZip("");
                                 clearGeo(t("geoAddress"));
                             } else {
-                                await recomputeDistancesFromAddress(address, zip, missions);
+                                await recomputeDistancesFromAddress(addressRef.current, zipRef.current, missions);
                             }
                         }
                     } else {
@@ -224,7 +231,7 @@ export default function ResearchMission() {
                             clearGeo(t("geoAddress"));
                         } else {
                             // ✅ garder l'adresse saisie et recalculer si besoin
-                            await recomputeDistancesFromAddress(address, zip, missions);
+                            await recomputeDistancesFromAddress(addressRef.current, zipRef.current, missions);
                         }
                     }
                 } catch (e) {
