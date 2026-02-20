@@ -5,11 +5,13 @@ import { Text } from '@/components/ThemedText';
 import reportStyles from "@/styles/pages/ReportsVerificationStyles";
 
 import { adminService } from "@/services/adminService";
+import { aiReportService } from "@/services/ai_report.service";
 import type {
     ReportPublic,
     ReportProcessingState,
     ReportStatsResponse,
 } from "@/models/admin.model";
+import type { AIReport } from "@/models/ai_report.model";
 import { useLanguage } from "@/context/LanguageContext";
 
 
@@ -17,13 +19,14 @@ import { useLanguage } from "@/context/LanguageContext";
    MAPPERS API -> UI
 ========================= */
 
-const mapApiStateToUi = (s: ReportProcessingState): ReportState => {
-    if (s === "PENDING") return "pending";
-    if (s === "APPROVED") return "accepted";
+const mapApiStateToUi = (s: string): ReportState => {
+    const normalized = s.toUpperCase();
+    if (normalized === "PENDING") return "pending";
+    if (normalized === "APPROVED") return "accepted";
     return "rejected";
 };
 
-const mapUiStateToApi = (s: ReportState): ReportProcessingState => {
+const mapUiStateToApi = (s: ReportState): string => {
     if (s === "pending") return "PENDING";
     if (s === "accepted") return "APPROVED";
     return "REJECTED";
@@ -36,26 +39,6 @@ const mapApiTargetToUiType = (target: string): ReportType => {
     if (target === "ASSOCIATION") return "Association";
     return "Volunteer";
 };
-
-// ISO -> dd/mm/yyyy (simple)
-const formatDateFr = (iso: string): string => {
-    const d = new Date(iso);
-    const dd = String(d.getDate()).padStart(2, "0");
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const yyyy = d.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
-};
-
-const mapApiReportToUi = (r: ReportPublic): Report => ({
-    id: r.id_report,
-    type: mapApiTargetToUiType(r.target),
-    target: r.target,
-    reason: r.reason,
-    dateReporting: formatDateFr(r.date_reporting),
-    state: mapApiStateToUi(r.state),
-    reporterName: r.reporter_name,
-    reportedName: r.reported_name,
-});
 
 const mapStatsToUiCounts = (stats: ReportStatsResponse | null) => {
     if (!stats) return { pending: 0, accepted: 0, rejected: 0 };
@@ -79,6 +62,10 @@ type Report = {
     state: ReportState;
     reporterName: string;
     reportedName: string;
+    isAI: boolean;
+    confidenceScore?: number;
+    modelVersion?: string;
+    _rawDate: string;
 };
 
 /**
@@ -105,7 +92,13 @@ export default function ReportsVerification() {
 
     const [offset, setOffset] = useState(0);
     const limit = 100;
-useEffect(() => {
+
+    const formatDateLocal = (iso: string): string => {
+        const d = new Date(iso);
+        return d.toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US');
+    };
+
+    useEffect(() => {
         let mounted = true;
 
         const load = async () => {
@@ -113,21 +106,55 @@ useEffect(() => {
                 setLoading(true);
                 setErrorMsg(null);
 
-                const [apiReports, apiStats] = await Promise.all([
+                const [apiReports, apiAiReports, apiStats] = await Promise.all([
                     adminService.getReports({ offset, limit }),
+                    aiReportService.getAIReports({ offset, limit }),
                     adminService.getReportStats(),
                 ]);
 
                 if (!mounted) return;
 
-                setReports(apiReports.map(mapApiReportToUi));
+                const mappedReports: Report[] = apiReports.map(r => ({
+                    id: r.id_report,
+                    type: mapApiTargetToUiType(r.target),
+                    target: r.target,
+                    reason: r.reason,
+                    dateReporting: formatDateLocal(r.date_reporting),
+                    state: mapApiStateToUi(r.state),
+                    reporterName: r.reporter_name,
+                    reportedName: r.reported_name,
+                    isAI: false,
+                    _rawDate: r.date_reporting
+                }));
+
+                const mappedAiReports: Report[] = apiAiReports.map(r => ({
+                    id: r.id_report!,
+                    type: mapApiTargetToUiType(r.target),
+                    target: `${r.target} #${r.target_id}`,
+                    reason: r.classification,
+                    dateReporting: formatDateLocal(r.created_at),
+                    state: mapApiStateToUi(r.state),
+                    reporterName: "Système IA",
+                    reportedName: `User #${r.id_user_reported}`,
+                    isAI: true,
+                    confidenceScore: r.confidence_score,
+                    modelVersion: r.model_version,
+                    _rawDate: r.created_at
+                }));
+
+                const allReports = [...mappedReports, ...mappedAiReports].sort((a, b) => 
+                    new Date(b._rawDate).getTime() - new Date(a._rawDate).getTime()
+                );
+
+                setReports(allReports);
                 setStats(apiStats);
             } catch (e: any) {
                 if (!mounted) return;
-                setErrorMsg(e?.message ?? "Erreur lors du chargement des signalements.");
+                setErrorMsg(e?.message ?? t('loadReportsError'));
             } finally {
-                if (!mounted) return;
-                setLoading(false);
+                if (!mounted) {
+                    setLoading(false);
+                }
             }
         };
 
@@ -135,7 +162,7 @@ useEffect(() => {
         return () => {
             mounted = false;
         };
-    }, [offset]);
+    }, [offset, t, language]);
 
     const counts = useMemo(() => {
         const fromStats = mapStatsToUiCounts(stats);
@@ -159,7 +186,7 @@ useEffect(() => {
                     search.trim().length === 0 ||
                     [r.reporterName, r.reportedName, r.type, r.target, r.reason, r.dateReporting]
                         .join(" ")
-                        .toLowerCase()
+                        .toLowerCase() 
                         .includes(search.toLowerCase());
 
                 const matchesType = selectedType === null || r.type === selectedType;
@@ -201,11 +228,26 @@ useEffect(() => {
         const apiState = mapUiStateToApi(newUiState);
 
         try {
-            const updatedApi = await adminService.updateReportState(reportId, apiState);
-            const updatedUi = mapApiReportToUi(updatedApi);
+            let updatedReport: Report;
 
-            setReports((prev) => prev.map((r) => (r.id === reportId ? updatedUi : r)));
-            setSelectedReport(updatedUi);
+            if (selectedReport.isAI) {
+                const updatedApi = await aiReportService.updateAIReportState(reportId, { 
+                    state: apiState as any // Le backend AI utilise ProcessingStatus
+                });
+                updatedReport = {
+                    ...selectedReport,
+                    state: mapApiStateToUi(updatedApi.state),
+                };
+            } else {
+                const updatedApi = await adminService.updateReportState(reportId, apiState as any);
+                updatedReport = {
+                    ...selectedReport,
+                    state: mapApiStateToUi(updatedApi.state),
+                };
+            }
+
+            setReports((prev) => prev.map((r) => (r.id === reportId && r.isAI === selectedReport.isAI ? updatedReport : r)));
+            setSelectedReport(updatedReport);
 
             refreshStats();
         } catch (e: any) {
@@ -216,56 +258,6 @@ useEffect(() => {
     const handleMarkAsAccepted = () => handleUpdateSelectedState("accepted");
     const handleMarkAsRejected = () => handleUpdateSelectedState("rejected");
 
-    const formatDateLocal = (iso: string): string => {
-        const d = new Date(iso);
-        return d.toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US');
-    };
-
-    // ... (rest of mappers)
-
-    useEffect(() => {
-        let mounted = true;
-
-        const load = async () => {
-            try {
-                setLoading(true);
-                setErrorMsg(null);
-
-                const [apiReports, apiStats] = await Promise.all([
-                    adminService.getReports({ offset, limit }),
-                    adminService.getReportStats(),
-                ]);
-
-                if (!mounted) return;
-
-                setReports(apiReports.map(r => ({
-                    id: r.id_report,
-                    type: mapApiTargetToUiType(r.target),
-                    target: r.target,
-                    reason: r.reason,
-                    dateReporting: formatDateLocal(r.date_reporting),
-                    state: mapApiStateToUi(r.state),
-                    reporterName: r.reporter_name,
-                    reportedName: r.reported_name,
-                })));
-                setStats(apiStats);
-            } catch (e: any) {
-                if (!mounted) return;
-                setErrorMsg(e?.message ?? t('loadReportsError'));
-            } finally {
-                if (!mounted){
-                    setLoading(false);
-                }
-            }
-        };
-
-        load();
-        return () => {
-            mounted = false;
-        };
-    }, [offset, t, language]);
-
-    // ...
     const getTypeFilterLabel = () => {
         if (!selectedType) return t('type');
         if (selectedType === "Mission") return t('mission');

@@ -30,3 +30,10 @@ export enum ReportTarget {
   MISSION = "mission",
   OTHER = "other",
 }
+
+export enum AIContentCategory {
+  NORMAL_CONTENT = "normal_content",
+  FRAUD_SUSPECTED = "fraud_suspected",
+  SPAM_LIKE = "spam_like",
+  INAPPROPRIATE = "inappropriate",
+}
