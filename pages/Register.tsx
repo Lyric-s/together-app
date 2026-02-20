@@ -173,7 +173,7 @@ export default function Register() {
                         const fileToUpload = {
                             uri: attachment.uri,
                             name: attachment.name,
-                            mimeType: attachment.mimeType,
+                            mimeType: attachment.mimeType || 'application/pdf',
                             // @ts-ignore
                             file: Platform.OS === 'web' ? (attachment as any).file : undefined
                         };

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/17</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>9/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/17</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -146,41 +146,41 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// services/documentService.ts
@@ -206,41 +206,41 @@ export interface PickedFile {
   file?: File; // Web specific (File object from input)
 }
 &nbsp;
-export const documentService = <span class="cstat-no" title="statement not covered" >{</span>
+export const documentService = {
     
-    uploadValidationDocument: <span class="fstat-no" title="function not covered" >as</span>ync (file: PickedFile, docName: string): Promise&lt;DocumentResponse&gt; =&gt; {
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const formData = <span class="cstat-no" title="statement not covered" >new FormData();</span>
-<span class="cstat-no" title="statement not covered" >            formData.append('doc_name', docName);</span>
+    uploadValidationDocument: async (file: PickedFile, docName: string): Promise&lt;DocumentResponse&gt; =&gt; {
+        try {
+            const formData = new FormData();
+            formData.append('doc_name', docName);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (Platform.OS === 'web') {</span>
-<span class="cstat-no" title="statement not covered" >                if (file.file) {</span>
+            if (Platform.OS === 'web') {
+                if (file.file) {
                     // If we have the direct File object (standard on Web)
-<span class="cstat-no" title="statement not covered" >                    formData.append('file', file.file);</span>
+                    formData.append('file', file.file);
                 } else {
                     // Fallback: fetch blob from URI (blob:...)
-                    const response = <span class="cstat-no" title="statement not covered" >await fetch(file.uri);</span>
-                    const blob = <span class="cstat-no" title="statement not covered" >await response.blob();</span>
-<span class="cstat-no" title="statement not covered" >                    formData.append('file', blob, file.name || 'document.pdf');</span>
+                    const response = await fetch(file.uri);
+                    const blob = await response.blob();
+                    formData.append('file', blob, file.name || <span class="branch-1 cbranch-no" title="branch not covered" >'document.pdf')</span>;
                 }
             } else {
                 // Mobile (React Native polyfill)
-                const filePayload = <span class="cstat-no" title="statement not covered" >{</span>
+                const filePayload = {
                     uri: file.uri,
-                    name: file.name || 'document_upload.pdf',
-                    type: file.mimeType || 'application/pdf',
+                    name: file.name || <span class="branch-1 cbranch-no" title="branch not covered" >'document_upload.pdf',</span>
+                    type: file.mimeType || <span class="branch-1 cbranch-no" title="branch not covered" >'application/pdf',</span>
                 };
-<span class="cstat-no" title="statement not covered" >                formData.append('file', filePayload as any);</span>
+                formData.append('file', filePayload as any);
             }
 &nbsp;
-            const response = <span class="cstat-no" title="statement not covered" >await api.post&lt;DocumentResponse&gt;('/documents/upload', formData);</span>
+            const response = await api.post&lt;DocumentResponse&gt;('/documents/upload', formData);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            return response.data;</span>
+            return response.data;
 &nbsp;
         } catch (error) {
-            const axiosError = <span class="cstat-no" title="statement not covered" >error as AxiosError;</span>
-<span class="cstat-no" title="statement not covered" >            console.error("❌ Upload Error:", axiosError.response?.data || axiosError.message);</span>
-<span class="cstat-no" title="statement not covered" >            throw error;</span>
+            const axiosError = error as AxiosError;
+            console.error("❌ Upload Error:", axiosError.response?.data || axiosError.message);
+            throw error;
         }
     }
 };</pre></td></tr></table></pre>
@@ -250,7 +250,7 @@ export const documentService = <span class="cstat-no" title="statement not cover
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-20T00:31:57.409Z
+                at 2026-02-20T08:30:37.058Z
             </div>
         <script src="../prettify.js"></script>
         <script>
