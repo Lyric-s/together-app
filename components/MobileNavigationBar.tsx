@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'expo-router';
 import { styles } from '@/styles/components/MobileNavigationBarStyles';
 import {Colors} from "@/constants/colors";
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { normalizePath } from '@/utils/path.utils';
 
 /**
@@ -38,28 +39,32 @@ const BottomNavBar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { userType } = useAuth();
+  const { t } = useLanguage();
 
   const volunteerTabs: TabItem[] = [
-    { id: 'home', route: '/(volunteer)/home', iconName: 'home', iconOutline: 'home-outline', label: 'Accueil' },
-    { id: 'search', route: '/(volunteer)/search', iconName: 'search', iconOutline: 'search-outline', label: 'Recherche' },
-    { id: 'library', route: '/(volunteer)/library', iconName: 'book', iconOutline: 'book-outline', label: 'Activité' },
-    { id: 'profile', route: '/(volunteer)/profile', iconName: 'person', iconOutline: 'person-outline', label: 'Profil' },
-    { id: 'settings', route: '/settings', iconName: 'settings', iconOutline: 'settings-outline', label: 'Paramètres' },
+    { id: 'home', route: '/(volunteer)/home', iconName: 'home', iconOutline: 'home-outline', label: t('home') },
+    { id: 'search', route: '/(volunteer)/search', iconName: 'search', iconOutline: 'search-outline', label: t('search') },
+    { id: 'library', route: '/(volunteer)/library', iconName: 'book', iconOutline: 'book-outline', label: t('library') },
+    { id: 'profile', route: '/(volunteer)/profile', iconName: 'person', iconOutline: 'person-outline', label: t('profile') },
   ];
 
   const guestTabs: TabItem[] = [
-    { id: 'home', route: '/(guest)/home', iconName: 'home', iconOutline: 'home-outline', label: 'Accueil' },
-    { id: 'search', route: '/(guest)/search', iconName: 'search', iconOutline: 'search-outline', label: 'Recherche' },
-    { id: 'library', route: '/(guest)/library', iconName: 'book', iconOutline: 'book-outline', label: 'Activité' },
-    { id: 'profile', route: '/(guest)/profile', iconName: 'person', iconOutline: 'person-outline', label: 'Profil' },
-    { id: 'settings', route: '/settings', iconName: 'settings', iconOutline: 'settings-outline', label: 'Paramètres' },
+    { id: 'home', route: '/(guest)/home', iconName: 'home', iconOutline: 'home-outline', label: t('home') },
+    { id: 'search', route: '/(guest)/search', iconName: 'search', iconOutline: 'search-outline', label: t('search') },
+    { id: 'library', route: '/(guest)/library', iconName: 'book', iconOutline: 'book-outline', label: t('library') },
+    { id: 'profile', route: '/(guest)/profile', iconName: 'person', iconOutline: 'person-outline', label: t('profile') },
   ];
 
   const tabs = userType === 'volunteer' ? volunteerTabs : guestTabs;
 
-  const isTabActive = (route: string) => {
+  const isTabActive = (route: string, tabId: string) => {
     const cleanPathname = normalizePath(pathname);
     const cleanRoute = normalizePath(route);
+
+    if (tabId === 'profile' && cleanPathname.startsWith('/settings')) {
+        return true;
+    }
+
     return cleanPathname === cleanRoute || cleanPathname.startsWith(`${cleanRoute}/`);
   };
 
@@ -67,7 +72,7 @@ const BottomNavBar: React.FC = () => {
     <View style={styles.navBar}>
       {tabs.map((tab) => {
         const routeString = typeof tab.route === 'string' ? tab.route : '';
-        const isActive = isTabActive(routeString);
+        const isActive = isTabActive(routeString, tab.id);
         return (
           <TouchableOpacity
             key={tab.id}

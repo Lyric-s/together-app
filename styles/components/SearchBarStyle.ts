@@ -89,7 +89,8 @@ export const styles = StyleSheet.create({
   },
   suggestionsContainer: {
   position: 'absolute',
-  top: 45, // Just below the input
+  top: '100%', // Just below the input
+  marginTop: 5,
   left: 0,
   right: 0,
   backgroundColor: 'white',
@@ -98,11 +99,17 @@ export const styles = StyleSheet.create({
   borderColor: Colors.grayToWhite,
   zIndex: 9999, // Important for overlay
   maxHeight: 200,
-  shadowColor: Colors.black,
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.15,
-  shadowRadius: 3.84,
-  elevation: 5,
+  ...Platform.select({
+    ios: {
+      shadowColor: Colors.black,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.15,
+      shadowRadius: 3.84,
+    },
+    android: {
+      elevation: 10,
+    },
+  }),
 },
 suggestionItem: {
   padding: 10,

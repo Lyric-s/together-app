@@ -64,3 +64,4 @@ workspace.xml
 
 # GitHub App credentials
 gha-creds-*.json
+coverage/

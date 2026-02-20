@@ -1,8 +1,10 @@
-import { View, TextInput, Text, TouchableOpacity, Image, FlatList, ActivityIndicator } from "react-native";
+import { View, TextInput, TouchableOpacity, Image, FlatList, ActivityIndicator } from "react-native";
+import { Text } from '@/components/ThemedText';
 import { useRef, useState, useEffect } from "react";
 import { Colors } from "../constants/colors";
 import { styles } from "../styles/components/SearchBarStyle";
 import { SearchFilters } from "../types/search.types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface SearchBarProps {
   categories?: string[]; // Renommé pour la clarté (était filters_1)
@@ -20,19 +22,21 @@ interface CityResult {
 }
 
 /**
- * Render a search bar with inputs for query text, category, postal code, and start date, plus controls to execute or reset the search.
+ * Render a search bar with inputs for query text, category, location (postal code), and start date, plus controls to execute or reset the search.
  *
  * The component calls `onSearch` when the user submits a search or presses the search button, passing the current text and a `SearchFilters` object where empty fields are represented as `null` and a valid `dateText` is parsed to a `Date`.
  *
- * @param categories - Optional list of category labels displayed in the category picker; the picker shows a default "Catégorie..." option mapped to `null`.
+ * @param categories - Optional list of category labels shown in the category picker; a default "none" option is exposed as `"-"` and maps to `null` in the filters.
  * @param onSearch - Callback invoked with `(text: string, filters: SearchFilters)` when a search is triggered. `filters` has the shape `{ category: string | null; zipCode: string | null; date: Date | null }`.
- * @returns The rendered search bar React element containing inputs and action buttons.
+ * @returns The rendered React element for the search bar.
  */
+
 export default function SearchBar({
     categories = [],    
     onSearch,
   }: SearchBarProps) {
 
+  const { t, getFontSize, fontFamily } = useLanguage();
   const [text, setText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("-");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -53,6 +57,12 @@ export default function SearchBar({
     };
   }, []);
 
+  /**
+   * Reset all search inputs to their initial states and trigger a cleared search.
+   *
+   * Clears the query text, selected category, location input, confirmed ZIP, suggestions, and date text,
+   * then calls `onSearch` with an empty text string and filters where `category`, `zipCode`, and `date` are `null`.
+   */
   function resetAll() {
     setText("");
     setSelectedCategory("-");
@@ -150,8 +160,8 @@ export default function SearchBar({
     <View style={[styles.container]}>
       
       <TextInput
-        style={[styles.input, { minWidth: 300 }]}
-        placeholder="Rechercher une mission..."
+        style={[styles.input, { minWidth: 300, fontSize: getFontSize(14), fontFamily }]}
+        placeholder={t('searchPlaceholder')}
         placeholderTextColor={Colors.grayPlaceholder}
         value={text}
         onChangeText={setText}
@@ -165,7 +175,7 @@ export default function SearchBar({
             onPress={() => setIsCategoryOpen(!isCategoryOpen)}
         >
             <Text style={{ color: selectedCategory === "-" ? Colors.grayPlaceholder : Colors.black }}>
-                {selectedCategory === "-" ? "Catégorie..." : selectedCategory}
+                {selectedCategory === "-" ? t('categoryPlaceholder') : selectedCategory}
             </Text>
             <Text style={{ position: 'absolute', right: 10, color: Colors.grayPlaceholder }}>▼</Text>
         </TouchableOpacity>
@@ -182,9 +192,9 @@ export default function SearchBar({
                         >
                             <Text style={[
                                 styles.suggestionText,
-                                item === selectedCategory && { fontWeight: 'bold', color: Colors.orange }
+                                item === selectedCategory ? { fontWeight: 'bold', color: Colors.orange } : {}
                             ]}>
-                                {item === "-" ? "Aucune" : item}
+                                {item === "-" ? t('none') : item}
                             </Text>
                         </TouchableOpacity>
                     )}
@@ -194,10 +204,10 @@ export default function SearchBar({
       </View>
 
       {/* --- LOCATION INPUT WITH AUTOCOMPLETE --- */}
-      <View style={[styles.flexContainer, { maxWidth: 200 }]}>
+      <View style={[styles.flexContainer, { maxWidth: 200, zIndex: 5000, elevation: 5000}]}>
         <TextInput
-          style={[styles.input]}
-          placeholder="Ville ou CP"
+          style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
+          placeholder={t('cityOrZip')}
           placeholderTextColor={Colors.grayPlaceholder}
           value={locationInput}
           onChangeText={handleLocationChange}
@@ -205,8 +215,6 @@ export default function SearchBar({
         {isLoadingLoc && (
            <ActivityIndicator size="small" color={Colors.orange} style={{position: 'absolute', right: 10, top: 12}}/>
         )}
-
-        {/* Suggestions Dropdown */}
         {suggestions.length > 0 && (
           <View style={styles.suggestionsContainer}>
             <FlatList
@@ -230,8 +238,8 @@ export default function SearchBar({
       
       <View style={[styles.flexContainer]}>
         <TextInput
-          style={[styles.input]}
-          placeholder="Date début (AAAA-MM-JJ)"
+          style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
+          placeholder={t('startDatePlaceholder')}
           placeholderTextColor={Colors.grayPlaceholder}
           value={dateText}
           onChangeText={setDateText}

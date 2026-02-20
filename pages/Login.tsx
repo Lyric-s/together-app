@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform, ActivityIndicator } from 'react-native';
+import { View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform, ActivityIndicator } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import SwitchButton from '../components/SwitchButton';
 import { styles } from '../styles/pages/RegisterCSS';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -10,19 +11,19 @@ import { Colors } from '@/constants/colors';
 import Cross from '@/components/Cross';
 import { UserType } from '@/models/enums'
 import { storageService } from '@/services/storageService';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
- * Renders the login screen and manages credential entry, validation, authentication, and post-login navigation.
+ * Render the login screen, handle credential input and validation, perform authentication, persist session tokens, refresh user context, and navigate to the appropriate post-login route.
  *
- * The component displays username and password inputs, shows a loading state and toast messages for validation or authentication failures, calls the authentication service and auth context to persist the session, and navigates to the admin dashboard or the appropriate user home after successful login.
- *
- * @returns The rendered JSX element for the login screen.
+ * @returns The JSX element representing the login screen
  */
 export default function Login() {
     const router = useRouter();
     const { login, refetchUser } = useAuth();
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState({ visible: false, title: '', message: '' });
+    const { t, getFontSize, fontFamily } = useLanguage();
 
     const isWeb = Platform.OS === 'web';
 
@@ -38,18 +39,18 @@ export default function Login() {
     };
 
     const handleAuthSwitch = (tab: string) => {
-        if (tab === 'Inscription') {
+        if (tab === 'register') {
             router.push('/(auth)/register');
         }
     };
 
     const handleLogin = async () => {
         if (!username.trim()) {
-            showToast("Erreur", "Le nom d'utilisateur est requis.");
+            showToast(t('error'), t('usernameReq'));
             return;
         }
         if (!password) {
-            showToast("Erreur", "Le mot de passe est requis.");
+            showToast(t('error'), t('passwordReq'));
             return;
         }
         setLoading(true);
@@ -70,12 +71,12 @@ export default function Login() {
                 }
             } else {
                 // Sécurité : si l'API ne retourne pas le type, on redirige vers une page par défaut
-                showToast("Erreur de redirection", "Type d'utilisateur non reconnu.");
+                showToast(t('redirectError'), t('userTypeUnknown'));
                 router.replace('/(guest)/home');
             }
         } catch (e: any) {
             console.error(e);
-            showToast("Échec de la connexion", "Identifiants incorrects.");
+            showToast(t('loginFail'), t('badCredentials'));
         } finally {
             setLoading(false);
         }
@@ -120,7 +121,11 @@ export default function Login() {
                                         <>
                                             <SwitchButton
                                                 variant="auth"
-                                                value={"Connexion"}
+                                                labelLeft={t('registerBtn')}
+                                                labelRight={t('loginBtn')}
+                                                valueLeft="register"
+                                                valueRight="login"
+                                                value={"login"}
                                                 onChange={handleAuthSwitch}
                                             />
                                             <Cross
@@ -149,45 +154,45 @@ export default function Login() {
 
                                 <View style={styles.form}>
                                     <TextInput
-                                        placeholder="Username *"
+                                        placeholder={`${t('username')} *`}
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         value={username} onChangeText={setUsername}
-                                        accessibilityLabel="Nom d'utilisateur"
-                                        accessibilityHint="Entrez votre nom d'utilisateur"
+                                        accessibilityLabel={t('username')}
+                                        accessibilityHint={t('enterUsername')}
 
                                     />
                                     <TextInput
-                                        placeholder="Mot de passe *"
+                                        placeholder={`${t('password')} *`}
                                         placeholderTextColor="rgba(255,255,255,0.7)"
-                                        style={styles.input}
+                                        style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                                         secureTextEntry={true}
                                         value={password}
                                         onChangeText={setPassword}
-                                        accessibilityLabel="Mot de passe"
-                                        accessibilityHint="Entrez votre mot de passe"
+                                        accessibilityLabel={t('password')}
+                                        accessibilityHint={t('enterPassword')}
                                     />
 
                                     <TouchableOpacity
                                         style={styles.submitBtn}
                                         onPress={handleLogin}
-                                        accessibilityLabel="Se connecter"
-                                        accessibilityHint="Appuyez pour vous connecter"
+                                        accessibilityLabel={t('login')}
+                                        accessibilityHint={t('loginHint')}
                                         accessibilityRole="button"
                                     >
                                         {loading ? (
                                             <ActivityIndicator color="#fff" />
                                         ) : (
-                                            <Text style={styles.submitBtnText}>Se connecter</Text>
+                                            <Text style={styles.submitBtnText}>{t('login')}</Text>
                                         )}
                                     </TouchableOpacity>
 
                                     { !isWeb &&
                                         <View style={styles.bottomLinksContainer}>
-                                            <Text style={styles.bottomText}> Pas de compte ?</Text>
+                                            <Text style={styles.bottomText}> {t('noAccount')}</Text>
                                             <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
                                                 <Text style={styles.bottomLinkText}>
-                                                    S'inscrire
+                                                    {t('register')}
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>

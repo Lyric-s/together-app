@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, Platform, useWindowDimensions, ScrollView } from 'react-native';
+import { View, ActivityIndicator, Platform, useWindowDimensions, ScrollView } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useLocalSearchParams } from 'expo-router';
 import BackButton from '@/components/BackButton';
 import { styles } from '@/styles/pages/AboutAssociationStyle';
 import { Association } from '@/models/association.model';
 import { associationService } from '@/services/associationService';
 import { Colors } from '@/constants/colors';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
  * Displays details for an association identified by the `id` route parameter, handling loading, error, and not-found states.
@@ -17,6 +19,7 @@ export default function AboutUsAssociation() {
   const { width } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
   const isSmallScreenWeb = isWeb && width < 900;
+  const { t } = useLanguage();
     
   const [association, setAssociation] = useState<Association | null>(null);
   const [loading, setLoading] = useState(true);
@@ -75,11 +78,11 @@ export default function AboutUsAssociation() {
                 isSmallScreenWeb && { paddingLeft: 70 },
                 isWeb && { paddingTop: 25 }
             ]}>
-                <BackButton name_page="Retour" />
+                <BackButton name_page={t('back')} />
             </View>
             <View>
                 <Text style={{ textAlign: 'center', marginTop: 20 }}>
-                    {error ? "Erreur lors du chargement de l'association" : "Association introuvable"}
+                    {error ? t('loadAssoError') : t('assoNotFound')}
                 </Text>
             </View>
         </View>
@@ -101,8 +104,8 @@ export default function AboutUsAssociation() {
             <Text 
                 style={[ 
                     styles.headerTitle,
-                    isWeb && { fontSize: 24, marginLeft: 0 },
-                    !isWeb && { textAlign: 'center' }
+                    isWeb ? { fontSize: 24, marginLeft: 0 } : {},
+                    !isWeb ? { textAlign: 'center' } : {}
                 ]}
                 numberOfLines={2}
             >
@@ -117,36 +120,36 @@ export default function AboutUsAssociation() {
             <View style={styles.content}>
           {/* Description box */}
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>Description</Text>
+            <Text style={styles.cardTitle}>{t('description')}</Text>
             <Text style={styles.text}>
-                {association.description || "Aucune description disponible pour le moment."}
+                {association.description || t('noDescription')}
             </Text>
           </View>
 
           {/* Informations box */}
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>Informations</Text>
+            <Text style={styles.cardTitle}>{t('informations')}</Text>
 
             <View style={{gap: 10}}>
                 <Text style={styles.infoText}>
-                    <Text style={styles.label}>Nom :</Text> {association.name}
+                    <Text style={styles.label}>{t('nameLabel')}</Text> {association.name}
                 </Text>
 
                 {association.address ? (
                     <Text style={styles.infoText}>
-                        <Text style={styles.label}>Adresse :</Text> {association.address}
+                        <Text style={styles.label}>{t('addressLabel')}</Text> {association.address}
                     </Text>
                 ) : null}
 
                 {association.zip_code ? (
                     <Text style={styles.infoText}>
-                        <Text style={styles.label}>Code postal :</Text> {association.zip_code}
+                        <Text style={styles.label}>{t('zipCodeLabel')}</Text> {association.zip_code}
                     </Text>
                 ) : null}
 
                 {association.phone_number ? (
                     <Text style={styles.infoText}>
-                        <Text style={styles.label}>Téléphone :</Text> {association.phone_number}
+                        <Text style={styles.label}>{t('phoneLabel')}</Text> {association.phone_number}
                     </Text>
                 ) : null}
             </View>

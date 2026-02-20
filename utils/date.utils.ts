@@ -1,12 +1,15 @@
 // src/utils/date.utils.ts
 
-export const formatMissionDate = (dateString: string | Date | undefined | null): string => {
-  if (!dateString) return "Date inconnue";
+export const formatMissionDate = (
+  dateString: string | Date | undefined | null,
+  locale: 'fr' | 'en' = 'fr'
+): string | null => {
+  if (!dateString) return null;
 
   // If it is already a Date object, convert it to an ISO string to process it uniformly.
   let inputStr: string;
   if (dateString instanceof Date) {
-    if (isNaN(dateString.getTime())) return "Date invalide";
+    if (isNaN(dateString.getTime())) return null;
     inputStr = dateString.toISOString();
   } else {
     inputStr = dateString;
@@ -19,6 +22,9 @@ export const formatMissionDate = (dateString: string | Date | undefined | null):
     // SAFE APPROACH: Cut the string manually.
     // This prevents new Date() from converting to UTC midnight and shifting by one day.
     const [year, month, day] = inputStr.split('-');
+    if (locale === 'en') {
+       return `${year}-${month}-${day}`; // ISOish or US style
+    }
     return `${day}/${month}/${year}`;
   }
 
@@ -26,23 +32,26 @@ export const formatMissionDate = (dateString: string | Date | undefined | null):
   // We let JavaScript convert it to the phone's local time.
   const dateObj = new Date(inputStr);
   
-  if (isNaN(dateObj.getTime())) return "Date invalide";
+  if (isNaN(dateObj.getTime())) return null;
 
   // Options to display the time only if it is relevant (not midnight if the API returns midnight)
   const hasTime = dateObj.getHours() !== 0 || dateObj.getMinutes() !== 0;
 
-  const datePart = dateObj.toLocaleDateString("fr-FR", {
+  const localeCode = locale === 'fr' ? 'fr-FR' : 'en-US';
+
+  const datePart = dateObj.toLocaleDateString(localeCode, {
     day: "2-digit",
     month: "2-digit",
     year: "numeric"
   });
 
   if (hasTime) {
-    const timePart = dateObj.toLocaleTimeString("fr-FR", {
+    const timePart = dateObj.toLocaleTimeString(localeCode, {
       hour: "2-digit",
       minute: "2-digit"
     });
-    return `${datePart} à ${timePart}`;
+    const separator = locale === 'fr' ? ' à ' : ' at ';
+    return `${datePart}${separator}${timePart}`;
   }
 
   return datePart;

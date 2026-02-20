@@ -4,10 +4,12 @@
  */
 
 import { Href, Redirect, Stack, router } from 'expo-router';
-import { Platform, View, Text, ActivityIndicator } from 'react-native';
+import { Platform, View, ActivityIndicator } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import Sidebar from '@/components/SideBar';
 import { useAuth } from '@/context/AuthContext';
 import { Colors } from '@/constants/colors';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
  * Render the web-only administrator layout with access control and a sidebar for navigation.
@@ -23,6 +25,7 @@ import { Colors } from '@/constants/colors';
 export default function AdminLayout() {
   const { user, isLoading, userType } = useAuth();
   const isWeb = Platform.OS === 'web';
+  const { t } = useLanguage();
 
   if (isLoading) {
     return (
@@ -36,8 +39,7 @@ export default function AdminLayout() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
         <Text style={{ fontSize: 18, textAlign: 'center' }}>
-          L'espace administrateur n'est pas disponible sur mobile.
-          Veuillez utiliser un ordinateur.
+          {t('adminMobileNotAvailable')}
         </Text>
       </View>
     );
@@ -51,7 +53,7 @@ export default function AdminLayout() {
     <View style={{ flex: 1, flexDirection: 'row', height: '100%' }}>
         <Sidebar 
             userType="admin" 
-            userName={user?.username || 'Admin'} 
+            userName={user?.username || t('defaultAdmin')} 
             onNavigate={(route) => {
                 router.push(route as Href);
             }} 

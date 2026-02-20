@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    backgroundColor: Colors.darkerWhite,
+    backgroundColor: Colors.white,
     padding: 20,
     gap: 20,
   },
@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     color: Colors.black,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   columnTitle: {
     fontSize: 20,

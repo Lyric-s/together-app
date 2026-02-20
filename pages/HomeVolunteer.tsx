@@ -4,7 +4,6 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import MissionVolunteerCard from '@/components/MissionVolunteerCard';
 import {
   View,
-  Text,
   Image,
   ScrollView,
   TouchableOpacity,
@@ -12,6 +11,7 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { Colors } from '@/constants/colors';
 import { styles } from '@/styles/pages/AccountWithoutCoCSS';
 import { Mission } from '@/models/mission.model';
@@ -19,14 +19,12 @@ import { missionService } from '@/services/missionService';
 import Footer from '@/components/footer';
 import AlertToast from '@/components/AlertToast';
 import { volunteerService } from '@/services/volunteerService';
+import { useLanguage } from '@/context/LanguageContext';
 
 /**
- * Render the volunteer account screen with responsive layouts for mobile and web.
+ * Render the volunteer dashboard showing recent and favorite missions and providing handlers for navigation, favoriting, and alerts.
  *
- * Displays recent missions and favorited missions, manages local state for missions and favorites,
- * and exposes handlers for opening mission details, toggling favorites (with backend save), and showing alerts.
- *
- * @returns The rendered JSX element for the volunteer account screen.
+ * @returns The component's rendered JSX element.
  */
 export default function HomeVolunteer() {
   const { width } = useWindowDimensions();
@@ -34,6 +32,7 @@ export default function HomeVolunteer() {
   const isWeb = Platform.OS === 'web';
   const isMobile = !isWeb;
   const isSmallScreen = width < 900;
+  const { t } = useLanguage();
 
   const [missions, setMissions] = useState<Mission[]>([]);
   const [favorites, setFavorites] = useState<Mission[]>([]);
@@ -62,26 +61,27 @@ export default function HomeVolunteer() {
       setMissions(data ?? []);
     } catch (e) {
       console.error(e);
-      setError("Impossible de charger les missions pour le moment.");
+      setError(t('loadError'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   const loadMissionsFavorites = useCallback(async () => {
     setLoadingF(true);
     setErrorF(null);
     try {
       const favoritesData = await volunteerService.getFavorites();
-      setFavorites(favoritesData ?? []);
-      setFavoriteIds(favoritesData.map(m => m.id_mission));
+      const safeFavorites = favoritesData ?? [];
+      setFavorites(safeFavorites);
+      setFavoriteIds(safeFavorites.map(m => m.id_mission));
     } catch (e) {
       console.error(e);
-      setErrorF("Impossible de charger les missions favorites pour le moment.");
+      setErrorF(t('loadError'));
     } finally {
       setLoadingF(false);
     }
-  }, []);
+  }, [t]);
 
   const handleToggleFavorite = async (mission: Mission) => {
     const isFav = favoriteIds.includes(mission.id_mission);
@@ -111,7 +111,7 @@ export default function HomeVolunteer() {
             setFavoriteIds(prev => prev.filter(id => id !== mission.id_mission));
             setFavorites(prev => prev.filter(m => m.id_mission !== mission.id_mission));
         }
-        showAlert("Erreur","Impossible de modifier les favoris pour le moment.");
+        showAlert(t('error'), t('favError'));
     }
   };
 
@@ -129,7 +129,12 @@ export default function HomeVolunteer() {
 
   return (
     <View style={[styles.container, { flex: 1 }]}> 
-      
+      <AlertToast 
+        visible={alertModal.visible} 
+        title={alertModal.title} 
+        message={alertModal.message} 
+        onClose={() => setAlertModal(prev => ({ ...prev, visible: false }))}
+      />
       {/* Header Mobile Only */}
       {isMobile && (
         <View style={styles.headerMobile}>
@@ -154,13 +159,13 @@ export default function HomeVolunteer() {
         {/* LISTE DES MISSIONS */}
         <View style={isMobile ? styles.sectionMobile : styles.sectionWeb}>
           <View style={styles.sectionHeader}>
-            <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen && {paddingLeft: 35}]}>
-               {isMobile ? 'Récent' : 'Missions récentes'}
+            <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen ? {paddingLeft: 35} : {}]}>
+               {isMobile ? t('recent') : t('recentMissions')}
             </Text>
             
             {isMobile && (
               <TouchableOpacity onPress={() => router.push('/(volunteer)/search')}>
-                <Text style={styles.seeAllText}>Voir tout</Text>
+                <Text style={styles.seeAllText}>{t('seeAll')}</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -187,14 +192,14 @@ export default function HomeVolunteer() {
                   }}
                 >
                   <Text style={{ color: Colors.orange, fontWeight: '600' }}>
-                    ↻ Recharger
+                    {t('reload')}
                   </Text>
                 </TouchableOpacity>
               </View>
             ) : (
             <View style={isMobile ? {alignItems:'center'} : styles.missionsGrid}>
               {missions.length === 0 ? (
-                <Text style={{ color: 'gray', fontStyle: 'italic', padding: 20 }}>Aucune mission récente disponible pour le moment.</Text>
+                <Text style={{ color: 'gray', fontStyle: 'italic', padding: 20 }}>{t('noRecentMissions')}</Text>
               ) : (
                 missions.slice(0, 3).map((mission) => (
                   <View key={mission.id_mission} style={styles.cardWrapper}>
@@ -213,21 +218,43 @@ export default function HomeVolunteer() {
         </View>
 
         {/* LISTE DES MISSIONS FAVORITES */}
-        { !loadingF && favorites.length > 0 &&
+        { !loadingF && (favorites.length > 0 || errorF) &&
         <View style={isMobile ? styles.sectionMobile : styles.sectionWeb}>
           <View style={styles.sectionHeader}>
-            <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen && {paddingLeft: 35}]}>
-               {isMobile ? 'Favoris' : 'Missions favoris'}
+            <Text style={isMobile ? styles.sectionTitle : [styles.sectionTitleWeb, isSmallScreen ? {paddingLeft: 35} : {}]}>
+               {isMobile ? t('favorites') : t('favoriteMissions')}
             </Text>
             
             {isMobile && (
               <TouchableOpacity onPress={() => router.push('/(volunteer)/library/upcoming')}>
-                <Text style={styles.seeAllText}>Voir tout</Text>
+                <Text style={styles.seeAllText}>{t('seeAll')}</Text>
               </TouchableOpacity>
             )}
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-             <View style={isMobile ? {alignItems:'center'} : styles.missionsGrid}>
+            {errorF ? (
+              <View style={{ alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+                <Text style={{ color: 'gray', textAlign: 'center', marginBottom: 10 }}>
+                  {errorF}
+                </Text>
+                <TouchableOpacity 
+                  onPress={loadMissionsFavorites}
+                  style={{
+                    paddingHorizontal: 20,
+                    paddingVertical: 10,
+                    backgroundColor: Colors.white,
+                    borderWidth: 1,
+                    borderColor: Colors.orange,
+                    borderRadius: 20
+                  }}
+                >
+                  <Text style={{ color: Colors.orange, fontWeight: '600' }}>
+                    {t('reload')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={isMobile ? {alignItems:'center'} : styles.missionsGrid}>
                 {favorites.slice(0, 3).map((mission) => (
                   <View key={`fav-${mission.id_mission}`} style={styles.cardWrapper}>
                     <MissionVolunteerCard
@@ -238,7 +265,8 @@ export default function HomeVolunteer() {
                     />
                   </View>
                 ))}
-             </View>
+              </View>
+            )}
           </View>
         </View>
         }

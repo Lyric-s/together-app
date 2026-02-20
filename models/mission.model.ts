@@ -17,7 +17,6 @@ export interface Mission {
   description: string;
   capacity_min: number;
   capacity_max: number;
-  volunteers_enrolled?: number;
   image_url?: string;
   volunteers_enrolled: number;
   available_slots: number;

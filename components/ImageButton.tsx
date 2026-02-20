@@ -1,4 +1,5 @@
-import { TouchableOpacity, Image, Text, ViewStyle, ImageStyle } from "react-native";
+import { TouchableOpacity, Image, ViewStyle, ImageStyle } from "react-native";
+import { Text } from '@/components/ThemedText';
 import { styles } from "@/styles/components/ImageButtonStyle";
 
 //  -------------- Component C16

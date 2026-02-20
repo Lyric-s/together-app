@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   TouchableOpacity,
   useWindowDimensions,
@@ -18,6 +17,8 @@ import { router } from 'expo-router';
 import { associationService } from '@/services/associationService';
 import { volunteerService } from '@/services/volunteerService';
 import { ProcessingStatus } from '@/models/enums';
+import { useLanguage } from '@/context/LanguageContext';
+import { Text } from '@/components/ThemedText';
 
 export const mapVolunteerStatusToVolunteerWithStatus = async (
   volunteerStatuses: VolunteerStatus[]
@@ -66,30 +67,16 @@ export const mapVolunteerStatusToVolunteerWithStatus = async (
 };
 
 /**
- * ActivityAssos
+ * Renders the association activity dashboard showing finished missions and actions to view mission details or volunteers.
  *
- * Component for the association's activity dashboard, showing a list of finished missions.
- * 
- * Features:
- * - Fetches finished missions from the backend API (`associationService.getMyFinishedMissions`)
- * - Converts API missions (MissionPublic) to internal Mission model
- * - Displays mission cards with details: name, dates, category, participant counts
- * - Provides two actions per mission:
- *    1. "Voir la mission" → navigates to mission details page
- *    2. "Voir les bénévoles" → opens a modal listing volunteers for that mission
- * - Includes responsive layout for small screens
+ * Fetches finished missions, displays each mission as a card with name, dates, category, and participant counts, and provides controls to open a mission details view or a volunteer list modal.
  *
- * State:
- * - missions: Array of finished missions
- * - modalVisible: Whether the volunteer list modal is open
- * - missionClick: Currently selected mission for volunteer modal
- * - search: Search filter for volunteers
- * - benevoles: Volunteers of the selected mission
- * - loading: Loading state for API calls
+ * @returns The rendered association activity dashboard component
  */
 export default function ActivityAssos() {
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 900;
+  const { t } = useLanguage();
 
   // ---------------------
   // STATE
@@ -167,7 +154,7 @@ export default function ActivityAssos() {
         </Text>
         <View style={[styles.categoryContainer, { marginVertical: -2, marginLeft: -10 }]}>
           <CategoryLabel
-            text={`Catégorie ${mission.category?.label || mission.id_categ}`}
+            text={`${t('categoryPrefix')} ${mission.category?.label || mission.id_categ}`}
             backgroundColor={Colors.brightOrange}
           />
         </View>
@@ -181,7 +168,7 @@ export default function ActivityAssos() {
             style={[styles.button, { backgroundColor: '#E8D5FF' }]}
             onPress={() => router.push(`/(association)/library/upcoming/${mission.id_mission.toString()}`)}
           >
-            <Text style={[styles.buttonText, { color: '#7C3AED' }]}>Voir la mission</Text>
+            <Text style={[styles.buttonText, { color: '#7C3AED' }]}>{t('viewMission')}</Text>
           </TouchableOpacity>
 
           {/* Open volunteer modal */}
@@ -189,7 +176,7 @@ export default function ActivityAssos() {
             style={[styles.button, { backgroundColor: '#D1FAE5' }]}
             onPress={() => handleViewVolunteers(mission.id_mission)}
           >
-            <Text style={[styles.buttonText, { color: '#059669' }]}>Voir les bénévoles</Text>
+            <Text style={[styles.buttonText, { color: '#059669' }]}>{t('viewVolunteers')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -213,8 +200,8 @@ export default function ActivityAssos() {
     <View style={{ flex: 1, flexDirection: 'row', backgroundColor: Colors.darkerWhite }}>
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.content}>
-          <Text style={[styles.pageTitle, isSmallScreen && { paddingLeft: 55 }]}>
-            Missions terminées
+          <Text style={[styles.pageTitle, isSmallScreen ? { paddingLeft: 55 } : {}]}>
+            {t('finishedMissions')}
           </Text>
           <View style={styles.missionsList}>
             {missions.map(renderMissionCard)}

@@ -37,7 +37,6 @@ export const styles = StyleSheet.create({
 
     ...(Platform.OS === 'web' && {
       width: '100%',
-      maxWidth: 900,
     }),
   },
 
@@ -50,6 +49,7 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.orange,
     borderRadius: 12,
     padding: 16,
+    maxWidth: 900,
   },
 
   cardTitle: {

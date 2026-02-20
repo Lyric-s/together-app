@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
   ScrollView,
   ActivityIndicator,
+  Platform,
+  useWindowDimensions
 } from "react-native";
 import MissionAdminAssosCard from "@/components/MissionAdminAssosCard";
 import { styles } from "@/styles/pages/AssosHomePageStyle";
@@ -12,6 +13,9 @@ import { Mission } from "@/models/mission.model";
 import { Notification } from "@/models/notif.model";
 import { mapMissionPublicToMission } from "@/utils/mission.utils";
 import { Colors } from "@/constants/colors";
+import Footer from "@/components/footer";
+import { useLanguage } from '@/context/LanguageContext';
+import { Text } from '@/components/ThemedText';
 
 /**
  * Represents a group of notifications displayed under the same date section.
@@ -22,20 +26,21 @@ type NotificationSection = {
 };
 
 /**
- * AssosHomePage
+ * Association home page presenting upcoming missions and notifications grouped by date.
  *
- * Association home page layout composed of two main sections:
+ * Left column displays upcoming missions; right column shows notifications grouped into
+ * date sections (Today, Yesterday, or localized date). Shows a centered loading indicator
+ * while data is being fetched and renders a Footer on web platforms.
  *
- * - Left column (35%):
- *   Displays upcoming missions using MissionAdminAssosCard components.
- *
- * - Right column (65%):
- *   Displays notifications grouped by date.
+ * @returns The rendered React element for the association home page.
  */
 export default function AssosHomePage() {
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 900;
   const [upcomingMissions, setUpcomingMissions] = useState<Mission[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     const loadData = async () => {
@@ -80,10 +85,10 @@ export default function AssosHomePage() {
       d1.getMonth() === d2.getMonth() &&
       d1.getFullYear() === d2.getFullYear();
 
-    if (isSameDay(date, today)) return "Aujourd’hui";
-    if (isSameDay(date, yesterday)) return "Hier";
+    if (isSameDay(date, today)) return t('today');
+    if (isSameDay(date, yesterday)) return t('yesterday');
 
-    return date.toLocaleDateString("fr-FR");
+    return date.toLocaleDateString(language === 'fr' ? "fr-FR" : "en-US");
   };
   
   // Group notifications by date
@@ -100,11 +105,10 @@ export default function AssosHomePage() {
       return acc;
     }, {})
   ).sort((a, b) => {
-    // Basic sort: put "Aujourd'hui" first, then "Hier", then others by date desc
-    if (a.title === "Aujourd’hui") return -1;
-    if (b.title === "Aujourd’hui") return 1;
-    if (a.title === "Hier") return -1;
-    if (b.title === "Hier") return 1;
+    if (a.title === t('today')) return -1;
+    if (b.title === t('today')) return 1;
+    if (a.title === t('yesterday')) return -1;
+    if (b.title === t('yesterday')) return 1;
     return 0; 
   });
 
@@ -117,58 +121,62 @@ export default function AssosHomePage() {
   }
 
   return (
-    <View style={styles.container}>
-      
-      {/* LEFT COLUMN – MISSIONS (35%) */}
-      <View style={styles.leftColumn}>
-        <Text style={styles.pageTitle}>Accueil</Text>
-        <Text style={styles.columnTitle}>Missions à venir</Text>
+    <View style={{ flex: 1, flexDirection: 'column' }}>
+        <View style={styles.container}>
+        
+        {/* LEFT COLUMN – MISSIONS (35%) */}
+        <View style={styles.leftColumn}>
+            <Text style={[styles.pageTitle, isSmallScreen ? { paddingLeft: 55 } : {}]}>{t('home')}</Text>
+            <Text style={styles.columnTitle}>{t('upcomingMissions')}</Text>
 
-        <ScrollView showsVerticalScrollIndicator={true}>
-          {upcomingMissions.length > 0 ? (
-            upcomingMissions.map((mission) => (
-              <MissionAdminAssosCard
-                key={mission.id_mission} 
-                mission={mission}              
-              />
-            ))
-          ) : (
-            <Text style={{ marginTop: 20, color: '#666', fontStyle: 'italic' }}>
-              Aucune mission à venir.
-            </Text>
-          )}
-        </ScrollView>
-      </View>
+            <ScrollView showsVerticalScrollIndicator={true}>
+            {upcomingMissions.length > 0 ? (
+                upcomingMissions.map((mission) => (
+                <MissionAdminAssosCard
+                    key={mission.id_mission} 
+                    mission={mission}              
+                />
+                ))
+            ) : (
+                <Text style={{ marginTop: 20, color: '#666', fontStyle: 'italic' }}>
+                {t('noUpcomingMissions')}
+                </Text>
+            )}
+            </ScrollView>
+        </View>
 
-      {/* RIGHT COLUMN – NOTIFICATIONS (65%) */}
-      <View style={styles.rightColumn}>
-        <Text style={styles.columnTitle}>Notifications</Text>
+        {/* RIGHT COLUMN – NOTIFICATIONS (65%) */}
+        <View style={styles.rightColumn}>
+            <Text style={styles.columnTitle}>{t('notifications')}</Text>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {notificationSections.length > 0 ? (
-            notificationSections.map((section) => (
-              <View key={section.title} style={styles.section}>
-                <Text style={styles.sectionTitle}>{section.title}</Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+            {notificationSections.length > 0 ? (
+                notificationSections.map((section) => (
+                <View key={section.title} style={styles.section}>
+                    <Text style={styles.sectionTitle}>{section.title}</Text>
 
-                {section.data.map((notif) => (
-                  <View
-                    key={notif.id_notification}
-                    style={[styles.notificationCard, styles.notifInfo]}
-                  >
-                    <Text style={styles.notificationText}>
-                      {notif.message}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            ))
-          ) : (
-            <Text style={{ marginTop: 20, color: '#666', fontStyle: 'italic' }}>
-              Aucune notification.
-            </Text>
-          )}
-        </ScrollView>
-      </View>
+                    {section.data.map((notif) => (
+                    <View
+                        key={notif.id_notification}
+                        style={[styles.notificationCard, styles.notifInfo]}
+                    >
+                        <Text style={styles.notificationText}>
+                        {notif.message}
+                        </Text>
+                    </View>
+                    ))}
+                </View>
+                ))
+            ) : (
+                <Text style={{ marginTop: 20, color: '#666', fontStyle: 'italic' }}>
+                {t('noNotifications')}
+                </Text>
+            )}
+            </ScrollView>
+        </View>
+        </View>
+        
+        {Platform.OS === 'web' && <Footer />}
     </View>
   );
 }

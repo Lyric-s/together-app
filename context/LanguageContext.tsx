@@ -8,7 +8,7 @@ type FontType = 'default' | 'opendyslexic';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: TranslationKey) => string;
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string;
   textSize: number;
   setTextSize: (size: number) => void;
   getFontSize: (baseSize: number) => number;
@@ -25,8 +25,14 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [textSize, setTextSize] = useState<number>(2);
   const [fontType, setFontType] = useState<FontType>('default');
 
-  const t = (key: TranslationKey) => {
-    return translations[language][key] || key;
+  const t = (key: TranslationKey, params?: Record<string, string | number>) => {
+    let text = translations[language][key] || key;
+    if (params) {
+      for (const [k, v] of Object.entries(params)) {
+        text = text.replace(new RegExp(`\\{\\{${k}\\}\\}`, 'g'), String(v));
+      }
+    }
+    return text;
   };
 
   const getFontSize = (baseSize: number) => {

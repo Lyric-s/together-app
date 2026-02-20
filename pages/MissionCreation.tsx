@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
+import { Text } from '@/components/ThemedText';
 // import * as ImagePicker from "expo-image-picker";
 import { Picker } from "@react-native-picker/picker";
 import DatePickerField from "@/components/DatePickerFields"; 
@@ -15,9 +16,19 @@ import { router } from "expo-router";
 import { categoryService } from "@/services/category.service";
 import { Category } from "@/models/category.model";
 import { Association } from "@/models/association.model";
+import { useLanguage } from "@/context/LanguageContext";
 
 
+/**
+ * Render a form allowing an association to create and publish a mission.
+ *
+ * Loads available categories and the current association, validates form fields (title, description, category, dates, location, volunteer capacities), and submits a mission payload to the backend; on successful creation it navigates to the association home.
+ *
+ * @returns The React element representing the mission creation form UI.
+ */
 export default function MissionCreation() {
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 900;
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
@@ -30,6 +41,7 @@ export default function MissionCreation() {
   const [maxVolunteers, setMaxVolunteers] = useState("");
   const [skills, setSkills] = useState("");
   const [association, setAssociation] = useState<Association>();
+  const { t, getFontSize, fontFamily } = useLanguage();
 
 
   // --- Fetch categories from API ---
@@ -61,9 +73,6 @@ export default function MissionCreation() {
 
   const toIsoDate = (date: Date) => date.toISOString().split("T")[0];
 
-
-
-
   const handlePublish = async () => {
   if (
     !title ||
@@ -74,12 +83,12 @@ export default function MissionCreation() {
     !maxVolunteers ||
     !association
   ) {
-    alert("Veuillez remplir tous les champs obligatoires.");
+    alert(t('fillRequired'));
     return;
   }
 
   if (endDate && endDate < startDate) {
-    alert("La date de fin doit être après la date de début.");
+    alert(t('dateOrderErr'));
     return;
   }
 
@@ -87,18 +96,18 @@ export default function MissionCreation() {
   const max = parseInt(maxVolunteers);
 
   if (isNaN(max) || max <= 0) {
-    alert("Le nombre maximum de bénévoles doit être un nombre valide supérieur à 0.");
+    alert(t('maxVolErr'));
     return;
   }
 
   if (minVolunteers && min > max) {
-    alert("Le nombre minimum de bénévoles ne peut pas dépasser le maximum.");
+    alert(t('minMaxVolErr'));
     return;
   }
 
   const now = new Date();
   if (startDate < now) {
-    alert("La date de début ne peut pas être dans le passé.");
+    alert(t('pastDateErr'));
     return;
   }
 
@@ -119,55 +128,54 @@ export default function MissionCreation() {
 
     const mission = await associationService.createMission(payload);
 
-    alert("Mission créée avec succès !");
+    alert(t('missionCreated'));
     console.log("Mission créée :", mission);
 
     // Go back to home page
     router.replace("/(association)/home");
   } catch (error) {
     console.error(error);
-    alert("Erreur lors de la création de la mission.");
+    alert(t('missionCreateErr'));
   }
 };
-
 
   return (
     <ScrollView style={styles.container}>
       <View >
-        <Text style={styles.mainTitle}>Création d'une mission</Text>
-        <Text style={styles.subtitle}>
-          Remplissez les informations pour créer une nouvelle mission.
+        <Text style={[styles.mainTitle, isSmallScreen ? { paddingLeft: 55 } : {}]}>{t('missionCreation')}</Text>
+        <Text style={[styles.subtitle, isSmallScreen ? { paddingLeft: 55 } : {}]}>
+          {t('fillInfo')}
         </Text>
 
         {/* SECTION 1 */}
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Informations générales</Text>
+          <Text style={styles.sectionTitle}>{t('generalInfo')}</Text>
 
-          <Text style={styles.label}>Titre de la mission *</Text>
+          <Text style={styles.label}>{t('missionTitleLabel')} *</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
             maxLength={100}
             value={title}
             onChangeText={setTitle}
           />
 
-          <Text style={styles.label}>Description de la mission *</Text>
+          <Text style={styles.label}>{t('missionDescLabel')} *</Text>
           <TextInput
-            style={[styles.input, styles.textArea]}
+            style={[styles.input, styles.textArea, { fontSize: getFontSize(14), fontFamily }]}
             maxLength={500}
             multiline
             value={description}
             onChangeText={setDescription}
           />
 
-          <Text style={styles.label}>Catégorie *</Text>
+          <Text style={styles.label}>{t('categoryLabel')} *</Text>
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={selectedCategory}
               onValueChange={(value) => setSelectedCategory(value)}
               style={styles.picker}
             >
-              <Picker.Item label="Sélectionnez une catégorie" value="" />
+              <Picker.Item label={t('selectCategory')} value="" />
 
               {categories.map((c) => (
                 <Picker.Item key={c.id_categ} label={c.label} value={c.id_categ} />
@@ -188,11 +196,11 @@ export default function MissionCreation() {
 
         {/* SECTION 2 */}
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Détails pratiques</Text>
+          <Text style={styles.sectionTitle}>{t('practicalDetails')}</Text>
 
           <View style={styles.row}>
             <View style={styles.half}>
-              <Text style={styles.label}>Date début *</Text>
+              <Text style={styles.label}>{t('startDateLabel')} *</Text>
               <DatePickerField
                 date={startDate}
                 onChange={setStartDate}
@@ -200,7 +208,7 @@ export default function MissionCreation() {
             </View>
 
             <View style={styles.half}>
-              <Text style={styles.label}>Date fin</Text>
+              <Text style={styles.label}>{t('endDateLabel')}</Text>
               <DatePickerField
                 date={endDate}
                 onChange={setEndDate}
@@ -208,38 +216,38 @@ export default function MissionCreation() {
             </View>
           </View>
 
-          <Text style={styles.label}>Lieu *</Text>
+          <Text style={styles.label}>{t('locationLabel')} *</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
             value={location}
             onChangeText={setLocation}
           />
 
           <View style={styles.row}>
             <View style={styles.half}>
-              <Text style={styles.label}>Nombre minimum bénévoles</Text>
+              <Text style={styles.label}>{t('minVolunteersLabel')}</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                 keyboardType="numeric"
                 value={minVolunteers}
-                onChangeText={(t) => setMinVolunteers(t.replace(/[^0-9]/g, ""))}
+                onChangeText={(val) => setMinVolunteers(val.replace(/[^0-9]/g, ""))}
               />
             </View>
 
             <View style={styles.half}>
-              <Text style={styles.label}>Nombre maximum bénévoles *</Text>
+              <Text style={styles.label}>{t('maxVolunteersLabel')} *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
                 keyboardType="numeric"
                 value={maxVolunteers}
-                onChangeText={(t) => setMaxVolunteers(t.replace(/[^0-9]/g, ""))}
+                onChangeText={(val) => setMaxVolunteers(val.replace(/[^0-9]/g, ""))}
               />
             </View>
           </View>
 
-          <Text style={styles.label}>Compétences requises</Text>
+          <Text style={styles.label}>{t('requiredSkillsLabel')}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { fontSize: getFontSize(14), fontFamily }]}
             value={skills}
             onChangeText={setSkills}
           />
@@ -249,14 +257,13 @@ export default function MissionCreation() {
         <View style={styles.buttonsRow}>
           
           <TouchableOpacity style={styles.publishButton} onPress={handlePublish}>
-            <Text style={styles.publishText}>Publier la mission</Text>
+            <Text style={styles.publishText}>{t('publishMission')}</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.requiredInfo}>* Champs obligatoires</Text>
+        <Text style={styles.requiredInfo}>* {t('requiredFields')}</Text>
       </View>
     </ScrollView>
   );
 }
-
 

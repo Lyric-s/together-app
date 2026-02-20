@@ -1,10 +1,11 @@
 // styles/pages/LanguageAccessibility.styles.ts
+import { Colors } from '@/constants/colors';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.white,
   },
   scrollContent: {
     paddingBottom: 120,
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
   },
   headerTitleContainer: {
-    backgroundColor: '#FFE5D6',
+    backgroundColor: Colors.veryLightOrange,
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -38,7 +39,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
+    color: Colors.black,
   },
 
   // --- Titre de la page ---
@@ -47,19 +48,19 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     marginBottom: 30,
-    color: '#000',
+    color: Colors.black,
   },
 
   // --- Formulaire ---
   formContainer: {
-    gap: 25, // Espacement vertical entre les éléments
+    gap: 25,
   },
   fieldGroup: {
     marginBottom: 10,
   },
   label: {
     fontSize: 16,
-    color: '#000',
+    color: Colors.black,
     marginBottom: 10,
     fontWeight: '400',
   },
@@ -67,9 +68,9 @@ export const styles = StyleSheet.create({
   // Styles pour les Pickers (Menus déroulants)
   pickerContainer: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: Colors.black,
     borderRadius: 4,
-    backgroundColor: '#FFF',
+    backgroundColor: Colors.white,
     height: 50,
     justifyContent: 'center',
   },
@@ -83,15 +84,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 20,
-  },
-  sizeButton: {
-    padding: 5,
-  },
-  sizeIndicator: {
-    flex: 1,
-    height: 4,
-    backgroundColor: '#FF6B35', // Barre orange
-    borderRadius: 2,
   },
 
   // Checkbox Thème sombre

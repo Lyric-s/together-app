@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
     View,
-    Text,
     Image,
     TouchableOpacity,
     ScrollView,
@@ -13,6 +12,8 @@ import AdminLineChart from "@/components/AdminLineChart";
 import styles from "@/styles/pages/DashboardAdminStyles";
 import { adminService } from "@/services/adminService";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { Text } from '@/components/ThemedText';
 
 type DashboardStats = {
     associationsCount: number;
@@ -24,10 +25,16 @@ type DashboardStats = {
     pendingAssociationsCount: number;
 };
 
+/**
+ * Renders the admin dashboard view, fetching dashboard statistics and displaying KPIs, monthly charts, and pending items while handling access control, loading, and error states.
+ *
+ * @returns The rendered dashboard component as a JSX element.
+ */
 export default function DashboardAdmin() {
     const { width } = useWindowDimensions();
     const isMobile = width < 900;
     const router = useRouter();
+    const { t } = useLanguage();
 
     const { userType, isLoading: authLoading } = useAuth();
 
@@ -48,7 +55,7 @@ export default function DashboardAdmin() {
 
                 // ✅ si pas admin, on évite l'appel
                 if (userType !== "admin") {
-                    setError("Accès refusé : vous devez être admin.");
+                    setError(t('accessDeniedAdmin'));
                     setLoading(false);
                     return;
                 }
@@ -60,7 +67,7 @@ export default function DashboardAdmin() {
             } catch (e) {
                 console.error("Dashboard load error:", e);
                 if (isMounted) {
-                    setError("Impossible de charger les statistiques du tableau de bord.");
+                    setError(t('loadStatsError'));
                 }
             } finally {
                 if (isMounted) setLoading(false);
@@ -72,12 +79,12 @@ export default function DashboardAdmin() {
         return () => {
             isMounted = false;
         };
-    }, [authLoading, userType]);
+    }, [authLoading, userType, t]);
 
     // ⚠️ Ajuste tes routes selon ta structure Expo Router (groupes, etc.)
-    const handleNavigateToReports = () => router.push("/report");
+    const handleNavigateToReports = () => router.push("/(admin)/report");
     const handleNavigateToAssociations = () =>
-        router.push("/search");
+        router.push("/(admin)/search");
 
     if (loading || !stats) {
         return (
@@ -91,7 +98,7 @@ export default function DashboardAdmin() {
                     {error ? (
                         <Text style={{ color: "red" }}>{error}</Text>
                     ) : (
-                        <Text>Chargement du tableau de bord...</Text>
+                        <Text>{t('loadingDashboard')}</Text>
                     )}
                 </View>
             </View>
@@ -114,36 +121,36 @@ export default function DashboardAdmin() {
                     scrollEventThrottle={16}
                 >
                     <View style={styles.contentWrapper}>
-                        <Text style={styles.title}>Tableau de bord</Text>
+                        <Text style={styles.title}>{t('dashboardTitle')}</Text>
                         <Text style={styles.subtitle}>
-                            Vision globale sur les performances de l’application
+                            {t('dashboardSubtitle')}
                         </Text>
 
                         <View style={[styles.kpiRow, isMobile && styles.column]}>
                             <KpiCard
                                 icon={require("@/assets/images/hearticondahboard.png")}
-                                label="Nombre d'association"
+                                label={t('assosCount')}
                                 value={Number(stats.associationsCount ?? 0).toLocaleString(
                                     "fr-FR"
                                 )}
                             />
                             <KpiCard
                                 icon={require("@/assets/images/CheckIconDashboard.png")}
-                                label="Missions accomplies"
+                                label={t('completedMissions')}
                                 value={Number(stats.completedMissionsCount ?? 0).toLocaleString(
                                     "fr-FR"
                                 )}
                             />
                             <KpiCard
                                 icon={require("@/assets/images/PersoniconDashboard.png")}
-                                label="Nombre d'utilisateurs"
+                                label={t('usersCount')}
                                 value={Number(stats.usersCount ?? 0).toLocaleString("fr-FR")}
                             />
                         </View>
 
                         <View style={[styles.chartsRow, isMobile && styles.column]}>
                             <View style={styles.block}>
-                                <Text style={styles.blockTitle}>Nouveaux bénévoles par mois</Text>
+                                <Text style={styles.blockTitle}>{t('newVolunteersMonth')}</Text>
                                 <View style={[styles.chartCard, styles.chartOrange]}>
                                     <AdminLineChart
                                         labels={volunteerMonths}
@@ -154,7 +161,7 @@ export default function DashboardAdmin() {
                             </View>
 
                             <View style={styles.block}>
-                                <Text style={styles.blockTitle}>Missions terminées par mois</Text>
+                                <Text style={styles.blockTitle}>{t('completedMissionsMonth')}</Text>
                                 <View style={[styles.chartCard, styles.chartPurple]}>
                                     <AdminLineChart
                                         labels={missionMonths}
@@ -167,7 +174,7 @@ export default function DashboardAdmin() {
 
                         <View style={[styles.bottomRow, isMobile && styles.column]}>
                             <View style={styles.block}>
-                                <Text style={styles.blockTitle}>Signalements en attentes</Text>
+                                <Text style={styles.blockTitle}>{t('pendingReports')}</Text>
                                 <PendingCard
                                     value={String(stats.pendingReportsCount ?? 0)}
                                     cardStyle={styles.pendingOrange}
@@ -178,7 +185,7 @@ export default function DashboardAdmin() {
 
                             <View style={styles.block}>
                                 <Text style={styles.blockTitle}>
-                                    Associations en attente de validation
+                                    {t('pendingAssos')}
                                 </Text>
                                 <PendingCard
                                     value={String(stats.pendingAssociationsCount ?? 0)}
@@ -217,6 +224,15 @@ function KpiCard({
     );
 }
 
+/**
+ * Render a pending-item card that displays a value and a localized "process" button.
+ *
+ * @param value - The text shown as the pending count or label
+ * @param cardStyle - Optional style overrides applied to the card container
+ * @param buttonStyle - Optional style overrides applied to the action button
+ * @param onPress - Callback invoked when the action button is pressed
+ * @returns A React element representing the pending card with the provided value and an action button
+ */
 function PendingCard({
                          value,
                          cardStyle,
@@ -228,11 +244,12 @@ function PendingCard({
     buttonStyle: any;
     onPress: () => void;
 }) {
+    const { t } = useLanguage();
     return (
         <View style={[styles.pendingCard, cardStyle]}>
             <Text style={styles.pendingValue}>{value}</Text>
             <TouchableOpacity style={[styles.pendingBtn, buttonStyle]} onPress={onPress}>
-                <Text style={styles.pendingBtnText}>traiter</Text>
+                <Text style={styles.pendingBtnText}>{t('process')}</Text>
             </TouchableOpacity>
         </View>
     );

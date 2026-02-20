@@ -2,9 +2,9 @@
 import React from 'react';
 import HomeVolunteer from '@/pages/HomeVolunteer';
 /**
- * Page component for the volunteer home.
+ * Renders the volunteer home page.
  *
- * Currently renders no UI because the component's return is commented out.
+ * @returns The JSX element for the volunteer home page.
  */
 
 export default function HomeVolunteerPage() {

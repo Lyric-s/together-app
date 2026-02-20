@@ -5,23 +5,27 @@
  * - MOBILE : Affiche l'interface complète avec gestion d'état locale (A venir / Historique).
  */
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, StyleSheet, Platform, ActivityIndicator, Image } from 'react-native';
+import { View, ScrollView, StyleSheet, Platform, ActivityIndicator, Image } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useRouter, Redirect } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { Mission } from '@/models/mission.model';
 import { volunteerService } from '@/services/volunteerService';
 import LibraryVolunteerView from '@/components/LibraryVolunteerView';
 import SwitchButton from '@/components/SwitchButton';
+import { useLanguage } from '@/context/LanguageContext';
 
-export default function LibraryIndex() {
+/**
+ * Renders the mobile volunteer library screen with "Upcoming" and "History" tabs.
+ *
+ * Displays a header and a scrollable list of missions for the active tab, manages local state for the active tab, missions, favorites, and loading, loads mission data when the tab changes, navigates to mission details, and toggles mission favorites.
+ *
+ * @returns The rendered mobile volunteer library view as a React element.
+ */
+function LibraryIndexMobile() {
   const router = useRouter();
-  const isWeb = Platform.OS === 'web';
-
-  if (isWeb) {
-    return <Redirect href="/(volunteer)/library/upcoming" />;
-  }
-  
-  const [activeTab, setActiveTab] = useState<'A venir' | 'Historique'>('A venir');
+  const { t } = useLanguage();
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'history'>('upcoming');
   const [missions, setMissions] = useState<Mission[]>([]);
   const [favorites, setFavorites] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +33,7 @@ export default function LibraryIndex() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      if (activeTab === 'A venir') {
+      if (activeTab === 'upcoming') {
         const [enrolledData, favoritesData] = await Promise.all([
           volunteerService.getEnrolledMissions(),
           volunteerService.getFavorites()
@@ -58,12 +62,17 @@ export default function LibraryIndex() {
 
   const handleToggleFavorite = async (id: number) => {
     try {
-       await volunteerService.removeFavorite(id);
-       loadData();
-     } catch (e) {
-       console.error(e);
-       loadData();
-     }
+      const isFavorite = favorites.some(f => f.id_mission === id);
+      if (isFavorite) {
+        await volunteerService.removeFavorite(id);
+      } else {
+        await volunteerService.addFavorite(id);
+      }
+      await loadData();
+    } catch (e) {
+      console.error(e);
+      await loadData();
+    }
   };
 
   return (
@@ -80,7 +89,7 @@ export default function LibraryIndex() {
     </View>
         
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <Text style={styles.pageTitle}>Ma Bibliothèque</Text>
+        <Text style={styles.pageTitle}>{t('myLibrary')}</Text>
 
         {loading ? (
           <ActivityIndicator size="large" color={Colors.orange} style={{ marginTop: 50 }} />
@@ -88,22 +97,22 @@ export default function LibraryIndex() {
           <View style={{ marginBottom: 80 }}> 
             
             {/* --- CONTENU ONGLET "A VENIR" --- */}
-            {activeTab === 'A venir' ? (
+            {activeTab === 'upcoming' ? (
                 <LibraryVolunteerView 
                     loading={loading}
-                    title="A venir"
+                    title={t('upcomingBtn')}
                     missions={missions} // Liste A venir
                     favorites={favorites} // Liste Favoris
-                    emptyText="Aucune mission prévue."
+                    emptyText={t('noPlannedMissions')}
                     onPressMission={handlePressMission}
                     onToggleFavorite={handleToggleFavorite}
                 />
             ) : (
                 <LibraryVolunteerView 
                     loading={loading}
-                    title="Historique"
+                    title={t('historyBtn')}
                     missions={missions} // Liste Historique
-                    emptyText="Aucune mission passée."
+                    emptyText={t('noPastMissions')}
                     onPressMission={handlePressMission}
                 />
             )}
@@ -113,12 +122,31 @@ export default function LibraryIndex() {
       <View style={styles.fixedBottom}>
         <SwitchButton 
           variant="activityVolunteer" 
+          labelLeft={t('upcomingBtn')}
+          labelRight={t('historyBtn')}
+          valueLeft="upcoming"
+          valueRight="history"
           value={activeTab} // L'état local contrôle quel bouton est allumé
-          onChange={(tab) => setActiveTab(tab as 'A venir' | 'Historique')} // Change l'état au lieu de l'URL
+          onChange={(tab) => setActiveTab(tab as 'upcoming' | 'history')} // Change l'état au lieu de l'URL
         />
       </View>
     </View>
   );
+}
+
+/**
+ * Chooses the appropriate entry UI for the volunteer library based on platform.
+ *
+ * @returns A React element that redirects web clients to "/(volunteer)/library/upcoming" or renders the mobile `LibraryIndexMobile` component on native platforms.
+ */
+export default function LibraryIndex() {
+  const isWeb = Platform.OS === 'web';
+
+  if (isWeb) {
+    return <Redirect href="/(volunteer)/library/upcoming" />;
+  }
+
+  return <LibraryIndexMobile />;
 }
 
 const styles = StyleSheet.create({

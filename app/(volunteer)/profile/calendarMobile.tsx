@@ -1,13 +1,23 @@
 // app/(volunteer)/profile/calendarMobile.tsx
 import React from 'react';
-import { View, Image, Text } from 'react-native';
+import { View, Image } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useRouter } from 'expo-router';
 import Calendar from '@/components/Calendar';
 import BackButton from '@/components/BackButton';
 import { styles } from '@/styles/pages/CalenderMobileCSS';
+import { useLanguage } from '@/context/LanguageContext';
 
+/**
+ * Render the volunteer profile mobile calendar screen.
+ *
+ * Displays a top logo area, a header with a back button and a translated "My Calendar" title with an icon, and the calendar content.
+ *
+ * @returns A React element representing the mobile calendar screen.
+ */
 export default function CalendarVolunteerPage() {
     const router = useRouter();
+    const { t } = useLanguage();
 
     return (
         <View style={styles.container}>
@@ -28,7 +38,7 @@ export default function CalendarVolunteerPage() {
                         source={require("@/assets/images/calender.png")}
                         style={styles.editIcon}
                         />
-                        <Text style={styles.headerTitle}>Mon calendrier</Text>
+                        <Text style={styles.headerTitle}>{t('myCalendar')}</Text>
                     </View>
                   </View>
 

@@ -1,9 +1,11 @@
 // components/VolunteerLibraryView.tsx
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { Colors } from '@/constants/colors';
 import { Mission } from '@/models/mission.model';
 import MissionVolunteerCard from '@/components/MissionVolunteerCard';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface LibraryViewProps {
   loading: boolean;
@@ -15,9 +17,22 @@ interface LibraryViewProps {
   onToggleFavorite?: (id: number) => void;
 }
 
+/**
+ * Render a volunteer missions list with an optional favorites section, handling loading and empty states.
+ *
+ * @param loading - When true, displays a loading indicator instead of the lists
+ * @param missions - Main list of missions to display
+ * @param favorites - Optional list of favorite missions to display in a separate section
+ * @param title - Title for the main missions section
+ * @param emptyText - Text to show when the main missions list is empty
+ * @param onPressMission - Callback invoked with a mission id when a mission card is pressed
+ * @param onToggleFavorite - Optional callback invoked with a mission id when a favorite toggle is pressed
+ * @returns A React element rendering the missions and optional favorites UI
+ */
 export default function VolunteerLibraryView({ 
   loading, missions, favorites, title, emptyText, onPressMission, onToggleFavorite 
 }: LibraryViewProps) {
+  const { t } = useLanguage();
   
   if (loading) {
     return <ActivityIndicator size="large" color={Colors.orange} style={{ marginTop: 50 }} />;
@@ -49,10 +64,10 @@ export default function VolunteerLibraryView({
       {/* SECTION FAVORIS */}
       {favorites && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Favoris</Text>
+          <Text style={styles.sectionTitle}>{t('favorites')}</Text>
           <View style={styles.cardsContainer}>
             {favorites.length === 0 ? (
-              <Text style={styles.emptyText}>Aucun favori pour le moment.</Text>
+              <Text style={styles.emptyText}>{t('noFavorites')}</Text>
             ) : (
               favorites.map(mission => (
                 <MissionVolunteerCard

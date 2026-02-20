@@ -1,12 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, StyleSheet, Platform, ActivityIndicator, Image, useWindowDimensions } from 'react-native';
+import { View, ScrollView, Platform, ActivityIndicator, Image, useWindowDimensions } from 'react-native';
+import { Text } from '@/components/ThemedText';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { Mission } from '@/models/mission.model';
 import { volunteerService } from '@/services/volunteerService';
 import MissionVolunteerCardHorizontal from '@/components/MissionVolunteerCardHorizontal';
 import { styles } from '@/styles/pages/UpcomingVolunteerCSS';
+import { useLanguage } from '@/context/LanguageContext';
 
+/**
+ * Screen component that displays a volunteer's upcoming (enrolled) missions and favorites.
+ *
+ * The component fetches enrolled missions and favorites, shows a loading indicator while data is loading,
+ * renders separate sections for upcoming missions and favorites, enables navigation to mission details,
+ * and allows removing missions from favorites which refreshes the lists.
+ *
+ * @returns The rendered JSX element for the volunteer library screen, showing a loading indicator or the upcoming and favorites sections.
+ */
 export default function LibraryUpcoming() {
   const router = useRouter();
   const isWeb = Platform.OS === 'web';
@@ -15,6 +26,7 @@ export default function LibraryUpcoming() {
   const [enrolled, setEnrolled] = useState<Mission[]>([]);
   const [favorites, setFavorites] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     loadData();
@@ -63,7 +75,7 @@ export default function LibraryUpcoming() {
                 </View>
             </View>
         )}
-        <Text style={[styles.pageTitle, isSmallScreen && {paddingLeft: 60, paddingTop: 10}]}>Ma Bibliothèque</Text>
+        <Text style={[styles.pageTitle, isSmallScreen ? {paddingLeft: 60, paddingTop: 10} : {}]}>{t('myLibrary')}</Text>
 
         <View>
         {loading ? (
@@ -72,9 +84,9 @@ export default function LibraryUpcoming() {
           <>
             {/* SECTION: A VENIR */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>A venir</Text>
+              <Text style={styles.sectionTitle}>{t('upcomingBtn')}</Text>
               {enrolled.length === 0 ? (
-                <Text style={styles.emptyText}>Aucune mission prévue prochainement.</Text>
+                <Text style={styles.emptyText}>{t('noPlannedMissions')}</Text>
               ) : (
                 enrolled.map(mission => (
                   <MissionVolunteerCardHorizontal
@@ -88,9 +100,9 @@ export default function LibraryUpcoming() {
 
             {/* SECTION: FAVORIS */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Favoris</Text>
+              <Text style={styles.sectionTitle}>{t('favorites')}</Text>
               {favorites.length === 0 ? (
-                <Text style={styles.emptyText}>Aucun favori pour le moment.</Text>
+                <Text style={styles.emptyText}>{t('noFavorites')}</Text>
               ) : (
                 favorites.map(mission => (
                   <MissionVolunteerCardHorizontal
@@ -110,4 +122,3 @@ export default function LibraryUpcoming() {
     </View>
   );
 }
-
