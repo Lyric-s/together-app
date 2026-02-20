@@ -1,8 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
 =======
 import React, { useState, useCallback, useMemo, useRef } from "react";
 >>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
+>>>>>>> 80feb07 (fix: TA-126 Stale closure and add link codecov and codspeed)
 import {
     View,
     FlatList,
@@ -117,6 +121,9 @@ export default function ResearchMission() {
     const [zip, setZip] = useState("");
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 80feb07 (fix: TA-126 Stale closure and add link codecov and codspeed)
 
     const addressRef = useRef(address);
     const zipRef = useRef(zip);
@@ -124,8 +131,11 @@ export default function ResearchMission() {
     useEffect(() => { addressRef.current = address; }, [address]);
     useEffect(() => { zipRef.current    = zip;     }, [zip]);
     
+<<<<<<< HEAD
 =======
 >>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
+=======
+>>>>>>> 80feb07 (fix: TA-126 Stale closure and add link codecov and codspeed)
     const [currentLocationLabel, setCurrentLocationLabel] = useState(t("geoAddress"));
 
     // ✅ NEW: garde l'adresse saisie (évite le reset quand on revient sur la page)
@@ -395,7 +405,7 @@ export default function ResearchMission() {
                                     await recomputeDistancesFromAddress(meAddr, meZip, missions);
                                 }
                             } else {
-                                await recomputeDistancesFromAddress(address, zip, missions);
+                                await recomputeDistancesFromAddress(addressRef.current, zipRef.current, missions);
                             }
                         } catch {
                             // si erreur, on ne casse pas l'adresse manuelle si elle existe
@@ -404,7 +414,7 @@ export default function ResearchMission() {
                                 setZip("");
                                 clearGeo(t("geoAddress"));
                             } else {
-                                await recomputeDistancesFromAddress(address, zip, missions);
+                                await recomputeDistancesFromAddress(addressRef.current, zipRef.current, missions);
                             }
                         }
                     } else {
@@ -415,7 +425,7 @@ export default function ResearchMission() {
                             clearGeo(t("geoAddress"));
                         } else {
                             // ✅ garder l'adresse saisie et recalculer si besoin
-                            await recomputeDistancesFromAddress(address, zip, missions);
+                            await recomputeDistancesFromAddress(addressRef.current, zipRef.current, missions);
                         }
 <<<<<<< HEAD
                     } else {
