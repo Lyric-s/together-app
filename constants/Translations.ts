@@ -500,6 +500,18 @@ export const translations = {
     contactPageTitle: "Nous contacter",
     contactDesc: "Une question ? Une suggestion ?\nN'hésitez pas à nous écrire directement.",
     emailLabel: "Notre adresse email",
+
+
+    // --- Signalements ---
+    reportSentSuccess: "Signalement envoyé avec succès.",
+    alreadyReported: "Vous avez déjà signalé cet élément.",
+    reportError: "Erreur lors de l'envoi du signalement.",
+    harassment: "Harcèlement",
+    inappropriate_behavior: "Comportement inapproprié",
+    spam: "Spam",
+    fraud: "Fraude",
+    other: "Autre",
+    selectReportType: "Sélectionnez le motif",
   },
   en: {
     // --- Navigation & Global ---
@@ -1001,5 +1013,16 @@ export const translations = {
     contactPageTitle: "Contact Us",
     contactDesc: "A question? A suggestion?\nFeel free to write to us directly.",
     emailLabel: "Our email address",
+
+    // --- Reports ---
+    reportSentSuccess: "Report sent successfully.",
+    alreadyReported: "You have already reported this item.",
+    reportError: "Error sending the report.",
+    harassment: "Harassment",
+    inappropriate_behavior: "Inappropriate behavior",
+    spam: "Spam",
+    fraud: "Fraud",
+    other: "Other",
+    selectReportType: "Select a reason",
   }
 };

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator, Platform, useWindowDimensions, ScrollView } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, ActivityIndicator, Platform, useWindowDimensions, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
 import { Text } from '@/components/ThemedText';
 import { useLocalSearchParams } from 'expo-router';
 import BackButton from '@/components/BackButton';
@@ -8,6 +8,8 @@ import { Association } from '@/models/association.model';
 import { associationService } from '@/services/associationService';
 import { Colors } from '@/constants/colors';
 import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from "@/context/AuthContext";
+import AlertToast from '@/components/AlertToast';
 
 /**
  * Displays details for an association identified by the `id` route parameter, handling loading, error, and not-found states.
@@ -19,12 +21,13 @@ export default function AboutUsAssociation() {
   const { width } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
   const isSmallScreenWeb = isWeb && width < 900;
+  const { userType } = useAuth();
   const { t } = useLanguage();
     
   const [association, setAssociation] = useState<Association | null>(null);
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState(false);
+  const [toast, setToast] = useState({ visible: false, title: '', message: '' });
 
   useEffect(() => {
     const rawId = Array.isArray(id) ? id[0] : id;
@@ -61,7 +64,11 @@ export default function AboutUsAssociation() {
     };
     fetchAssociation();
   }, [id]);
-  
+
+  const showToast = useCallback((title: string, message: string) => {
+    setToast({ visible: true, title, message });
+  }, []);
+
   if (loading) {
     return (
         <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
@@ -88,9 +95,18 @@ export default function AboutUsAssociation() {
         </View>
     );
   }
+  const handleReport = () => {
+    Alert.alert(t('report'), `${t('reportConcerning')} ${association?.name}`);
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: Colors.white }]} >
+        <AlertToast 
+            visible={toast.visible} 
+            title={toast.title} 
+            message={toast.message} 
+            onClose={() => setToast(t => ({ ...t, visible: false }))}
+        />
 
         <View style={[
             styles.header,
@@ -111,6 +127,18 @@ export default function AboutUsAssociation() {
             >
                 {association.name}
             </Text>
+             {/* REPORT BUTTON */}
+            {userType === 'volunteer' && (
+      <TouchableOpacity 
+        style={{ position: 'absolute', right: 10, top: isWeb ? 25 : 12 }} 
+        onPress={handleReport}
+      >
+        <Image 
+          source={require("@/assets/images/report.png")} 
+          style={{ width: 24, height: 24, tintColor: Colors.orange }} 
+        />
+      </TouchableOpacity>
+    )}
         </View>
         {/* Content */}
         <ScrollView

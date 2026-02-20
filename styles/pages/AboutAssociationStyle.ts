@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
+    position: 'relative' // Ensure relative positioning for absolute children
   },
 
   headerTitle: {
@@ -21,6 +22,11 @@ export const styles = StyleSheet.create({
     flexShrink: 1,
   },
 
+  reportIcon: {
+    width: 28,
+    height: 28,
+    resizeMode: 'contain',
+  },
   
   scrollContent: {
     paddingBottom: 40,

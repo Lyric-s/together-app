@@ -5,28 +5,28 @@
  */
 
 export enum UserType {
-  ADMIN = "admin",
-  VOLUNTEER = "volunteer",
-  ASSOCIATION = "association",
+  ADMIN = "ADMIN",
+  VOLUNTEER = "VOLUNTEER",
+  ASSOCIATION = "ASSOCIATION",
 }
 
 export enum ProcessingStatus {
-  PENDING = "pending",
-  APPROVED = "approved",
-  REJECTED = "rejected",
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
 }
 
 export enum ReportType {
-  HARASSMENT = "harassment",
-  INAPPROPRIATE_BEHAVIOR = "inappropriate_behavior",
-  SPAM = "spam",
-  FRAUD = "fraud",
-  OTHER = "other",
+  HARASSMENT = "HARASSMENT",
+  INAPPROPRIATE_BEHAVIOR = "INAPPROPRIATE_BEHAVIOR",
+  SPAM = "SPAM",
+  FRAUD = "FRAUD",
+  OTHER = "OTHER",
 }
 
 export enum ReportTarget {
-  PROFILE = "profile",
-  MESSAGE = "message",
-  MISSION = "mission",
-  OTHER = "other",
+  PROFILE = "PROFILE",
+  MESSAGE = "MESSAGE",
+  MISSION = "MISSION",
+  OTHER = "OTHER",
 }
