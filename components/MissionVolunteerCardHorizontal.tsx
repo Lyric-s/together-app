@@ -1,0 +1,126 @@
+import { View, Text, TouchableOpacity, Image, Platform, StyleSheet } from "react-native";
+import CategoryLabel from "./CategoryLabel";
+import { styles } from "../styles/components/MissionVolunteerCardHorizontalStyle"
+import { Mission } from "@/models/mission.model";
+import { Colors } from "@/constants/colors";
+import { formatMissionDate } from "@/utils/date.utils";
+
+interface MissionCardProps {
+  mission: Mission;
+  onPressMission: () => void;
+  onPressFavorite?: () => void;
+  isFavorite?: boolean;
+}
+
+/**
+ * Render a horizontal mission card for volunteers showing image, category, metadata, and an optional favorite control.
+ *
+ * Displays the mission image (with a fallback), category label, mission name, association name, formatted start date,
+ * location (zip code and country if available), and capacity (min/max). Tapping the card invokes `onPressMission`; if
+ * `onPressFavorite` is provided a heart button is shown to toggle favorite state indicated by `isFavorite`.
+ *
+ * @param mission - The mission data to display (name, image_url, association, category, date_start, location, capacities)
+ * @param onPressMission - Callback invoked when the card is pressed
+ * @param isFavorite - Whether the mission is currently marked as favorite; controls heart icon appearance
+ * @param onPressFavorite - Optional callback invoked when the favorite (heart) button is pressed; if omitted the heart button is hidden
+ * @returns A React element representing the mission card
+ */
+export default function MissionVolunteerCard({
+  mission,
+  onPressMission,
+  isFavorite = false,
+  onPressFavorite,
+}: MissionCardProps) {
+
+  const isWeb = Platform.OS === 'web';
+  const defaultImage = require("../assets/images/volunteering_img.jpg");
+  const imageSource = mission.image_url
+    ? { uri: mission.image_url }
+    : defaultImage;
+
+  const formattedDate = formatMissionDate(mission.date_start);
+  const assoName = mission.association?.name || "Association inconnue";
+  const categoryLabel = mission.category?.label || "Général";
+  const categoryColor = Colors.orange;
+
+  const locationParts = [mission.location?.zip_code, mission.location?.country].filter(Boolean);
+  const mission_location = locationParts.length > 0
+    ? locationParts.join(', ')
+    : "Lieu non précisé";
+
+  return (
+    <TouchableOpacity
+      style={[
+        styles.card,
+        {
+          width: isWeb ? '95%' : '95%',
+          alignSelf: 'center',
+          flexShrink: 0,
+          marginBottom: 5
+        }
+      ]}
+      onPress={() => {
+        if (Platform.OS === 'web' && document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+        onPressMission();
+      }}
+      activeOpacity={0.8}
+    >
+
+      <View style={styles.leftContainer}>
+        <Image source={imageSource} style={styles.image} />
+
+        <View style={styles.categoryLabelOverlay}>
+          <CategoryLabel
+            text={categoryLabel}
+            backgroundColor={categoryColor}
+          />
+        </View>
+
+        {onPressFavorite && (
+          <TouchableOpacity 
+            style={styles.heartButtonOverlay} 
+            onPress={() => {
+                if (Platform.OS === 'web' && document.activeElement instanceof HTMLElement) {
+                    document.activeElement.blur();
+                }
+                onPressFavorite();
+            }} 
+            activeOpacity={0.7}
+          >
+            <Image
+              source={
+                isFavorite
+                  ? require("../assets/images/red_heart.png")
+                  : require("../assets/images/gray_heart.png")
+              }
+              style={styles.heartIcon}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <View style={styles.rightContainer}>
+        <View style={styles.contentTop}>
+          <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">{mission.name}</Text>
+          <Text style={styles.association} numberOfLines={1} ellipsizeMode="tail">{assoName}</Text>
+          <Text style={styles.date}>{formattedDate}</Text>
+          {mission_location && <Text style={styles.city} numberOfLines={1} ellipsizeMode="tail">{mission_location}</Text>}
+        </View>
+
+        <View style={styles.peopleContainer}>
+          <Text style={styles.peopleText}>
+            {mission.volunteers_enrolled} / {mission.capacity_max}
+          </Text>
+          <Image
+            source={require("../assets/images/people.png")}
+            style={styles.peopleIcon}
+            resizeMode="contain"
+          />
+        </View>
+      </View>
+
+    </TouchableOpacity>
+  );
+}
