@@ -313,7 +313,6 @@ const confirmReport = async (reportType: ReportType) => {
       }
     }
 
-    // 3. Même chose pour le message d'erreur, on attend la fin de l'animation du modal
     setTimeout(() => {
       if (e.response?.status === 409) {
         showToast(t('info'), t('alreadyReported'));
