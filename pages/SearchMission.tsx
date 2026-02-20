@@ -333,10 +333,14 @@ export default function ResearchMission() {
                     if (userType === "volunteer") {
                         try {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7cc7b19 (fix: TA-126 you can change the address)
                             if(!manualLocation) {
                                 const me = await volunteerService.getMe();
                                 const meAddr = (me?.address || "").trim();
                                 const meZip = (me?.zip_code || "").trim();
+<<<<<<< HEAD
 
                                 // ✅ adresse profil = pas "manual"
                                 setManualLocation(false);
@@ -376,17 +380,22 @@ export default function ResearchMission() {
                             const me = await volunteerService.getMe();
                             const meAddr = (me?.address || "").trim();
                             const meZip = (me?.zip_code || "").trim();
+=======
+>>>>>>> 7cc7b19 (fix: TA-126 you can change the address)
 
-                            // ✅ adresse profil = pas "manual"
-                            setManualLocation(false);
+                                // ✅ adresse profil = pas "manual"
+                                setManualLocation(false);
 
-                            setAddress(meAddr);
-                            setZip(meZip);
+                                setAddress(meAddr);
+                                setZip(meZip);
 
-                            if (!meAddr && !meZip) {
-                                clearGeo(t("geoAddress"));
+                                if (!meAddr && !meZip) {
+                                    clearGeo(t("geoAddress"));
+                                } else {
+                                    await recomputeDistancesFromAddress(meAddr, meZip, missions);
+                                }
                             } else {
-                                await recomputeDistancesFromAddress(meAddr, meZip, missions);
+                                await recomputeDistancesFromAddress(address, zip, missions);
                             }
                         } catch {
                             // si erreur, on ne casse pas l'adresse manuelle si elle existe
@@ -442,6 +451,7 @@ export default function ResearchMission() {
             resetPagination,
             manualLocation,
 <<<<<<< HEAD
+<<<<<<< HEAD
             allMissions.length,
         ])
 =======
@@ -450,6 +460,8 @@ export default function ResearchMission() {
 =======
             address,
             zip,
+=======
+>>>>>>> 7cc7b19 (fix: TA-126 you can change the address)
             allMissions.length,
         ])
 >>>>>>> ec463ec (fix: coderabbit suggestions fixed)
