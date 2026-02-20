@@ -37,6 +37,7 @@ webInfoColumn: {
     alignItems: "center",
     marginBottom: 20,
     gap: 10,
+    position: 'relative' // Added for relative positioning context
   },
 
   headerTitle: {
@@ -122,6 +123,12 @@ webInfoColumn: {
     width: 42,
     height: 42,
     marginTop: 10,
+  },
+
+  reportIcon: {
+    width: 28,
+    height: 28,
+    resizeMode: 'contain',
   },
 
   infoLine: {

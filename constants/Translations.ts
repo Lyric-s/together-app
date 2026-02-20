@@ -500,6 +500,18 @@ export const translations = {
     contactPageTitle: "Nous contacter",
     contactDesc: "Une question ? Une suggestion ?\nN'hésitez pas à nous écrire directement.",
     emailLabel: "Notre adresse email",
+
+
+    // --- Signalements ---
+    reportSentSuccess: "Signalement envoyé avec succès.",
+    alreadyReported: "Vous avez déjà signalé cet élément.",
+    reportError: "Erreur lors de l'envoi du signalement.",
+    harassment: "Harcèlement",
+    inappropriate_behavior: "Comportement inapproprié",
+    spam: "Spam",
+    fraud: "Fraude",
+    other: "Autre",
+    selectReportType: "Sélectionnez le motif",
   },
   en: {
     // --- Navigation & Global ---
@@ -724,7 +736,15 @@ export const translations = {
     associationNotSpecified: "Association not specified",
     addToFavorites: "Add to Favorites",
     removeFromFavorites: "Remove from Favorites",
+<<<<<<< HEAD
+<<<<<<< HEAD
     favoriteUpdateError: "Unable to update favorites.",
+=======
+    favoriteUpdateError: "Unable to update favourites.",
+>>>>>>> 50efb98 (fix: TA-96 add keys translations for geo)
+=======
+    favoriteUpdateError: "Unable to update favorites.",
+>>>>>>> 4e04f02 (fix: TA-96 modif translations for geo)
     missionJoinErr: "Unable to join the mission at this time.",    
 
     // --- Search & Filters ---
@@ -1001,5 +1021,16 @@ export const translations = {
     contactPageTitle: "Contact Us",
     contactDesc: "A question? A suggestion?\nFeel free to write to us directly.",
     emailLabel: "Our email address",
+
+    // --- Reports ---
+    reportSentSuccess: "Report sent successfully.",
+    alreadyReported: "You have already reported this item.",
+    reportError: "Error sending the report.",
+    harassment: "Harassment",
+    inappropriate_behavior: "Inappropriate behavior",
+    spam: "Spam",
+    fraud: "Fraud",
+    other: "Other",
+    selectReportType: "Select a reason",
   }
 };

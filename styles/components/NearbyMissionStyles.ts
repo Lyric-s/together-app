@@ -26,13 +26,31 @@ export const styles = StyleSheet.create({
 
     categoryBadge: {
         position: "absolute",
+<<<<<<< HEAD
+<<<<<<< HEAD
         top: 0,
         left: 0,
+=======
+        top: 10,
+        left: 10,
+>>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+        top: 0,
+        left: 0,
+>>>>>>> cafce15 (fix: TA-96 modif style of label cat and heartButton of NearbyMissionCard)
     },
 
     heartButton: {
         position: "absolute",
+<<<<<<< HEAD
+<<<<<<< HEAD
         bottom: 5,
+=======
+        bottom: 10,
+>>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+        bottom: 5,
+>>>>>>> cafce15 (fix: TA-96 modif style of label cat and heartButton of NearbyMissionCard)
         left: 10,
         padding: 4,
     },
@@ -86,11 +104,26 @@ export const styles = StyleSheet.create({
     },
 
     dateDot: {
+<<<<<<< HEAD
+<<<<<<< HEAD
         color: Colors.palePurple,
         fontSize: 12,
     },
 
 
+=======
+        color: '#81458F',
+        fontSize: 12,
+    },
+
+>>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+        color: Colors.palePurple,
+        fontSize: 12,
+    },
+
+
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
     dateText: {
         fontSize: 12.5,
         color: Colors.black,

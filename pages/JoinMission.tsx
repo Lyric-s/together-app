@@ -7,6 +7,7 @@ import {
   useWindowDimensions,
   ActivityIndicator,
   Platform,
+  Modal,
 } from "react-native";
 import { Text } from '@/components/ThemedText';
 import { Href, router, useLocalSearchParams, useRouter } from 'expo-router';
@@ -22,7 +23,9 @@ import { Mission } from "@/models/mission.model";
 import { Colors } from "@/constants/colors";
 import AlertToast from "@/components/AlertToast";
 import { useLanguage } from "@/context/LanguageContext";
-
+import { ReportCreate } from '@/models/report.model';
+import { ReportType, ReportTarget } from '@/models/enums';
+import { reportService } from '@/services/reportService';
 type JoinStatus = 'none' | 'pending' | 'validated';
 
 /**
@@ -33,6 +36,7 @@ type JoinStatus = 'none' | 'pending' | 'validated';
  * @returns The rendered React component for the mission detail page.
  */
 export default function JoinMissionPage() {
+  const [isReportModalVisible, setIsReportModalVisible] = useState(false);
   const { id: missionId } = useLocalSearchParams<{ id: string }>();
   const { width } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
@@ -267,6 +271,57 @@ export default function JoinMissionPage() {
           router.push(route);
       }
   };
+const handleReport = () => {
+  if (!userType || userType === 'volunteer_guest') {
+    showToast(t('loginRequired'), t('loginToAct'));
+    return;
+  }
+  setIsReportModalVisible(true);
+};
+
+const confirmReport = async (reportType: ReportType) => {
+  // 1. On ferme d'abord le modal
+  setIsReportModalVisible(false);
+
+  const idToReport = mission.association?.id_user || mission.id_asso;
+  if (!idToReport) return;
+
+  try {
+    const payload: ReportCreate = {
+      type: reportType,
+      target: ReportTarget.MISSION,
+      reason: `Signalement (${reportType}) pour la mission: ${mission.name}`,
+      id_user_reported: idToReport,
+    };
+
+    await reportService.create(payload);
+
+    // 2. CORRECTION POINT 1 : On attend 400ms que le modal soit totalement fermé
+    // avant d'afficher le toast de succès.
+    setTimeout(() => {
+      showToast(t('success'), t('reportSentSuccess'));
+    }, 400);
+
+  } catch (e: any) {
+    // Extraction du message d'erreur pour éviter le crash "Objects are not valid as a React child"
+    let errorMessage = t('reportError');
+    if (e.response?.data?.detail) {
+      if (typeof e.response.data.detail === 'string') {
+        errorMessage = e.response.data.detail;
+      } else if (Array.isArray(e.response.data.detail)) {
+        errorMessage = e.response.data.detail[0]?.msg || t('reportError');
+      }
+    }
+
+    setTimeout(() => {
+      if (e.response?.status === 409) {
+        showToast(t('info'), t('alreadyReported'));
+      } else {
+        showToast(t('error'), errorMessage);
+      }
+    }, 400);
+  }
+};
 
   return (
     <View style={[styles.container, { backgroundColor: Colors.white }]} >
@@ -293,6 +348,17 @@ export default function JoinMissionPage() {
           >
               {mission.name}
           </Text>
+          {userType === 'volunteer' && (
+      <TouchableOpacity 
+        style={{ position: 'absolute', right: 10, top: isWeb ? 25 : 10 }} 
+        onPress={handleReport}
+      >
+        <Image 
+          source={require("@/assets/images/report.png")} 
+          style={{ width: 24, height: 24, tintColor: Colors.orange }} 
+        />
+      </TouchableOpacity>
+    )}
       </View>
 
       <ScrollView
@@ -402,6 +468,38 @@ export default function JoinMissionPage() {
             )}
         </View>
       </ScrollView>
+      <Modal
+        visible={isReportModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsReportModalVisible(false)}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <View style={{ backgroundColor: 'white', width: '80%', borderRadius: 20, padding: 20, elevation: 5 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 15, textAlign: 'center', color: Colors.orange }}>
+              {t('selectReportType')}
+            </Text>
+
+            {Object.values(ReportType).map((type) => (
+              <TouchableOpacity 
+                key={type} 
+                style={{ paddingVertical: 12, borderBottomWidth: 0.5, borderBottomColor: '#ddd' }}
+                onPress={() => confirmReport(type)}
+              >
+                <Text style={{ textAlign: 'center', fontSize: 16 }}>{t(type.toLowerCase() as any)}</Text>
+              </TouchableOpacity>
+            ))}
+
+            <TouchableOpacity 
+              onPress={() => setIsReportModalVisible(false)}
+              style={{ marginTop: 15, padding: 10 }}
+            >
+              <Text style={{ color: 'red', textAlign: 'center', fontWeight: 'bold' }}>{t('cancel')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      
     </View>
   );
 }

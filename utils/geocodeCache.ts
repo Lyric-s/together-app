@@ -136,7 +136,15 @@ export class GeocodeLRUCache {
                 const parsed = JSON.parse(raw) as { entries?: [string, CacheEntry][] };
                 const entries = parsed?.entries ?? [];
 
+<<<<<<< HEAD
+<<<<<<< HEAD
                 // filter expired and sort by ts asc, then cap
+=======
+                // filter expired and sort by ts desc, then cap
+>>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                // filter expired and sort by ts asc, then cap
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                 const cleaned: [string, CacheEntry][] = [];
                 for (const [k, v] of entries) {
                     // runtime guard (storage can be corrupted)
@@ -146,6 +154,8 @@ export class GeocodeLRUCache {
                     cleaned.push([k, v]);
                 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
                 // Insert oldest first so Map iteration order matches LRU eviction (oldest evicted first).
                 cleaned.sort((a, b) => a[1].ts - b[1].ts);
 
@@ -154,6 +164,22 @@ export class GeocodeLRUCache {
                 // we slice from the end (newest) but still insert oldest->newest.
                 const capped = cleaned.slice(-this.opts.maxEntries);
                 for (const [k, v] of capped) {
+=======
+                cleaned.sort((a, b) => b[1].ts - a[1].ts);
+
+                this.map.clear();
+                for (const [k, v] of cleaned.slice(0, this.opts.maxEntries)) {
+>>>>>>> efb5352 (feat: TA-126  adding geolocalisation option + changes to searchmission page + adding cache for geolocalisation)
+=======
+                // Insert oldest first so Map iteration order matches LRU eviction (oldest evicted first).
+                cleaned.sort((a, b) => a[1].ts - b[1].ts);
+
+                this.map.clear();
+                // Keep the most recent maxEntries while preserving correct order:
+                // we slice from the end (newest) but still insert oldest->newest.
+                const capped = cleaned.slice(-this.opts.maxEntries);
+                for (const [k, v] of capped) {
+>>>>>>> ec463ec (fix: coderabbit suggestions fixed)
                     this.map.set(k, v);
                 }
             } catch {

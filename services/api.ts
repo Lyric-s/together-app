@@ -11,7 +11,24 @@ const getBaseUrl = () => {
   // CASE MOBILE (Expo Go ou build standalone)
   // ---------------------------------------------------------
   if (__DEV__ && typeof window === 'undefined') {
+<<<<<<< HEAD
+<<<<<<< HEAD
     return process.env.EXPO_PUBLIC_API_URL;
+=======
+    const debuggerHost = Constants.expoConfig?.hostUri || Constants.experienceUrl || '';
+    const localhost = debuggerHost.split('//')[1]?.split(':')[0] || 'localhost';
+<<<<<<< HEAD
+<<<<<<< HEAD
+    return process.env.EXPO_PUBLIC_API_URL //`http://${localhost}:8000`;
+>>>>>>> b678e8c (fix: TA-132 modif and add env variable)
+=======
+    return process.env.EXPO_PUBLIC_API_URL || `http://${localhost}:8000`;
+>>>>>>> 27d1483 (fix: TA-132 fix missing fallback)
+=======
+=======
+>>>>>>> a64e44b (fix: TA-132 debuggerHost and localhost are computed but never used)
+    return process.env.EXPO_PUBLIC_API_URL;
+>>>>>>> b6ce861 (fix: TA-132 modif and add env var)
   }
 
   // ---------------------------------------------------------
@@ -20,17 +37,45 @@ const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
     // CASE A: You are LOCAL (http://localhost:3000)
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
        return process.env.EXPO_PUBLIC_API_URL;
+=======
+       return process.env.EXPO_PUBLIC_API_URL //|| 'http://localhost:8000';
+>>>>>>> b678e8c (fix: TA-132 modif and add env variable)
+=======
+       return process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
+>>>>>>> 27d1483 (fix: TA-132 fix missing fallback)
+=======
+       return process.env.EXPO_PUBLIC_API_URL;
+>>>>>>> b6ce861 (fix: TA-132 modif and add env var)
     }
 
     // CASE B: You are in PRODUCTION
     // This is where the magic of the backend happens.
     // Leave the URL blank. Axios will automatically use the current domain.
+<<<<<<< HEAD
+<<<<<<< HEAD
     return process.env.EXPO_PUBLIC_API_URL; 
   }
 
   // Security fallback (should not occur on the web)
   return process.env.EXPO_PUBLIC_API_URL;
+=======
+    return process.env.EXPO_PUBLIC_API_URL || ''; 
+  }
+
+  // Security fallback (should not occur on the web)
+  return process.env.EXPO_PUBLIC_API_URL || '';
+>>>>>>> b678e8c (fix: TA-132 modif and add env variable)
+=======
+    return process.env.EXPO_PUBLIC_API_URL; 
+  }
+
+  // Security fallback (should not occur on the web)
+  return process.env.EXPO_PUBLIC_API_URL;
+>>>>>>> 27d1483 (fix: TA-132 fix missing fallback)
 };
 
 const api = axios.create({

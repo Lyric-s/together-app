@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator, Platform, useWindowDimensions, ScrollView } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, ActivityIndicator, Platform, useWindowDimensions, ScrollView, TouchableOpacity, Image, Alert, Modal} from 'react-native';
 import { Text } from '@/components/ThemedText';
 import { useLocalSearchParams } from 'expo-router';
 import BackButton from '@/components/BackButton';
@@ -8,6 +8,11 @@ import { Association } from '@/models/association.model';
 import { associationService } from '@/services/associationService';
 import { Colors } from '@/constants/colors';
 import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from "@/context/AuthContext";
+import AlertToast from '@/components/AlertToast'
+import { reportService } from '@/services/reportService';
+import { ReportType, ReportTarget } from '@/models/enums';
+import { ReportCreate } from '@/models/report.model';;
 
 /**
  * Displays details for an association identified by the `id` route parameter, handling loading, error, and not-found states.
@@ -15,16 +20,18 @@ import { useLanguage } from '@/context/LanguageContext';
  * @returns A React element that renders a loading indicator while fetching, an error or not-found message when appropriate, or the association details (header, description, and information fields) when available.
  */
 export default function AboutUsAssociation() {
+  const [isReportModalVisible, setIsReportModalVisible] = useState(false);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { width } = useWindowDimensions();
   const isWeb = Platform.OS === 'web';
   const isSmallScreenWeb = isWeb && width < 900;
+  const { userType } = useAuth();
   const { t } = useLanguage();
     
   const [association, setAssociation] = useState<Association | null>(null);
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState(false);
+  const [toast, setToast] = useState({ visible: false, title: '', message: '' });
 
   useEffect(() => {
     const rawId = Array.isArray(id) ? id[0] : id;
@@ -61,7 +68,11 @@ export default function AboutUsAssociation() {
     };
     fetchAssociation();
   }, [id]);
-  
+
+  const showToast = useCallback((title: string, message: string) => {
+    setToast({ visible: true, title, message });
+  }, []);
+
   if (loading) {
     return (
         <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
@@ -88,9 +99,64 @@ export default function AboutUsAssociation() {
         </View>
     );
   }
+  const handleReport = () => {
+    if (!userType || userType === 'volunteer_guest') {
+      showToast(t('loginRequired'), t('loginToAct'));
+      return;
+    }
+    setIsReportModalVisible(true);
+  };
+
+  const confirmReport = async (reportType: ReportType) => {
+    setIsReportModalVisible(false);
+
+    // On signale l'utilisateur lié à l'association
+    const idToReport = association?.id_user;
+    if (!idToReport) return;
+
+    try {
+      const payload: ReportCreate = {
+        type: reportType,
+        target: ReportTarget.PROFILE, // On cible le PROFIL de l'asso
+        reason: `Signalement (${reportType}) pour l'association: ${association.name}`,
+        id_user_reported: idToReport,
+      };
+
+      await reportService.create(payload);
+
+      // Délai pour laisser le modal se fermer avant le Toast
+      setTimeout(() => {
+        showToast(t('success'), t('reportSentSuccess'));
+      }, 400);
+
+    } catch (e: any) {
+      let errorMessage = t('reportError');
+      if (e.response?.data?.detail) {
+        if (typeof e.response.data.detail === 'string') {
+          errorMessage = e.response.data.detail;
+        } else if (Array.isArray(e.response.data.detail)) {
+          errorMessage = e.response.data.detail[0]?.msg || t('reportError');
+        }
+      }
+
+      setTimeout(() => {
+        if (e.response?.status === 409) {
+          showToast(t('info'), t('alreadyReported'));
+        } else {
+          showToast(t('error'), errorMessage);
+        }
+      }, 400);
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: Colors.white }]} >
+        <AlertToast 
+            visible={toast.visible} 
+            title={toast.title} 
+            message={toast.message} 
+            onClose={() => setToast(t => ({ ...t, visible: false }))}
+        />
 
         <View style={[
             styles.header,
@@ -111,6 +177,18 @@ export default function AboutUsAssociation() {
             >
                 {association.name}
             </Text>
+             {/* REPORT BUTTON */}
+            {userType === 'volunteer' && (
+      <TouchableOpacity 
+        style={{ position: 'absolute', right: 10, top: isWeb ? 25 : 12 }} 
+        onPress={handleReport}
+      >
+        <Image 
+          source={require("@/assets/images/report.png")} 
+          style={{ width: 24, height: 24, tintColor: Colors.orange }} 
+        />
+      </TouchableOpacity>
+    )}
         </View>
         {/* Content */}
         <ScrollView
@@ -125,11 +203,10 @@ export default function AboutUsAssociation() {
                 {association.description || t('noDescription')}
             </Text>
           </View>
-
+            
           {/* Informations box */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>{t('informations')}</Text>
-
             <View style={{gap: 10}}>
                 <Text style={styles.infoText}>
                     <Text style={styles.label}>{t('nameLabel')}</Text> {association.name}
@@ -155,7 +232,41 @@ export default function AboutUsAssociation() {
             </View>
           </View>
           </View>
+          
         </ScrollView>
+        <Modal
+        visible={isReportModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsReportModalVisible(false)}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <View style={{ backgroundColor: 'white', width: '80%', borderRadius: 20, padding: 20, elevation: 5 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 15, textAlign: 'center', color: Colors.orange }}>
+              {t('selectReportType')}
+            </Text>
+
+            {Object.values(ReportType).map((type) => (
+              <TouchableOpacity 
+                key={type} 
+                style={{ paddingVertical: 12, borderBottomWidth: 0.5, borderBottomColor: '#ddd' }}
+                onPress={() => confirmReport(type)}
+              >
+                <Text style={{ textAlign: 'center', fontSize: 16 }}>
+                  {t(type.toLowerCase() as any)}
+                </Text>
+              </TouchableOpacity>
+            ))}
+
+            <TouchableOpacity 
+              onPress={() => setIsReportModalVisible(false)}
+              style={{ marginTop: 15, padding: 10 }}
+            >
+              <Text style={{ color: 'red', textAlign: 'center', fontWeight: 'bold' }}>{t('cancel')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

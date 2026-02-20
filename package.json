@@ -21,8 +21,21 @@
     "export": "npm run build:web",
     "test": "jest",
     "test:watch": "jest --watch",
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     "test:cov": "jest --ci --coverage --runInBand",
     "bench": "vitest bench --run"
+=======
+    "test:cov": "jest --coverage"
+>>>>>>> e9f3564 (test: setup Jest + coverage configuration)
+=======
+    "test:cov": "jest --ci --coverage --runInBand"
+>>>>>>> 89b5279 (test: add geolocation utils tests + ci)
+=======
+    "test:cov": "jest --ci --coverage --runInBand",
+    "bench": "vitest bench --run"
+>>>>>>> 9ab54b5 (chore: TA-133  adding codspeed and its workflow)
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -73,8 +86,17 @@
     "expo-module-scripts": "^5.0.8",
     "jest": "^29.7.0",
     "jest-expo": "^54.0.17",
+<<<<<<< HEAD
+<<<<<<< HEAD
     "typescript": "~5.9.2",
     "vitest": "^4.0.18"
+=======
+    "typescript": "~5.9.2"
+>>>>>>> e9f3564 (test: setup Jest + coverage configuration)
+=======
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.18"
+>>>>>>> 9ab54b5 (chore: TA-133  adding codspeed and its workflow)
   },
   "private": true
 }
