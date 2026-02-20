@@ -126,7 +126,7 @@ export default function ProfilAdmin() {
 
     if (!isWeb) {
          return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, backgroundColor: Colors.white }}>
                 <Text style={{ fontSize: 18, textAlign: 'center' }}>
                     {t('adminWebOnly')}
                 </Text>
@@ -136,19 +136,18 @@ export default function ProfilAdmin() {
 
     if (!profileUser) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.white }}>
                 <Text>{t('profileLoadError')}</Text>
             </View>
         );
     }
 
     return (
-        <>
-            <LinearGradient
-                colors={[Colors.white, Colors.orangeVeryLight]}                style={{ flex: 1 }}
-                start={{ x: 0.5, y: 0 }}
-                end={{ x: 0.5, y: 1 }}
-            >
+        <LinearGradient
+            colors={[Colors.white, Colors.orangeVeryLight]}                style={{ flex: 1 }}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
+        >
             <AlertToast
                 visible={alertModal.visible}
                 title={alertModal.title}
@@ -172,7 +171,6 @@ export default function ProfilAdmin() {
                     </ScrollView>
                 </View>
             </View>
-            </LinearGradient>
-        </>
+        </LinearGradient>
     );
 }
