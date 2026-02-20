@@ -187,20 +187,24 @@ export default function ResearchMission() {
                     // Récuperation adresse profil si c un benevole
                     if (userType === "volunteer") {
                         try {
-                            const me = await volunteerService.getMe();
-                            const meAddr = (me?.address || "").trim();
-                            const meZip = (me?.zip_code || "").trim();
+                            if(!manualLocation) {
+                                const me = await volunteerService.getMe();
+                                const meAddr = (me?.address || "").trim();
+                                const meZip = (me?.zip_code || "").trim();
 
-                            // ✅ adresse profil = pas "manual"
-                            setManualLocation(false);
+                                // ✅ adresse profil = pas "manual"
+                                setManualLocation(false);
 
-                            setAddress(meAddr);
-                            setZip(meZip);
+                                setAddress(meAddr);
+                                setZip(meZip);
 
-                            if (!meAddr && !meZip) {
-                                clearGeo(t("geoAddress"));
+                                if (!meAddr && !meZip) {
+                                    clearGeo(t("geoAddress"));
+                                } else {
+                                    await recomputeDistancesFromAddress(meAddr, meZip, missions);
+                                }
                             } else {
-                                await recomputeDistancesFromAddress(meAddr, meZip, missions);
+                                await recomputeDistancesFromAddress(address, zip, missions);
                             }
                         } catch {
                             // si erreur, on ne casse pas l'adresse manuelle si elle existe
@@ -242,8 +246,6 @@ export default function ResearchMission() {
             clearGeo,
             resetPagination,
             manualLocation,
-            address,
-            zip,
             allMissions.length,
         ])
     );
